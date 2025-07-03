@@ -18,9 +18,10 @@ const loadContent = (file, elementId) => {
 
 // When the DOM is fully loaded, call the function for each section
 document.addEventListener('DOMContentLoaded', () => {
-    loadContent('./research.html', 'research-placeholder');
-    loadContent('./education.html', 'education-placeholder');
-    loadContent('./work_experience.html', 'work-experience-placeholder');
-    loadContent('./publications.html', 'publications-placeholder');
-    loadContent('./projects.html', 'projects-placeholder');
+    loadContent('./homepage.html', 'homepage');
+    loadContent('./research.html', 'research');
+    loadContent('./education.html', 'education');
+    loadContent('./work_experience.html', 'work-experience');
+    loadContent('./publications.html', 'publications');
+    // loadContent('./projects.html', 'projects');
 });
