@@ -26,6 +26,20 @@
                 overflow-y: auto;
             }
         }
+        /* Custom style for the icon links */
+        .icon-link {
+            font-size: 1.5rem; /* Makes icons larger */
+            transition: color 0.2s ease-in-out;
+        }
+        /* Hiding Navbar styles */
+        #main-navbar {
+            transition: top 0.3s ease-in-out;
+        }
+        .navbar-hidden {
+            top: -70px; 
+        }
+        
+        
     </style>
 </head>
 
@@ -34,7 +48,7 @@
 <!-- <body> -->
 
     <!-- Sticky Top Navbar -->
-    <nav id="main-navbar" class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top">
+    <nav id="main-navbar" class="navbar navbar-expand-lg navbar-light bg-body-tertiary border-bottom sticky-top">
         <div class="container">
             <a class="navbar-brand fw-bold" href="#">Tanmay Ambadkar</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -58,6 +72,9 @@
                         <a class="nav-link" href="#work-experience">Work Experience</a>
                     </li>
                 </ul>
+                <button class="btn btn-link nav-link py-2 px-0 px-lg-2" type="button" id="theme-toggle">
+                    <i class="bi" id="theme-icon"></i>
+                </button>
             </div>
         </div>
     </nav>
@@ -66,8 +83,8 @@
         <div class="row">
 
             <!-- Left Column (Sidebar) -->
-            <div class="col-md-4">
-                <div class="sidebar pt-4">
+            <div class="sidebar col-md-4">
+                <div class="pt-4">
                     <div class="text-center">
                         <img class="avatar avatar-128 bg-light rounded-circle text-white p-2 mb-3"
                              src="files/profile.jpg" alt="Tanmay Ambadkar">

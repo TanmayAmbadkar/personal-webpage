@@ -5,15 +5,12 @@
     <div class="mb-4">
         <h5 class="fw-bold">Safer Policies via Affine Representations using Koopman Dynamics</h5>
         <p class="mb-1"><em><b>Tanmay Ambadkar</b>, Darshan Chudiwal, Greg Anderson, Abhinav Verma</em></p>
-        <p class="text-muted mb-2">Submitted to NeurIPS 2025</p>
+        <p class="text-muted mb-2">In Submission</p>
         <details>
             <summary><strong>Abstract</strong></summary>
             <div style="padding-left: 1rem; margin-top: 0.5rem;">
                 <p>
-                <strong>The Problem:</strong> Manually designing a perfect reward function to guide an RL agent is extremely difficult and a major barrier for non-experts. A slightly flawed specification can lead to completely wrong or unexpected behavior.
-                </p>
-                <p>
-                <strong>My Approach (AutoSpec):</strong> I developed a framework called <strong>AutoSpec</strong> that allows a user to provide an initial, high-level, and potentially imperfect specification. The agent then autonomously refines and corrects this specification during training by identifying and resolving inconsistencies, leading to better task performance without requiring constant human intervention. This makes RL more accessible to domain experts who need the technology but are not RL specialists.
+                    Reinforcement learning for safety-critical tasks requires constructing a policy that prioritizes taking safe actions while optimizing performance. Moreover, in many applications it is important to maintain safety during training, not just at the end of the learning process. Model-predictive shielding using weakest preconditions is a promising framework that helps maintain safety during training and deployment, but current techniques are limited to low-dimensional state spaces (4 features) and struggle to scale to higher dimensional environments with complex environment dynamics. In this paper we present SPARKD, a highly scalable framework for model-predictive shielding which works by linearizing non-linear dynamics using a lifted representation of the state space. Our framework leverages the Koopman Operator theory to learn basis functions which augument the state space to capture highly non-linear transition models. The use of the lifted space by SPARKD allows for effective safety calculation using convex optimization and efficient safety analysis for shielding. Our experiments show that SPARKD is capable of learning performant policies with fewer safety violations than existing safe RL techniques.
                 </p>
             </div>
         </details>
@@ -23,15 +20,12 @@
     <div class="mb-4">
         <h5 class="fw-bold">AutoSpec: Automating the Refinement of Reinforcement Learning Specifications</h5>
         <p class="mb-1"><em><b>Tanmay Ambadkar</b>, Đorđe Žikelić, Abhinav Verma</em></p>
-        <p class="text-muted mb-2">Submitted to NeurIPS 2025</p>
+        <p class="text-muted mb-2">In Submission</p>
         <details>
             <summary><strong>Abstract</strong></summary>
             <div style="padding-left: 1rem; margin-top: 0.5rem;">
                 <p>
-                <strong>The Problem:</strong> Manually designing a perfect reward function to guide an RL agent is extremely difficult and a major barrier for non-experts. A slightly flawed specification can lead to completely wrong or unexpected behavior.
-                </p>
-                <p>
-                <strong>My Approach (AutoSpec):</strong> I developed a framework called <strong>AutoSpec</strong> that allows a user to provide an initial, high-level, and potentially imperfect specification. The agent then autonomously refines and corrects this specification during training by identifying and resolving inconsistencies, leading to better task performance without requiring constant human intervention. This makes RL more accessible to domain experts who need the technology but are not RL specialists.
+                    Logical specifications have been shown to help reinforcement learning algorithms in achieving complex tasks. However, when a task is under-specified, agents might fail to learn useful policies. In this work, we explore the possibility of improving coarse-grained logical specifications via an exploration-guided strategy. We propose AutoSpec a framework that searches for a logical specification refinement whose satisfaction implies satisfaction of the original specification, but which provide additional guidance therefore making it easier for reinforcement learning algorithms to learn useful policies. AutoSpec is applicable to reinforcement learning tasks specified via the SpectRL specification logic. We exploit the compositional nature of specifications written in SpectRL, and design an algorithm that refines the abstract graph of the specification by either refining its existing edge specifications or by introducing new edge specifications. We then show how AutoSpec can be used with existing reinforcement learning algorithms for learning policies from logical specifications. Our experiments demonstrate that AutoSpec yields promising improvements in terms of the complexity of control tasks that can be solved, when refined logical specifications produced by AutoSpec are utilized.
                 </p>
             </div>
         </details>
@@ -41,15 +35,12 @@
     <div class="mb-4">
         <h5 class="fw-bold">Scaling Strategy, Not Compute: A Stand-Alone, Open-Source StarCraft II Benchmark for Accessible RL Research</h5>
         <p class="mb-1"><em>Sourav Panda, <b>Tanmay Ambadkar</b>, Shreyas Kale, Abhinav Verma, Jonathan Dodge</em></p>
-        <p class="text-muted mb-2">Submitted to NeurIPS 2025</p>
+        <p class="text-muted mb-2">In Submission</p>
         <details>
             <summary><strong>Abstract</strong></summary>
             <div style="padding-left: 1rem; margin-top: 0.5rem;">
                 <p>
-                <strong>The Problem:</strong> Manually designing a perfect reward function to guide an RL agent is extremely difficult and a major barrier for non-experts. A slightly flawed specification can lead to completely wrong or unexpected behavior.
-                </p>
-                <p>
-                <strong>My Approach (AutoSpec):</strong> I developed a framework called <strong>AutoSpec</strong> that allows a user to provide an initial, high-level, and potentially imperfect specification. The agent then autonomously refines and corrects this specification during training by identifying and resolving inconsistencies, leading to better task performance without requiring constant human intervention. This makes RL more accessible to domain experts who need the technology but are not RL specialists.
+                The research community lacks a middle ground between StarCraft II’s full game and mini-games. In the full game, sprawling state-action space renders reward signals sparse and noisy, but in mini-games, simple agents saturate performance with little genuine strategy. This yawning complexity gap hinders steady curriculum design and prevents many academic groups from experimenting with modern RL algorithms under realistic compute budgets. To fill this gap, we present the Two-Bridge Map, the first entry in an open-source benchmark series we purposely engineered as an intermediate benchmark to sit between these extremes. By disabling economy mechanics such as resource collection, base building, and fog-of-war, the environment isolates two core wargaming skills: long-range navigation and micro-combat. Two-Bridge ships as a lightweight, Gym-compatible wrapper on top of PySC2. Because it is a directly interactable environment rather than a replay-driven pipeline, researchers can train and evaluate any RL algorithm immediately---no downloading, filtering, or preprocessing of Blizzard replays required. Preliminary experiments show that agents learn coherent manoeuvring and engagement behaviours without imposing full-game computational costs. By open-sourcing the maps, wrappers, and reference scripts, we invite researchers to adopt the Two-Bridge Map Series as a standard benchmark.
                 </p>
             </div>
         </details>
@@ -88,19 +79,16 @@
     <!-- Publication Item 7 -->
     <div class="mb-4">
         <h5 class="fw-bold">Optimizing Operational Costs in Combined Heat and Power Integrated District Heating Systems: A Reinforcement Learning Approach</h5>
-        <p class="mb-1"><em>Saranya Anbarasu, <b>Tanmay Ambadkar</b></em></p>
+        <p class="mb-1"><em>Saranya Anbarasu, <b>Tanmay Ambadkar</b>, Rosina Adhikari, Kathryn Hinkelman, Zhanwei He, Wangda Zuo, Ardeshir Moftakhari</em></p>
         <p class="text-muted mb-2">SimBuild, 2024</p>
         <div>
-            <a href="https://publications.ibpsa.org/conference/paper/?id=simbuild2024_2147" target="_blank" rel="noopener noreferrer">Link</a>
+            <a href="https://publications.ibpsa.org/conference/paper/?id=simbuild2024_2147" target="_blank" rel="noopener noreferrer">Paper</a>
         </div>
         <details>
             <summary><strong>Abstract</strong></summary>
             <div style="padding-left: 1rem; margin-top: 0.5rem;">
                 <p>
-                <strong>The Problem:</strong> Manually designing a perfect reward function to guide an RL agent is extremely difficult and a major barrier for non-experts. A slightly flawed specification can lead to completely wrong or unexpected behavior.
-                </p>
-                <p>
-                <strong>My Approach (AutoSpec):</strong> I developed a framework called <strong>AutoSpec</strong> that allows a user to provide an initial, high-level, and potentially imperfect specification. The agent then autonomously refines and corrects this specification during training by identifying and resolving inconsistencies, leading to better task performance without requiring constant human intervention. This makes RL more accessible to domain experts who need the technology but are not RL specialists.
+                    As societies worldwide strive to reduce carbon footprints and transition toward cleaner energy sources, grid-integrated district energy systems (DES) emerge as a pivotal player in achieving these objectives. The escalating complexity of DES necessitates adaptive, synergistic, and hierarchical control of heterogeneous systems to achieve common energy and cost conservation goals. Prior research highlights several challenges of model-based control techniques for DES, such as limited access to computational tools, prolonged durations to digital twin development, and the complexities associated with control design. In contrast, model-free control methodologies appear as a viable alternative. As a response, our study explores a reinforcement learning-based (RL) supervisory control to minimize the operational costs in a university campus DES. To enhance overall system efficiency, we utilize resource flexibility to improve DES operations by responding to fluctuations in utility prices. In this paper, we demonstrate the toolchain, and virtual testbed development, engineer a suitable RL reward, along with the learning from challenges. From the case study, the RL agent showcases a significant 32% net operational cost savings and a 13% peak demand reduction compared to the conventional thermal load following control. This research signifies the potential of RL-based control systems in optimizing the performance of complex DES and multi-energy systems involving several control points.
                 </p>
             </div>
         </details>
@@ -112,18 +100,15 @@
         <p class="mb-1"><em><b>Tanmay Ambadkar</b>, Jignesh S. Bhatt</em></p>
         <p class="text-muted mb-2">Color and Imaging Conference (CIC), 2023</p>
         <div>
-            <a href="https://library.imaging.org/cic/articles/31/1/23" target="_blank" rel="noopener noreferrer">PDF</a>
+            <a href="https://library.imaging.org/cic/articles/31/1/23" target="_blank" rel="noopener noreferrer">Paper</a>
             <a href="https://github.com/TanmayAmbadkar/ImageColorNet-Residual-Colorization"target="_blank" rel="noopener noreferrer">Code</a>
-            <a href="https://doi.org/10.2352/CIC.2023.31.1.24" target="_blank" rel="noopener noreferrer">DOI</a>
+            <!-- <a href="https://doi.org/10.2352/CIC.2023.31.1.24" target="_blank" rel="noopener noreferrer">DOI</a> -->
         </div>
         <details>
             <summary><strong>Abstract</strong></summary>
             <div style="padding-left: 1rem; margin-top: 0.5rem;">
                 <p>
-                <strong>The Problem:</strong> Manually designing a perfect reward function to guide an RL agent is extremely difficult and a major barrier for non-experts. A slightly flawed specification can lead to completely wrong or unexpected behavior.
-                </p>
-                <p>
-                <strong>My Approach (AutoSpec):</strong> I developed a framework called <strong>AutoSpec</strong> that allows a user to provide an initial, high-level, and potentially imperfect specification. The agent then autonomously refines and corrects this specification during training by identifying and resolving inconsistencies, leading to better task performance without requiring constant human intervention. This makes RL more accessible to domain experts who need the technology but are not RL specialists.
+                    Colorization of grayscale images is a severely ill-posed inverse problem among computer vision tasks. We present a novel end-to-end deep learning method for the automatic colorization of grayscale images. Past methods employ multiple deep networks, use auxiliary information, and/or are trained on massive datasets to understand the semantic transfer of colors. The proposed method is a 38-layer deep convolutional residual network that utilizes the CIELAB color space to reduce the problem’s solution space. The network comprises 16 residual blocks, each with 128 convolutional filters to address the ill-posedness of colorization, followed by 4 convolutional blocks to reconstruct the image. Experiments under challenging heterogeneous scenarios and using the Imagenet, Intel, and MirFlickr datasets show significant generalization when assessed visually and against PSNR, SSIM, and PIQE. The proposed method is relatively simpler (16 million parameters), faster (15 images/sec), and resource-efficient (just 50000 training images) when compared to the state-of-the-art
                 </p>
             </div>
         </details>
@@ -135,17 +120,14 @@
         <p class="mb-1"><em>N. Menon, S. Saboo, <b>T. Ambadkar</b> and U. Uppili</em></p>
         <p class="text-muted mb-2">International Conference on Intelligent Data Science Technologies and Applications (IDSTA), 2022</p>
         <div>
-            <a href="https://ieeexplore.ieee.org/document/9923044" target="_blank" rel="noopener noreferrer">PDF</a>
-            <a href="https://doi.org/10.1109/IDSTA55301.2022.9923044" target="_blank" rel="noopener noreferrer">DOI</a>
+            <a href="https://ieeexplore.ieee.org/document/9923044" target="_blank" rel="noopener noreferrer">Paper</a>
+            <!-- <a href="https://doi.org/10.1109/IDSTA55301.2022.9923044" target="_blank" rel="noopener noreferrer">DOI</a> -->
         </div>
         <details>
             <summary><strong>Abstract</strong></summary>
             <div style="padding-left: 1rem; margin-top: 0.5rem;">
                 <p>
-                <strong>The Problem:</strong> Manually designing a perfect reward function to guide an RL agent is extremely difficult and a major barrier for non-experts. A slightly flawed specification can lead to completely wrong or unexpected behavior.
-                </p>
-                <p>
-                <strong>My Approach (AutoSpec):</strong> I developed a framework called <strong>AutoSpec</strong> that allows a user to provide an initial, high-level, and potentially imperfect specification. The agent then autonomously refines and corrects this specification during training by identifying and resolving inconsistencies, leading to better task performance without requiring constant human intervention. This makes RL more accessible to domain experts who need the technology but are not RL specialists.
+                    Accurately forecasting energy consumption for buildings has become increasingly important over the years owing to the increasing prices of energy. A good forecast gives an understanding of how much the expected load (demand) of the building would be in the coming days and months. This could be used in further planning of energy usage within the building. This also becomes important due to the dynamic nature of energy rates. With an accurate forecast, one could also aim for spot trading by which the energy is bought and sold at different rates in a daily fashion. We target short-term and medium-term demand forecasting for buildings. Data Sampling is an integral part of training time-series models. The temporal horizon along with the patterns captured contribute to the model learning and thus its forecasts. When the data is aplenty with more than one value per day, the traditional sliding window method is unable to forecast for short-term forecasts without the actual truth values because of its continuous nature. The forecasts deviate very quickly and become unusable. In this paper, we present a novel data sampling technique called Discrete Sequencing. This samples data sequences in a lagged fashion which looks at a much larger temporal horizon with a smaller sequence size. We demonstrate the efficacy of our sampling technique by testing the forecasts on three different neural network architectures.
                 </p>
             </div>
         </details>
@@ -157,18 +139,15 @@
         <p class="mb-1"><em><b>Tanmay Ambadkar</b>, Pramit Mazumdar</em></p>
         <p class="text-muted mb-2">Proc. IS&T Int’l. Symp. on Electronic Imaging: Image Processing: Algorithms and Systems, 2022</p>
         <div>
-            <a href="https://library.imaging.org/ei/articles/34/10/IPAS-367" target="_blank" rel="noopener noreferrer">PDF</a>
+            <a href="https://library.imaging.org/ei/articles/34/10/IPAS-367" target="_blank" rel="noopener noreferrer">Paper</a>
             <a href="https://github.com/TanmayAmbadkar/DRL-FOV"target="_blank" rel="noopener noreferrer">Code</a>
-            <a href="https://doi.org/10.2352/EI.2022.34.10.IPAS-367" target="_blank" rel="noopener noreferrer">DOI</a>
+            <!-- <a href="https://doi.org/10.2352/EI.2022.34.10.IPAS-367" target="_blank" rel="noopener noreferrer">DOI</a> -->
         </div>
         <details>
             <summary><strong>Abstract</strong></summary>
             <div style="padding-left: 1rem; margin-top: 0.5rem;">
                 <p>
-                <strong>The Problem:</strong> Manually designing a perfect reward function to guide an RL agent is extremely difficult and a major barrier for non-experts. A slightly flawed specification can lead to completely wrong or unexpected behavior.
-                </p>
-                <p>
-                <strong>My Approach (AutoSpec):</strong> I developed a framework called <strong>AutoSpec</strong> that allows a user to provide an initial, high-level, and potentially imperfect specification. The agent then autonomously refines and corrects this specification during training by identifying and resolving inconsistencies, leading to better task performance without requiring constant human intervention. This makes RL more accessible to domain experts who need the technology but are not RL specialists.
+                    The popularity of 360° videos has grown immensely in the last few years. One probable reason is the availability of low-cost devices and ease in capturing them. Additionally, users have shown interest in this particular type of media due to its inherent feature of being immersive, which is completely absent in traditional 2D videos. Nowadays such powerful 360° videos have many applications such as generating various content-specific videos (gaming, knowledge, travel, sports, educational, etc.), during surgeries by medical professionals, in autonomous vehicles, etc. A typical 360° video when seen through a Head Mounted Display (HMD) gives an immersive feeling, where the viewer perceives standing within the real environment in a virtual platform. Similar to real life, at any point in time, the viewer can view only a particular region and not the entire 360° content. Viewers adopts physical movement for exploring the total 360° content. However, due to the large volume of 360° media, it faces challenges during transmission. Adaptive compression techniques have been incorporated in this regard, which is in accordance with the viewing behaviour of a viewer. Therefore, with the growing popularity and usage of 360° media, the adaptive compression methodologies are in development. One important factor in adaptive compression is the estimation of the natural field-of-view (FOV) of a viewer watching 360° content using a HMD. The FOV estimation task becomes more challenging due to the spatial displacement of the viewer with respect to the dynamically changing video content. In this work, we propose a model to estimate the FOV of a user viewing a 360° video using an HMD. This task is popularly known as the Virtual Cinematography. The proposed FOVSelectionNet is primarily based on a reinforcement learning framework. In addition to this, saliency estimation is proved to be a very powerful indicator for attention modelling. Therefore, in this proposed network we utilise a saliency indicator for driving the reward function of the reinforcement learning framework. Experiments are performed on the benchmark Pano2Vid 360° dataset, and the results are observed to be similar to human exploration
                 </p>
             </div>
         </details>
