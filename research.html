@@ -1,0 +1,66 @@
+<div class="container" style="font-family: sans-serif; line-height: 1.6;">
+    
+    <h3><u>Research Overview</u></h3>
+    <p>
+        My research is focused on making artificial intelligence more reliable and trustworthy. While reinforcement learning (RL) can train agents to perform incredibly complex tasks, it often struggles with three key challenges: it needs perfectly defined goals, it can behave unsafely, and it doesn't know how to handle conflicting objectives. My work tackles these problems by creating frameworks that allow people to guide AI with high-level instructions. I'm building systems that can automatically fix imperfect instructions, a "safety shield" that prevents agents from taking dangerous actions, and methods that allow users to balance competing goals on the fly. Ultimately, the goal is to build AI that is not only powerful but also safe, interpretable, and collaborative enough to be deployed in critical real-world scenarios.
+    </p>
+
+    <!-- <hr style="margin: 2rem 0;"> -->
+
+    <!-- <h3><u>Research Objectives</u></h3> -->
+
+    <!-- <style>
+        details {
+            border: 1px solid #dee2e6;
+            border-radius: 0.375rem;
+            margin-bottom: 0.5rem;
+            padding: 0.75rem 1.25rem;
+        }
+        summary {
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+        details[open] > summary {
+            margin-bottom: 0.75rem;
+        }
+    </style> -->
+
+    <details>
+      <summary><strong>Objective 1: Making RL Robust to Imperfect Instructions</strong></summary>
+      <div style="padding-left: 1rem; margin-top: 0.5rem;">
+        <p>
+          <strong>The Problem:</strong> Manually designing a perfect reward function to guide an RL agent is extremely difficult and a major barrier for non-experts. A slightly flawed specification can lead to completely wrong or unexpected behavior.
+        </p>
+        <p>
+          <strong>My Approach (AutoSpec):</strong> I developed a framework called <strong>AutoSpec</strong> that allows a user to provide an initial, high-level, and potentially imperfect specification. The agent then autonomously refines and corrects this specification during training by identifying and resolving inconsistencies, leading to better task performance without requiring constant human intervention. This makes RL more accessible to domain experts who need the technology but are not RL specialists.
+        </p>
+      </div>
+    </details>
+    
+    <details>
+      <summary><strong>Objective 2: Building a Scalable Safety Shield for RL Agents</strong></summary>
+      <div style="padding-left: 1rem; margin-top: 0.5rem;">
+        <p>
+          <strong>The Problem:</strong> An RL agent trained to maximize a reward will do so at all costs, potentially violating critical safety constraints and causing catastrophic failures in the real world.
+        </p>
+        <p>
+          <strong>My Approach (SPARKD):</strong> I am developing an algorithm-agnostic safety shield that acts as a runtime monitor. It works by learning a globally linear model of the environment's non-linear dynamics to predict the consequences of an agent's actions. If a proposed action is deemed unsafe, the shield intervenes by providing a safe alternative. This approach ensures the agent satisfies safety constraints while still giving it the freedom to explore and learn effectively, bridging the gap between theoretical RL and practical, safe deployment.
+        </p>
+      </div>
+    </details>
+    
+    <details>
+      <summary><strong>Objective 3: Enabling User-Driven Trade-offs in Multi-Objective RL</strong></summary>
+      <div style="padding-left: 1rem; margin-top: 0.5rem;">
+        <p>
+          <strong>The Problem:</strong> Real-world applications rarely have a single goal. More often, they involve balancing a set of conflicting objectives, such as maximizing performance while minimizing cost and energy consumption.
+        </p>
+        <p>
+          <strong>My Approach:</strong> My work on this DoD-funded project focuses on training a single RL policy that can generate a wide spectrum of optimal behaviors, each representing a different trade-off between objectives. This allows a human operator to interactively tune the agent's priorities at runtime—without any retraining—to adapt its strategy to changing mission requirements. This creates more flexible, transparent, and human-tunable AI systems.
+        </p>
+      </div>
+    </details>
+    <hr>
+
+</div>
