@@ -11,7 +11,6 @@
     <meta name="author" content="Your Name or Company">
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- NEW: LZ-String library for compressing data into a URL-safe string -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <meta name="theme-color" content="#4f46e5"/>
@@ -172,6 +171,25 @@
         #clipboard-message.show {
             opacity: 1;
         }
+        /* Confirmation Modal */
+        #confirmation-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9998;
+            align-items: center;
+            justify-content: center;
+        }
+        #confirmation-modal-content {
+            background-color: white;
+            padding: 24px;
+            border-radius: 8px;
+            max-width: 400px;
+            text-align: center;
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
@@ -211,10 +229,22 @@
                     <input type="number" id="loanTerm" value="10" class="w-full bg-gray-100 border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 px-3">
                 </div>
             </div>
+             <!-- Action Buttons -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pb-6 mb-6 border-b border-gray-200">
+                <button id="calculateBtn" class="w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-indigo-700">
+                    Calculate
+                </button>
+                <button id="downloadBtn" class="w-full bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-green-700">
+                    Download csv
+                </button>
+                <button id="shareBtn" class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-700">
+                    Share
+                </button>
+            </div>
             <!-- Advanced Payoff Strategy Section -->
-            <div class="pt-6 border-t border-gray-200">
+            <div>
                 <h3 class="text-lg font-medium text-gray-900 mb-4">Advanced Payoff Strategy</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label for="extraPaymentsPerYear" class="flex items-center text-sm font-medium text-gray-700 mb-1">
                             <span class="inline-block w-3 h-3 bg-yellow-100 border border-yellow-300 rounded-sm mr-2"></span>
@@ -234,37 +264,21 @@
                     </div>
                 </div>
             </div>
-             <!-- Action Buttons -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-gray-200">
-                <button id="calculateBtn" class="w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-indigo-700">
-                    Calculate
-                </button>
-                <button id="downloadBtn" class="w-full bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-green-700">
-                    Download csv
-                </button>
-                <button id="shareBtn" class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-700">
-                    Share
-                </button>
-            </div>
         </div>
         
         <!-- Summary Section -->
-        <div id="summary" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 text-center">
+        <div id="summary" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8 text-center">
             <div class="bg-white p-4 rounded-xl shadow">
                 <h3 class="text-sm font-medium text-gray-500">Minimum Monthly Payment</h3>
                 <p id="monthlyPayment" class="text-2xl font-semibold text-indigo-600">-</p>
             </div>
             <div class="bg-white p-4 rounded-xl shadow">
                 <h3 class="text-sm font-medium text-gray-500">Total Interest Paid</h3>
-                <p id="totalInterest" class="text-2xl font-semibold text-indigo-600">-</p>
+                <div id="totalInterest" class="text-2xl font-semibold text-indigo-600">-</div>
             </div>
             <div class="bg-white p-4 rounded-xl shadow">
-                <h3 class="text-sm font-medium text-gray-500">Original Payoff Date</h3>
-                <p id="payoffDate" class="text-2xl font-semibold text-gray-600">-</p>
-            </div>
-            <div class="bg-white p-4 rounded-xl shadow">
-                <h3 class="text-sm font-medium text-gray-500">New Payoff Date</h3>
-                <p id="newPayoffDate" class="text-2xl font-semibold text-green-600">-</p>
+                <h3 class="text-sm font-medium text-gray-500">Payoff Date & Savings</h3>
+                <div id="payoff-summary" class="text-2xl font-semibold text-gray-600">-</div>
             </div>
         </div>
 
@@ -295,6 +309,18 @@
     
     <!-- Clipboard Message -->
     <div id="clipboard-message">Link copied to clipboard!</div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmation-modal" class="hidden flex">
+        <div id="confirmation-modal-content">
+            <h3 class="text-lg font-bold mb-2">Reset Payoff Strategy?</h3>
+            <p class="text-sm text-gray-700 mb-6">This will clear all lumpsum, recurring, and advanced payments for this loan. Are you sure you want to continue?</p>
+            <div class="flex justify-end gap-4">
+                <button id="confirm-cancel-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-md">Cancel</button>
+                <button id="confirm-reset-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md">Yes, Reset</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         // --- SEO & AI Search Tools ---
@@ -336,7 +362,7 @@
             const setupPWA = () => {
                 const manifest = {
                     "name": "Multi-Loan Payment Estimator", "short_name": "LoanCalc", "start_url": ".", "display": "standalone", "background_color": "#f9fafb", "theme_color": "#4f46e5", "description": "A powerful, offline-first student loan calculator with tabs.",
-                    "icons": [{"src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTIgMTkyIj48cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgcng9IjM4LjQiIGZpbGw9IiM0ZjQ2ZTUiLz48dGV4dCB4PSI5NiIgeT0iMTM1IiBmb250LXNpemU9IjEwMCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9ImJvbGQiPiQ8L3RleHQ+PC9zdmc+", "sizes": "192x192", "type": "image/svg+xml"}, {"src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEwMi40IiBmaWxsPSIjNGY0NmU1IiLz48dGV4dCB4PSIyNTYiIHk9IjM2NSIgZm9udC1zaXplPSIyODAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSJib2xkIj4kPC90ZXh0Pjwvc3ZnPg==", "sizes": "512x512", "type": "image/svg+xml"}]
+                    "icons": [{"src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTIgMTkyIj48cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgcng9IjM4LjQiIGZpbGw9IiM0ZjQ2ZTUiLz48dGV4dCB4PSI5NiIgeT0iMTM1IiBmb250LXNpemU9IjEwMCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaGyPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9ImJvbGQiPiQ8L3RleHQ+PC9zdmc+", "sizes": "192x192", "type": "image/svg+xml"}, {"src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEwMi40IiBmaWxsPSIjNGY0NmU1IiLz48dGV4dCB4PSIyNTYiIHk9IjM2NSIgZm9udC1zaXplPSIyODAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSJib2xkIj4kPC90ZXh0Pjwvc3ZnPg==", "sizes": "512x512", "type": "image/svg+xml"}]
                 };
                 const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
                 const manifestUrl = URL.createObjectURL(manifestBlob);
@@ -363,13 +389,15 @@
             const summaryEl = document.getElementById('summary');
             const monthlyPaymentEl = document.getElementById('monthlyPayment');
             const totalInterestEl = document.getElementById('totalInterest');
-            const payoffDateEl = document.getElementById('payoffDate');
-            const newPayoffDateEl = document.getElementById('newPayoffDate');
+            const payoffSummaryEl = document.getElementById('payoff-summary');
             const tabsContainer = document.getElementById('tabs-container');
             const loanAmountCurrencySymbolEl = document.getElementById('loan-amount-currency-symbol');
             const extraPaymentsPerYearEl = document.getElementById('extraPaymentsPerYear');
             const annualHikePercentEl = document.getElementById('annualHikePercent');
             const clipboardMessageEl = document.getElementById('clipboard-message');
+            const confirmationModal = document.getElementById('confirmation-modal');
+            const confirmResetBtn = document.getElementById('confirm-reset-btn');
+            const confirmCancelBtn = document.getElementById('confirm-cancel-btn');
 
             // --- Currency Management ---
             let userCurrency = 'USD';
@@ -456,7 +484,8 @@
                     additionalPayments: {},
                     lumpsums: [],
                     extraPaymentsPerYear: 0,
-                    annualHikePercent: 0
+                    annualHikePercent: 0,
+                    originalTotalInterest: null
                 };
                 state.tabs.push(newTab);
                 state.activeTabId = newTab.id;
@@ -517,7 +546,7 @@
                 loanTermEl.value = activeTab.term;
                 extraPaymentsPerYearEl.value = activeTab.extraPaymentsPerYear || 0;
                 annualHikePercentEl.value = activeTab.annualHikePercent || 0;
-                generateSchedule();
+                generateSchedule(false);
             }
 
             // --- Shareable Link Logic ---
@@ -565,16 +594,14 @@
                 const newLumpsum = { id: Date.now(), afterMonth: afterMonth, amount: 1000 };
                 activeTab.lumpsums.push(newLumpsum);
                 activeTab.lumpsums.sort((a, b) => a.afterMonth - b.afterMonth);
-                saveState();
-                generateSchedule();
+                generateSchedule(false);
             }
             
             function deleteLumpsum(id) {
                 const activeTab = getActiveTabData();
                 if (!activeTab) return;
                 activeTab.lumpsums = activeTab.lumpsums.filter(l => l.id !== id);
-                saveState();
-                generateSchedule();
+                generateSchedule(false);
             }
 
             function updateLumpsum(id, amount) {
@@ -583,8 +610,7 @@
                 const lumpsum = activeTab.lumpsums.find(l => l.id === id);
                 if (lumpsum) {
                     lumpsum.amount = amount;
-                    saveState();
-                    generateSchedule();
+                    generateSchedule(false);
                 }
             }
             
@@ -594,8 +620,7 @@
                 for (let m = month; m <= activeTab.term * 12; m++) {
                     activeTab.additionalPayments[m] = amount;
                 }
-                saveState();
-                generateSchedule();
+                generateSchedule(false);
             }
 
             // --- Core Calculation & Rendering Logic ---
@@ -604,14 +629,18 @@
                 return p * (i * Math.pow(1 + i, n)) / (Math.pow(1 + i, n) - 1);
             }
 
-            function generateSchedule() {
+            function generateSchedule(resetBaseline = false) {
                 const activeTab = getActiveTabData();
                 if (!activeTab) return;
-                activeTab.amount = parseFloat(loanAmountEl.value);
-                activeTab.apr = parseFloat(aprEl.value);
-                activeTab.term = parseInt(loanTermEl.value);
+                
+                if (resetBaseline) {
+                    activeTab.amount = parseFloat(loanAmountEl.value);
+                    activeTab.apr = parseFloat(aprEl.value);
+                    activeTab.term = parseInt(loanTermEl.value);
+                }
                 activeTab.extraPaymentsPerYear = parseInt(extraPaymentsPerYearEl.value) || 0;
                 activeTab.annualHikePercent = parseFloat(annualHikePercentEl.value) || 0;
+
                 const { amount: principal, apr, term: years, extraPaymentsPerYear, annualHikePercent } = activeTab;
                 if (isNaN(principal) || isNaN(apr) || isNaN(years) || principal <= 0 || apr < 0 || years <= 0) {
                     amortizationBody.innerHTML = `<tr><td colspan="9" class="text-center p-8 text-red-500">Please enter valid loan details.</td></tr>`;
@@ -661,20 +690,64 @@
                     currentBalance = endingBalance;
                     visibleMonths++;
                 }
+                
+                if (resetBaseline) {
+                    activeTab.originalTotalInterest = totalInterestPaid;
+                }
+
                 amortizationBody.innerHTML = tableHTML || `<tr><td colspan="9" class="text-center p-8 text-gray-500">Loan is fully paid.</td></tr>`;
-                totalInterestEl.textContent = formatCurrency(totalInterestPaid);
-                const originalPayoffDate = new Date();
-                originalPayoffDate.setDate(1);
-                originalPayoffDate.setMonth(originalPayoffDate.getMonth() + numberOfMonths);
-                payoffDateEl.textContent = originalPayoffDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
-                const newPayoffDate = new Date();
-                newPayoffDate.setDate(1);
-                newPayoffDate.setMonth(newPayoffDate.getMonth() + visibleMonths);
-                newPayoffDateEl.textContent = newPayoffDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+                updateSummary(totalInterestPaid, numberOfMonths, visibleMonths);
+
                 saveState();
                 attachRowEventListeners();
             }
             
+            function updateSummary(newInterest, originalMonths, newMonths) {
+                const activeTab = getActiveTabData();
+                const originalInterest = activeTab.originalTotalInterest;
+
+                // Update Interest Paid card
+                if (originalInterest && Math.abs(newInterest - originalInterest) > 0.01) {
+                    totalInterestEl.innerHTML = `
+                        <div class="flex items-center justify-center gap-2">
+                            <span class="text-lg text-gray-500 line-through">${formatCurrency(originalInterest)}</span>
+                            <span class="text-2xl font-semibold text-green-600">${formatCurrency(newInterest)}</span>
+                        </div>
+                    `;
+                } else {
+                    totalInterestEl.innerHTML = `<p class="text-2xl font-semibold text-indigo-600">${formatCurrency(newInterest)}</p>`;
+                }
+
+                // Update Payoff Date card
+                const originalPayoffDate = new Date();
+                originalPayoffDate.setDate(1);
+                originalPayoffDate.setMonth(originalPayoffDate.getMonth() + originalMonths);
+                const formattedOriginalDate = originalPayoffDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+
+                const newPayoffDate = new Date();
+                newPayoffDate.setDate(1);
+                newPayoffDate.setMonth(newPayoffDate.getMonth() + newMonths);
+                const formattedNewDate = newPayoffDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+
+                if (originalInterest && newMonths < originalMonths) {
+                    const interestSaved = originalInterest - newInterest;
+                    const monthsSaved = originalMonths - newMonths;
+                    payoffSummaryEl.innerHTML = `
+                        <div>
+                            <div class="flex items-center justify-center gap-2">
+                                <span class="text-lg text-gray-500 line-through">${formattedOriginalDate}</span>
+                                <span class="text-2xl font-semibold text-green-600">${formattedNewDate}</span>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">
+                                (Saving ${formatCurrency(interestSaved)} & ${monthsSaved} months)
+                            </p>
+                        </div>
+                    `;
+                } else {
+                     payoffSummaryEl.innerHTML = `<p class="text-2xl font-semibold text-gray-600">${formattedOriginalDate}</p>`;
+                }
+            }
+
             function createMonthlyRowHTML(activeTab, month, date, balance, minPay, addPay, totalPay, interest, principal, endBalance, highlightClass) {
                 const lumpsumAboveExists = activeTab.lumpsums.some(l => l.afterMonth === month - 1);
                 const lumpsumBelowExists = activeTab.lumpsums.some(l => l.afterMonth === month);
@@ -738,6 +811,28 @@
                 document.body.removeChild(link);
             }
 
+            // --- Confirmation Modal Logic ---
+            function showConfirmationModal() {
+                confirmationModal.classList.remove('hidden');
+            }
+            function hideConfirmationModal() {
+                confirmationModal.classList.add('hidden');
+            }
+            function hasActiveStrategies(tab) {
+                return tab.extraPaymentsPerYear > 0 || 
+                       tab.annualHikePercent > 0 || 
+                       tab.lumpsums.length > 0 || 
+                       Object.values(tab.additionalPayments).some(p => p > 0);
+            }
+            function resetStrategies(tab) {
+                tab.extraPaymentsPerYear = 0;
+                tab.annualHikePercent = 0;
+                tab.lumpsums = [];
+                tab.additionalPayments = {};
+                extraPaymentsPerYearEl.value = 0;
+                annualHikePercentEl.value = 0;
+            }
+
             // --- Event Listeners ---
             function attachRowEventListeners() {
                 document.querySelectorAll('.additional-payment-input').forEach(input => {
@@ -756,7 +851,23 @@
                 });
             }
 
-            calculateBtn.addEventListener('click', generateSchedule);
+            calculateBtn.addEventListener('click', () => {
+                const activeTab = getActiveTabData();
+                if (hasActiveStrategies(activeTab)) {
+                    showConfirmationModal();
+                } else {
+                    resetStrategies(activeTab);
+                    generateSchedule(true);
+                }
+            });
+            confirmResetBtn.addEventListener('click', () => {
+                const activeTab = getActiveTabData();
+                resetStrategies(activeTab);
+                generateSchedule(true);
+                hideConfirmationModal();
+            });
+            confirmCancelBtn.addEventListener('click', hideConfirmationModal);
+
             downloadBtn.addEventListener('click', downloadAsExcel);
             shareBtn.addEventListener('click', () => {
                 const activeTab = getActiveTabData();
@@ -764,8 +875,8 @@
                     shareTab(activeTab.id);
                 }
             });
-            extraPaymentsPerYearEl.addEventListener('change', generateSchedule);
-            annualHikePercentEl.addEventListener('change', generateSchedule);
+            extraPaymentsPerYearEl.addEventListener('change', () => generateSchedule(false));
+            annualHikePercentEl.addEventListener('change', () => generateSchedule(false));
             
             tabsContainer.addEventListener('click', (e) => {
                 const tabEl = e.target.closest('.tab');
