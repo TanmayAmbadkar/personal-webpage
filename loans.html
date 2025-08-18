@@ -153,6 +153,12 @@
         .highlight-hike td {
              background-color: #dcfce7; /* green-100 */
         }
+        .yearly-summary-row td {
+            background-color: #e5e7eb; /* gray-200 */
+            font-weight: 600;
+            border-top: 1px solid #d1d5db;
+            border-bottom: 1px solid #d1d5db;
+        }
         /* Clipboard Message */
         #clipboard-message {
             position: fixed;
@@ -267,7 +273,7 @@
         </div>
         
         <!-- Summary Section -->
-        <div id="summary" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8 text-center">
+        <div id="summary" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 text-center">
             <div class="bg-white p-4 rounded-xl shadow">
                 <h3 class="text-sm font-medium text-gray-500">Minimum Monthly Payment</h3>
                 <p id="monthlyPayment" class="text-2xl font-semibold text-indigo-600">-</p>
@@ -275,6 +281,10 @@
             <div class="bg-white p-4 rounded-xl shadow">
                 <h3 class="text-sm font-medium text-gray-500">Total Interest Paid</h3>
                 <div id="totalInterest" class="text-2xl font-semibold text-indigo-600">-</div>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow">
+                <h3 class="text-sm font-medium text-gray-500">Total Amount Paid</h3>
+                <div id="totalAmountPaid" class="text-2xl font-semibold text-indigo-600">-</div>
             </div>
             <div class="bg-white p-4 rounded-xl shadow">
                 <h3 class="text-sm font-medium text-gray-500">Payoff Date & Savings</h3>
@@ -362,7 +372,7 @@
             const setupPWA = () => {
                 const manifest = {
                     "name": "Multi-Loan Payment Estimator", "short_name": "LoanCalc", "start_url": ".", "display": "standalone", "background_color": "#f9fafb", "theme_color": "#4f46e5", "description": "A powerful, offline-first student loan calculator with tabs.",
-                    "icons": [{"src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTIgMTkyIj48cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgcng9IjM4LjQiIGZpbGw9IiM0ZjQ2ZTUiLz48dGV4dCB4PSI5NiIgeT0iMTM1IiBmb250LXNpemU9IjEwMCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaGyPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9ImJvbGQiPiQ8L3RleHQ+PC9zdmc+", "sizes": "192x192", "type": "image/svg+xml"}, {"src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEwMi40IiBmaWxsPSIjNGY0NmU1IiLz48dGV4dCB4PSIyNTYiIHk9IjM2NSIgZm9udC1zaXplPSIyODAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSJib2xkIj4kPC90ZXh0Pjwvc3ZnPg==", "sizes": "512x512", "type": "image/svg+xml"}]
+                    "icons": [{"src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTIgMTkyIj48cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgcng9IjM4LjQiIGZpbGw9IiM0ZjQ2ZTUiLz48dGV4dCB4PSI5NiIgeT0iMTM1IiBmb250LXNpemU9IjEwMCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9ImJvbGQiPiQ8L3RleHQ+PC9zdmc+", "sizes": "192x192", "type": "image/svg+xml"}, {"src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEwMi40IiBmaWxsPSIjNGY0NmU1IiLz48dGV4dCB4PSIyNTYiIHk9IjM2NSIgZm9udC1zaXplPSIyODAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSJib2xkIj4kPC90ZXh0Pjwvc3ZnPg==", "sizes": "512x512", "type": "image/svg+xml"}]
                 };
                 const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
                 const manifestUrl = URL.createObjectURL(manifestBlob);
@@ -389,6 +399,7 @@
             const summaryEl = document.getElementById('summary');
             const monthlyPaymentEl = document.getElementById('monthlyPayment');
             const totalInterestEl = document.getElementById('totalInterest');
+            const totalAmountPaidEl = document.getElementById('totalAmountPaid');
             const payoffSummaryEl = document.getElementById('payoff-summary');
             const tabsContainer = document.getElementById('tabs-container');
             const loanAmountCurrencySymbolEl = document.getElementById('loan-amount-currency-symbol');
@@ -485,7 +496,8 @@
                     lumpsums: [],
                     extraPaymentsPerYear: 0,
                     annualHikePercent: 0,
-                    originalTotalInterest: null
+                    originalTotalInterest: null,
+                    originalTotalAmount: null
                 };
                 state.tabs.push(newTab);
                 state.activeTabId = newTab.id;
@@ -658,6 +670,11 @@
                 paymentDate.setDate(1);
                 let lumpsumIndex = 0;
                 let visibleMonths = 0;
+                
+                let cumulativeInterest = 0;
+                let cumulativePrincipal = 0;
+                let cumulativeTotalPayment = 0;
+
                 for (let month = 1; month <= numberOfMonths && currentBalance > 0.01; month++) {
                     let highlightClass = '';
                     if (annualHikePercent > 0 && month > 1 && (month - 1) % 12 === 0) {
@@ -670,6 +687,8 @@
                         const endingBalanceLumpsum = currentBalance - lumpsumAmount;
                         tableHTML += createLumpsumRowHTML(lumpsum, currentBalance, paymentDate, lumpsumAmount, endingBalanceLumpsum);
                         currentBalance = endingBalanceLumpsum;
+                        cumulativeTotalPayment += lumpsumAmount;
+                        cumulativePrincipal += lumpsumAmount;
                         lumpsumIndex++;
                     }
                     if (currentBalance < 0.01) break;
@@ -686,25 +705,37 @@
                     const actualTotalPayment = principalPaid + interestForMonth;
                     const endingBalance = currentBalance - principalPaid;
                     totalInterestPaid += interestForMonth;
+                    
+                    cumulativeInterest += interestForMonth;
+                    cumulativePrincipal += principalPaid;
+                    cumulativeTotalPayment += actualTotalPayment;
+
                     tableHTML += createMonthlyRowHTML(activeTab, month, formattedDate, currentBalance, currentMonthlyPayment, finalAdditionalPayment, actualTotalPayment, interestForMonth, principalPaid, endingBalance, highlightClass);
                     currentBalance = endingBalance;
                     visibleMonths++;
+
+                    if (month % 12 === 0 && currentBalance > 0.01) {
+                        tableHTML += createYearlySummaryRowHTML(month / 12, cumulativeTotalPayment, cumulativeInterest, cumulativePrincipal);
+                    }
                 }
                 
                 if (resetBaseline) {
                     activeTab.originalTotalInterest = totalInterestPaid;
+                    activeTab.originalTotalAmount = principal + totalInterestPaid;
                 }
 
                 amortizationBody.innerHTML = tableHTML || `<tr><td colspan="9" class="text-center p-8 text-gray-500">Loan is fully paid.</td></tr>`;
-                updateSummary(totalInterestPaid, numberOfMonths, visibleMonths);
+                updateSummary(principal, totalInterestPaid, numberOfMonths, visibleMonths);
 
                 saveState();
                 attachRowEventListeners();
             }
             
-            function updateSummary(newInterest, originalMonths, newMonths) {
+            function updateSummary(principal, newInterest, originalMonths, newMonths) {
                 const activeTab = getActiveTabData();
                 const originalInterest = activeTab.originalTotalInterest;
+                const originalTotalAmount = activeTab.originalTotalAmount;
+                const newTotalAmount = principal + newInterest;
 
                 // Update Interest Paid card
                 if (originalInterest && Math.abs(newInterest - originalInterest) > 0.01) {
@@ -718,16 +749,28 @@
                     totalInterestEl.innerHTML = `<p class="text-2xl font-semibold text-indigo-600">${formatCurrency(newInterest)}</p>`;
                 }
 
+                // Update Total Amount Paid card
+                if (originalTotalAmount && Math.abs(newTotalAmount - originalTotalAmount) > 0.01) {
+                    totalAmountPaidEl.innerHTML = `
+                        <div class="flex items-center justify-center gap-2">
+                            <span class="text-lg text-gray-500 line-through">${formatCurrency(originalTotalAmount)}</span>
+                            <span class="text-2xl font-semibold text-green-600">${formatCurrency(newTotalAmount)}</span>
+                        </div>
+                    `;
+                } else {
+                    totalAmountPaidEl.innerHTML = `<p class="text-2xl font-semibold text-indigo-600">${formatCurrency(newTotalAmount)}</p>`;
+                }
+
                 // Update Payoff Date card
                 const originalPayoffDate = new Date();
                 originalPayoffDate.setDate(1);
                 originalPayoffDate.setMonth(originalPayoffDate.getMonth() + originalMonths);
-                const formattedOriginalDate = originalPayoffDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+                const formattedOriginalDate = originalPayoffDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
 
                 const newPayoffDate = new Date();
                 newPayoffDate.setDate(1);
                 newPayoffDate.setMonth(newPayoffDate.getMonth() + newMonths);
-                const formattedNewDate = newPayoffDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+                const formattedNewDate = newPayoffDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
 
                 if (originalInterest && newMonths < originalMonths) {
                     const interestSaved = originalInterest - newInterest;
@@ -784,6 +827,18 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(amount)}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-indigo-700">${formatCurrency(endBalance)}</td>
                     </tr>`;
+            }
+
+            function createYearlySummaryRowHTML(year, totalPayment, totalInterest, totalPrincipal) {
+                return `
+                    <tr class="yearly-summary-row">
+                        <td colspan="5" class="px-6 py-2 text-sm text-gray-800">Cumulative Summary: Year ${year}</td>
+                        <td class="px-6 py-2 text-sm text-gray-800">${formatCurrency(totalPayment)}</td>
+                        <td class="px-6 py-2 text-sm text-gray-800">${formatCurrency(totalInterest)}</td>
+                        <td class="px-6 py-2 text-sm text-gray-800">${formatCurrency(totalPrincipal)}</td>
+                        <td class="px-6 py-2"></td>
+                    </tr>
+                `;
             }
 
             function downloadAsExcel() {
