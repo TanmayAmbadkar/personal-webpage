@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Loan Payment Estimator</title>
+    <title>Multi-Loan Payment Estimator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -23,18 +23,130 @@
         .input-group input {
             padding-left: 28px;
         }
-        .table-cell-input {
-            width: 100px; /* Adjust width as needed */
+        .tab {
+            cursor: pointer;
+            padding: 10px 20px;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s ease-in-out;
+            position: relative;
+            padding-right: 55px; /* Space for action buttons */
+        }
+        .tab.active {
+            border-bottom-color: #4f46e5; /* indigo-600 */
+            color: #4f46e5;
+            font-weight: 600;
+        }
+        .tab:hover:not(.active) {
+            background-color: #f3f4f6; /* gray-100 */
+        }
+        .tab-name {
+            outline: none;
+        }
+        .tab-name[contenteditable="true"] {
+            background-color: #e0e7ff; /* indigo-100 */
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        .tab-actions {
+            position: absolute;
+            top: 50%;
+            right: 8px;
+            transform: translateY(-50%);
+            display: none;
+            gap: 6px;
+            align-items: center;
+        }
+        .tab:hover .tab-actions {
+            display: flex;
+        }
+        .tab-action-btn {
+            color: #9ca3af;
+            cursor: pointer;
+            border-radius: 9999px;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .tab-action-btn:hover {
+            background-color: #e5e7eb;
+            color: #1f2937;
+        }
+        .lumpsum-row td {
+            background-color: #eff6ff; /* blue-50 */
+        }
+        /* Lumpsum Add/Below Buttons */
+        tr[data-type="monthly"] td {
+            position: relative; /* Container for the buttons */
+        }
+        .lumpsum-btn {
+            position: absolute;
+            display: none; /* Hide by default */
+            left: 50%;
+            background-color: #4f46e5;
+            color: white;
+            border: none;
+            padding: 2px 8px;
+            font-size: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            z-index: 10;
+            white-space: nowrap;
+        }
+        .lumpsum-btn:hover {
+            background-color: #4338ca;
+        }
+        tr[data-type="monthly"] td:hover .lumpsum-btn {
+            display: block; /* Show on cell hover */
+        }
+        .lumpsum-above {
+            top: 0;
+            transform: translate(-50%, -50%);
+        }
+        .lumpsum-below {
+            bottom: 0;
+            transform: translate(-50%, 50%);
+        }
+        /* Delete Lumpsum button styling */
+        .delete-lumpsum-btn {
+            display: block; /* Always visible */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #dc2626; /* red-600 */
+            color: white;
+            border: none;
+            padding: 2px 8px;
+            font-size: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            z-index: 10;
+            opacity: 0.8;
+        }
+        .delete-lumpsum-btn:hover {
+             background-color: #b91c1c; /* red-700 */
+             opacity: 1;
         }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
 
     <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-7xl">
-        <header class="text-center mb-8">
-            <h1 class="text-3xl sm:text-4xl font-bold text-gray-900">Student Loan Payment Estimator</h1>
-            <p class="mt-2 text-md text-gray-600">Enter your loan details to see a full amortization schedule and the impact of extra payments.</p>
+        <header class="text-center mb-6">
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-900">Multi-Loan Payment Estimator</h1>
+            <p class="mt-2 text-md text-gray-600">Manage multiple loan schedules. All your data is saved automatically in your browser.</p>
         </header>
+
+        <!-- Tabs Section -->
+        <div class="border-b border-gray-200 mb-8">
+            <div id="tabs-container" class="flex items-center space-x-2">
+                <!-- Tabs will be dynamically inserted here -->
+            </div>
+        </div>
 
         <div class="bg-white p-6 rounded-2xl shadow-lg mb-8">
             <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
@@ -50,14 +162,14 @@
                 <div>
                     <label for="apr" class="block text-sm font-medium text-gray-700 mb-1">Annual Interest Rate (APR)</label>
                     <div class="relative">
-                        <input type="number" id="apr" value="5.5" step="0.01" class="w-full bg-gray-100 border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 pr-8">
+                        <input type="number" id="apr" value="5.5" step="0.01" class="w-full bg-gray-100 border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 pr-8 px-3">
                         <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">%</span>
                     </div>
                 </div>
                 <!-- Loan Term Input -->
                 <div>
                     <label for="loanTerm" class="block text-sm font-medium text-gray-700 mb-1">Loan Term (Years)</label>
-                    <input type="number" id="loanTerm" value="10" class="w-full bg-gray-100 border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <input type="number" id="loanTerm" value="10" class="w-full bg-gray-100 border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 px-3">
                 </div>
                 <!-- Calculate Button -->
                 <div class="self-end">
@@ -68,29 +180,29 @@
                  <!-- Download Button -->
                 <div class="self-end">
                     <button id="downloadBtn" class="w-full bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 ease-in-out">
-                        Download as Excel
+                        Download csv
                     </button>
                 </div>
             </div>
         </div>
         
         <!-- Summary Section -->
-        <div id="summary" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 text-center hidden">
+        <div id="summary" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 text-center">
             <div class="bg-white p-4 rounded-xl shadow">
                 <h3 class="text-sm font-medium text-gray-500">Minimum Monthly Payment</h3>
-                <p id="monthlyPayment" class="text-2xl font-semibold text-indigo-600"></p>
+                <p id="monthlyPayment" class="text-2xl font-semibold text-indigo-600">-</p>
             </div>
             <div class="bg-white p-4 rounded-xl shadow">
                 <h3 class="text-sm font-medium text-gray-500">Total Interest Paid</h3>
-                <p id="totalInterest" class="text-2xl font-semibold text-indigo-600"></p>
+                <p id="totalInterest" class="text-2xl font-semibold text-indigo-600">-</p>
             </div>
             <div class="bg-white p-4 rounded-xl shadow">
                 <h3 class="text-sm font-medium text-gray-500">Original Payoff Date</h3>
-                <p id="payoffDate" class="text-2xl font-semibold text-gray-600"></p>
+                <p id="payoffDate" class="text-2xl font-semibold text-gray-600">-</p>
             </div>
             <div class="bg-white p-4 rounded-xl shadow">
                 <h3 class="text-sm font-medium text-gray-500">New Payoff Date</h3>
-                <p id="newPayoffDate" class="text-2xl font-semibold text-green-600"></p>
+                <p id="newPayoffDate" class="text-2xl font-semibold text-green-600">-</p>
             </div>
         </div>
 
@@ -104,7 +216,7 @@
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Beginning Balance</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Min. Payment</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Additional Payment</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Additional/Lumpsum</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Payment</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Interest</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Principal</th>
@@ -112,8 +224,7 @@
                         </tr>
                     </thead>
                     <tbody id="amortization-body" class="bg-white divide-y divide-gray-200">
-                        <!-- Rows will be generated by JavaScript -->
-                         <tr><td colspan="9" class="text-center p-8 text-gray-500">Enter your loan details and click "Calculate" to see your payment breakdown.</td></tr>
+                         <tr><td colspan="9" class="text-center p-8 text-gray-500">Add a tab and enter loan details to get started.</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -133,11 +244,179 @@
         const totalInterestEl = document.getElementById('totalInterest');
         const payoffDateEl = document.getElementById('payoffDate');
         const newPayoffDateEl = document.getElementById('newPayoffDate');
+        const tabsContainer = document.getElementById('tabs-container');
 
-        // --- Utility Functions ---
+        // --- State Management ---
+        let state = {
+            tabs: [],
+            activeTabId: null
+        };
+
+        const saveState = () => {
+            localStorage.setItem('loanCalculatorState', JSON.stringify(state));
+        };
+
+        const loadState = () => {
+            const savedState = localStorage.getItem('loanCalculatorState');
+            if (savedState) {
+                state = JSON.parse(savedState);
+            } else {
+                addTab(false); // Add a default first tab without saving yet
+            }
+        };
+
+        const getActiveTabData = () => {
+            return state.tabs.find(tab => tab.id === state.activeTabId);
+        };
+
+        // --- Tab Management ---
+        const renderTabs = () => {
+            tabsContainer.innerHTML = '';
+            state.tabs.forEach(tab => {
+                const tabEl = document.createElement('div');
+                tabEl.className = `tab ${tab.id === state.activeTabId ? 'active' : ''}`;
+                tabEl.dataset.tabId = tab.id;
+                tabEl.innerHTML = `
+                    <span class="tab-name" contenteditable="false">${tab.name}</span>
+                    <div class="tab-actions">
+                        <div class="tab-action-btn rename-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                        </div>
+                        <div class="tab-action-btn delete-tab-btn" onclick="event.stopPropagation(); deleteTab(${tab.id});">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        </div>
+                    </div>`;
+                tabsContainer.appendChild(tabEl);
+            });
+
+            const addBtn = document.createElement('button');
+            addBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-500 hover:text-indigo-600"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>`;
+            addBtn.className = 'ml-2';
+            addBtn.onclick = () => addTab(true);
+            tabsContainer.appendChild(addBtn);
+        };
+
+        function addTab(shouldSave = true) {
+            const newTab = {
+                id: Date.now(),
+                name: `Loan ${state.tabs.length + 1}`,
+                amount: 30000,
+                apr: 5.5,
+                term: 10,
+                additionalPayments: {},
+                lumpsums: []
+            };
+            state.tabs.push(newTab);
+            state.activeTabId = newTab.id;
+            if (shouldSave) saveState();
+            renderTabs();
+            loadActiveTabDataIntoUI();
+        }
+
+        function deleteTab(tabId) {
+            const tabIndex = state.tabs.findIndex(t => t.id === tabId);
+            if (tabIndex === -1) return;
+
+            state.tabs.splice(tabIndex, 1);
+
+            if (state.activeTabId === tabId) {
+                if (state.tabs.length > 0) {
+                    const newActiveIndex = Math.max(0, tabIndex - 1);
+                    state.activeTabId = state.tabs[newActiveIndex].id;
+                } else {
+                    addTab(false);
+                }
+            }
+            
+            saveState();
+            renderTabs();
+            loadActiveTabDataIntoUI();
+        }
+
+        function switchTab(tabId) {
+            state.activeTabId = tabId;
+            saveState();
+            renderTabs();
+            loadActiveTabDataIntoUI();
+        }
+        
+        function renameTab(tabId, newName) {
+            const tab = state.tabs.find(t => t.id === tabId);
+            if(tab && newName) {
+                tab.name = newName;
+                saveState();
+            }
+        }
+        
+        function startRename(tabEl) {
+            const tabNameEl = tabEl.querySelector('.tab-name');
+            if (tabNameEl) {
+                tabNameEl.contentEditable = true;
+                tabNameEl.focus();
+                document.execCommand('selectAll', false, null);
+            }
+        }
+
+        function loadActiveTabDataIntoUI() {
+            const activeTab = getActiveTabData();
+            if (!activeTab) {
+                amortizationBody.innerHTML = `<tr><td colspan="9" class="text-center p-8 text-gray-500">Add a tab to get started.</td></tr>`;
+                return;
+            }
+            loanAmountEl.value = activeTab.amount;
+            aprEl.value = activeTab.apr;
+            loanTermEl.value = activeTab.term;
+            generateSchedule();
+        }
+
+        // --- Lumpsum & Payment Management ---
+        function addLumpsum(afterMonth) {
+            const activeTab = getActiveTabData();
+            if (!activeTab) return;
+            
+            const newLumpsum = {
+                id: Date.now(),
+                afterMonth: afterMonth,
+                amount: 1000
+            };
+            activeTab.lumpsums.push(newLumpsum);
+            activeTab.lumpsums.sort((a, b) => a.afterMonth - b.afterMonth);
+            saveState();
+            generateSchedule();
+        }
+        
+        function deleteLumpsum(id) {
+            const activeTab = getActiveTabData();
+            if (!activeTab) return;
+            activeTab.lumpsums = activeTab.lumpsums.filter(l => l.id !== id);
+            saveState();
+            generateSchedule();
+        }
+
+        function updateLumpsum(id, amount) {
+             const activeTab = getActiveTabData();
+             if (!activeTab) return;
+             const lumpsum = activeTab.lumpsums.find(l => l.id === id);
+             if (lumpsum) {
+                 lumpsum.amount = amount;
+                 saveState();
+                 generateSchedule();
+             }
+        }
+        
+        function updateAdditionalPayment(month, amount) {
+             const activeTab = getActiveTabData();
+             if (!activeTab) return;
+             for (let m = month; m <= activeTab.term * 12; m++) {
+                 activeTab.additionalPayments[m] = amount;
+             }
+             saveState();
+             generateSchedule();
+        }
+
+
+        // --- Core Calculation & Rendering Logic ---
         const formatCurrency = (num) => num.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-
-        // --- Core Calculation Logic ---
 
         function calculateMonthlyPayment(p, i, n) {
             if (i === 0) return p / n;
@@ -145,13 +424,19 @@
         }
 
         function generateSchedule() {
-            const principal = parseFloat(loanAmountEl.value);
-            const apr = parseFloat(aprEl.value);
-            const years = parseInt(loanTermEl.value);
+            const activeTab = getActiveTabData();
+            if (!activeTab) return;
+
+            activeTab.amount = parseFloat(loanAmountEl.value);
+            activeTab.apr = parseFloat(aprEl.value);
+            activeTab.term = parseInt(loanTermEl.value);
+            
+            const principal = activeTab.amount;
+            const apr = activeTab.apr;
+            const years = activeTab.term;
 
             if (isNaN(principal) || isNaN(apr) || isNaN(years) || principal <= 0 || apr < 0 || years <= 0) {
-                amortizationBody.innerHTML = `<tr><td colspan="9" class="text-center p-8 text-red-500">Please enter valid loan details.</td></tr>`;
-                summaryEl.classList.add('hidden');
+                amortizationBody.innerHTML = `<tr><td colspan="9" class="text-center p-8 text-red-500">Please enter valid loan details for this tab.</td></tr>`;
                 return;
             }
 
@@ -159,148 +444,126 @@
             const numberOfMonths = years * 12;
             const monthlyPayment = calculateMonthlyPayment(principal, monthlyInterestRate, numberOfMonths);
 
-            summaryEl.classList.remove('hidden');
             monthlyPaymentEl.textContent = formatCurrency(monthlyPayment);
 
             let currentBalance = principal;
             let totalInterestPaid = 0;
             let tableHTML = '';
+            let paymentDate = new Date();
+            paymentDate.setDate(1);
             
+            let lumpsumIndex = 0;
+            let visibleMonths = 0;
+
             for (let month = 1; month <= numberOfMonths && currentBalance > 0.01; month++) {
-                // --- UPDATED: Date calculation starts from next month ---
-                const paymentDate = new Date();
-                paymentDate.setDate(1); // Set to the 1st to avoid month-end rollover issues
-                paymentDate.setMonth(paymentDate.getMonth() + month); // Start from next month
+                while(lumpsumIndex < activeTab.lumpsums.length && activeTab.lumpsums[lumpsumIndex].afterMonth === month - 1) {
+                    const lumpsum = activeTab.lumpsums[lumpsumIndex];
+                    const lumpsumAmount = Math.min(currentBalance, lumpsum.amount);
+                    const endingBalanceLumpsum = currentBalance - lumpsumAmount;
+                    tableHTML += createLumpsumRowHTML(lumpsum, currentBalance, paymentDate, lumpsumAmount, endingBalanceLumpsum);
+                    currentBalance = endingBalanceLumpsum;
+                    lumpsumIndex++;
+                }
+                if (currentBalance < 0.01) break;
+
+                paymentDate.setMonth(paymentDate.getMonth() + 1);
                 const formattedDate = paymentDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric'});
-
                 const interestForMonth = currentBalance * monthlyInterestRate;
-                const additionalPayment = 0;
-                const totalPayment = monthlyPayment + additionalPayment;
-                const principalPaid = totalPayment - interestForMonth;
-                const endingBalance = currentBalance - principalPaid;
-                totalInterestPaid += interestForMonth;
-
-                tableHTML += `
-                    <tr data-month="${month}" class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${month}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${formattedDate}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(currentBalance)}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(monthlyPayment)}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                             <div class="input-group">
-                                <span>$</span>
-                                <input type="number" min="0" step="10" value="0" class="additional-payment-input w-24 bg-gray-100 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                            </div>
-                        </td>
-                        <td class="total-payment px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${formatCurrency(totalPayment)}</td>
-                        <td class="interest-paid px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(interestForMonth)}</td>
-                        <td class="principal-paid px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(principalPaid)}</td>
-                        <td class="ending-balance px-6 py-4 whitespace-nowrap text-sm font-semibold text-indigo-700">${formatCurrency(endingBalance)}</td>
-                    </tr>
-                `;
-                currentBalance = endingBalance;
-            }
-            
-            amortizationBody.innerHTML = tableHTML;
-
-            totalInterestEl.textContent = formatCurrency(totalInterestPaid);
-            const payoffDate = new Date();
-            payoffDate.setDate(1);
-            payoffDate.setMonth(payoffDate.getMonth() + numberOfMonths);
-            const formattedPayoffDate = payoffDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
-            payoffDateEl.textContent = formattedPayoffDate;
-            newPayoffDateEl.textContent = formattedPayoffDate;
-            
-            document.querySelectorAll('.additional-payment-input').forEach(input => {
-                input.addEventListener('change', recalculateFromRow);
-            });
-        }
-        
-        function recalculateFromRow(event) {
-            const changedInput = event.target;
-            const startRow = changedInput.closest('tr');
-            const startMonth = parseInt(startRow.dataset.month);
-            const allRows = Array.from(amortizationBody.querySelectorAll('tr'));
-            const newAdditionalPaymentValue = changedInput.value;
-
-            for (let i = startMonth - 1; i < allRows.length; i++) {
-                const row = allRows[i];
-                const input = row.querySelector('.additional-payment-input');
-                if (input) {
-                    input.value = newAdditionalPaymentValue;
-                }
-            }
-            
-            const apr = parseFloat(aprEl.value);
-            const monthlyInterestRate = apr / 100 / 12;
-            const monthlyPayment = parseFloat(monthlyPaymentEl.textContent.replace(/[^0-9.-]+/g,""));
-
-            let currentBalance = startMonth === 1 
-                ? parseFloat(loanAmountEl.value) 
-                : parseFloat(allRows[startMonth - 2].querySelector('.ending-balance').textContent.replace(/[^0-9.-]+/g,""));
-
-            let totalInterestPaidRecalc = 0;
-            for (let i = 0; i < startMonth - 1; i++) {
-                 totalInterestPaidRecalc += parseFloat(allRows[i].querySelector('.interest-paid').textContent.replace(/[^0-9.-]+/g,""));
-            }
-
-            for (let i = startMonth - 1; i < allRows.length; i++) {
-                const row = allRows[i];
-                if (currentBalance < 0.01) {
-                    row.style.display = 'none';
-                    continue;
-                }
-                row.style.display = 'table-row';
-
-                const additionalPayment = parseFloat(row.querySelector('.additional-payment-input').value) || 0;
-                const totalPayment = monthlyPayment + additionalPayment;
-                const interestForMonth = currentBalance * monthlyInterestRate;
-                const principalPaid = Math.min(currentBalance, totalPayment - interestForMonth);
+                const additionalPayment = activeTab.additionalPayments[month] || 0;
+                const totalMonthlyPayment = monthlyPayment + additionalPayment;
+                const principalPaid = Math.min(currentBalance, totalMonthlyPayment - interestForMonth);
                 const actualTotalPayment = principalPaid + interestForMonth;
                 const endingBalance = currentBalance - principalPaid;
                 
-                totalInterestPaidRecalc += interestForMonth;
-
-                row.querySelector('td:nth-child(3)').textContent = formatCurrency(currentBalance); // Beginning Balance is now 3rd TD
-                row.querySelector('.total-payment').textContent = formatCurrency(actualTotalPayment);
-                row.querySelector('.interest-paid').textContent = formatCurrency(interestForMonth);
-                row.querySelector('.principal-paid').textContent = formatCurrency(principalPaid);
-                row.querySelector('.ending-balance').textContent = formatCurrency(endingBalance);
-                
+                totalInterestPaid += interestForMonth;
+                tableHTML += createMonthlyRowHTML(month, formattedDate, currentBalance, monthlyPayment, additionalPayment, actualTotalPayment, interestForMonth, principalPaid, endingBalance);
                 currentBalance = endingBalance;
+                visibleMonths++;
             }
             
-            let visibleMonths = 0;
-            allRows.forEach(row => {
-                if (row.style.display !== 'none') {
-                    visibleMonths++;
-                }
-            });
+            amortizationBody.innerHTML = tableHTML || `<tr><td colspan="9" class="text-center p-8 text-gray-500">Loan is fully paid or invalid.</td></tr>`;
 
+            totalInterestEl.textContent = formatCurrency(totalInterestPaid);
+            const originalPayoffDate = new Date();
+            originalPayoffDate.setDate(1);
+            originalPayoffDate.setMonth(originalPayoffDate.getMonth() + numberOfMonths);
+            payoffDateEl.textContent = originalPayoffDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+            
             const newPayoffDate = new Date();
             newPayoffDate.setDate(1);
             newPayoffDate.setMonth(newPayoffDate.getMonth() + visibleMonths);
             newPayoffDateEl.textContent = newPayoffDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
-            totalInterestEl.textContent = formatCurrency(totalInterestPaidRecalc);
+            
+            saveState();
+            attachRowEventListeners();
+        }
+        
+        function createMonthlyRowHTML(month, date, balance, minPay, addPay, totalPay, interest, principal, endBalance) {
+            const lumpsumButtonsHTML = `
+                <button class="lumpsum-btn lumpsum-above" onclick="addLumpsum(${month - 1})">Add Lumpsum</button>
+                <button class="lumpsum-btn lumpsum-below" onclick="addLumpsum(${month})">Add Lumpsum</button>
+            `;
+            const createCell = (content) => `<td class="px-6 py-4 whitespace-nowrap text-sm relative">${content}${lumpsumButtonsHTML}</td>`;
+
+            return `
+                <tr data-month="${month}" data-type="monthly">
+                    ${createCell(`<span class="text-gray-500">${month}</span>`)}
+                    ${createCell(`<span class="text-gray-500">${date}</span>`)}
+                    ${createCell(`<span class="text-gray-900">${formatCurrency(balance)}</span>`)}
+                    ${createCell(`<span class="text-gray-900">${formatCurrency(minPay)}</span>`)}
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 relative">
+                        <div class="input-group">
+                            <span>$</span>
+                            <input type="number" min="0" step="10" value="${addPay}" class="additional-payment-input w-24 bg-gray-100 border-gray-300 rounded-md shadow-sm">
+                        </div>
+                        ${lumpsumButtonsHTML}
+                    </td>
+                    ${createCell(`<span class="font-medium text-gray-900">${formatCurrency(totalPay)}</span>`)}
+                    ${createCell(`<span class="text-gray-900">${formatCurrency(interest)}</span>`)}
+                    ${createCell(`<span class="text-gray-900">${formatCurrency(principal)}</span>`)}
+                    ${createCell(`<span class="font-semibold text-indigo-700">${formatCurrency(endBalance)}</span>`)}
+                </tr>`;
         }
 
+        function createLumpsumRowHTML(lumpsum, balance, date, amount, endBalance) {
+             const formattedDate = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric'});
+             return `
+                <tr data-lumpsum-id="${lumpsum.id}" data-type="lumpsum" class="lumpsum-row">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-800">Lumpsum</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${formattedDate}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(balance)}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 relative">
+                        -
+                        <button class="delete-lumpsum-btn" onclick="deleteLumpsum(${lumpsum.id})">Delete</button>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <div class="input-group">
+                            <span>$</span>
+                            <input type="number" min="0" step="10" value="${amount}" class="lumpsum-payment-input w-24 bg-blue-100 border-blue-300 rounded-md shadow-sm">
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${formatCurrency(amount)}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(0)}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(amount)}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-indigo-700">${formatCurrency(endBalance)}</td>
+                </tr>`;
+        }
+
+
         function downloadAsExcel() {
+            const activeTab = getActiveTabData();
+            if (!activeTab) return;
             const table = document.querySelector('table');
             const headers = Array.from(table.querySelectorAll('thead th')).map(th => th.textContent);
-            const rows = Array.from(table.querySelectorAll('tbody tr'));
-            
             let csvContent = headers.join(',') + '\n';
 
-            rows.forEach(row => {
-                if (row.style.display === 'none') return;
-                
+            Array.from(amortizationBody.querySelectorAll('tr')).forEach(row => {
                 const cells = Array.from(row.querySelectorAll('td'));
                 const rowData = cells.map((cell, index) => {
-                    // --- UPDATED: Index is now 4 for Additional Payment column ---
-                    if (index === 4) { 
-                        return cell.querySelector('input').value;
+                    let cellText = cell.textContent.replace(/[\$,]/g, '').trim();
+                    if (index === 4) { // Additional/Lumpsum column
+                        cellText = cell.querySelector('input')?.value || '0';
                     }
-                    let cellText = cell.textContent.replace(/[\$,]/g, '');
                     return `"${cellText}"`;
                 });
                 csvContent += rowData.join(',') + '\n';
@@ -308,23 +571,79 @@
             
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
-            if (link.download !== undefined) {
-                const url = URL.createObjectURL(blob);
-                link.setAttribute('href', url);
-                link.setAttribute('download', 'student_loan_schedule.csv');
-                link.style.visibility = 'hidden';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            }
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `${activeTab.name.replace(/ /g, '_')}_schedule.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
         // --- Event Listeners ---
+        function attachRowEventListeners() {
+            document.querySelectorAll('.additional-payment-input').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    const month = parseInt(e.target.closest('tr').dataset.month);
+                    const amount = parseFloat(e.target.value) || 0;
+                    updateAdditionalPayment(month, amount);
+                });
+            });
+            document.querySelectorAll('.lumpsum-payment-input').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    const id = parseInt(e.target.closest('tr').dataset.lumpsumId);
+                    const amount = parseFloat(e.target.value) || 0;
+                    updateLumpsum(id, amount);
+                });
+            });
+        }
+
         calculateBtn.addEventListener('click', generateSchedule);
         downloadBtn.addEventListener('click', downloadAsExcel);
         
+        tabsContainer.addEventListener('click', (e) => {
+            const tabEl = e.target.closest('.tab');
+            if (!tabEl) return;
+
+            const renameBtn = e.target.closest('.rename-btn');
+            const deleteBtn = e.target.closest('.delete-tab-btn');
+
+            if (renameBtn) {
+                e.stopPropagation();
+                startRename(tabEl);
+                return;
+            }
+            if (deleteBtn) {
+                // The deleteTab function is called directly from the onclick attribute
+                e.stopPropagation();
+                return;
+            }
+            
+            switchTab(Number(tabEl.dataset.tabId));
+        });
+
+        tabsContainer.addEventListener('blur', (e) => {
+            const tabNameEl = e.target.closest('.tab-name');
+            if (tabNameEl && tabNameEl.contentEditable === 'true') {
+                tabNameEl.contentEditable = false;
+                const tabId = Number(e.target.closest('.tab').dataset.tabId);
+                renameTab(tabId, tabNameEl.textContent.trim());
+            }
+        }, true);
+
+        tabsContainer.addEventListener('keydown', (e) => {
+             const tabNameEl = e.target.closest('.tab-name');
+             if (tabNameEl && tabNameEl.contentEditable === 'true' && e.key === 'Enter') {
+                 e.preventDefault();
+                 tabNameEl.blur();
+             }
+        });
+
         // --- Initial Load ---
-        window.addEventListener('load', generateSchedule);
+        window.addEventListener('load', () => {
+            loadState();
+            renderTabs();
+            loadActiveTabDataIntoUI();
+        });
 
     </script>
 </body>
