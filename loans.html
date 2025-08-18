@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Loan Payment Estimator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .input-group {
+            position: relative;
+        }
+        .input-group span {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+        }
+        .input-group input {
+            padding-left: 28px;
+        }
+        .table-cell-input {
+            width: 100px; /* Adjust width as needed */
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-7xl">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-900">Student Loan Payment Estimator</h1>
+            <p class="mt-2 text-md text-gray-600">Enter your loan details to see a full amortization schedule and the impact of extra payments.</p>
+        </header>
+
+        <div class="bg-white p-6 rounded-2xl shadow-lg mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                <!-- Loan Amount Input -->
+                <div>
+                    <label for="loanAmount" class="block text-sm font-medium text-gray-700 mb-1">Loan Amount</label>
+                    <div class="input-group">
+                        <span>$</span>
+                        <input type="number" id="loanAmount" value="30000" class="w-full bg-gray-100 border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                </div>
+                <!-- APR Input -->
+                <div>
+                    <label for="apr" class="block text-sm font-medium text-gray-700 mb-1">Annual Interest Rate (APR)</label>
+                    <div class="relative">
+                        <input type="number" id="apr" value="5.5" step="0.01" class="w-full bg-gray-100 border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 pr-8">
+                        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">%</span>
+                    </div>
+                </div>
+                <!-- Loan Term Input -->
+                <div>
+                    <label for="loanTerm" class="block text-sm font-medium text-gray-700 mb-1">Loan Term (Years)</label>
+                    <input type="number" id="loanTerm" value="10" class="w-full bg-gray-100 border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <!-- Calculate Button -->
+                <div class="self-end">
+                    <button id="calculateBtn" class="w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
+                        Calculate
+                    </button>
+                </div>
+                 <!-- Download Button -->
+                <div class="self-end">
+                    <button id="downloadBtn" class="w-full bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 ease-in-out">
+                        Download as Excel (.csv)
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Summary Section -->
+        <div id="summary" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 text-center hidden">
+            <div class="bg-white p-4 rounded-xl shadow">
+                <h3 class="text-sm font-medium text-gray-500">Minimum Monthly Payment</h3>
+                <p id="monthlyPayment" class="text-2xl font-semibold text-indigo-600"></p>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow">
+                <h3 class="text-sm font-medium text-gray-500">Total Interest Paid</h3>
+                <p id="totalInterest" class="text-2xl font-semibold text-indigo-600"></p>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow">
+                <h3 class="text-sm font-medium text-gray-500">Original Payoff Date</h3>
+                <p id="payoffDate" class="text-2xl font-semibold text-gray-600"></p>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow">
+                <h3 class="text-sm font-medium text-gray-500">New Payoff Date</h3>
+                <p id="newPayoffDate" class="text-2xl font-semibold text-green-600"></p>
+            </div>
+        </div>
+
+        <!-- Amortization Table -->
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Month</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Beginning Balance</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Min. Payment</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Additional Payment</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Payment</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Interest</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Principal</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ending Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody id="amortization-body" class="bg-white divide-y divide-gray-200">
+                        <!-- Rows will be generated by JavaScript -->
+                         <tr><td colspan="9" class="text-center p-8 text-gray-500">Enter your loan details and click "Calculate" to see your payment breakdown.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- DOM Element References ---
+        const loanAmountEl = document.getElementById('loanAmount');
+        const aprEl = document.getElementById('apr');
+        const loanTermEl = document.getElementById('loanTerm');
+        const calculateBtn = document.getElementById('calculateBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const amortizationBody = document.getElementById('amortization-body');
+        const summaryEl = document.getElementById('summary');
+        const monthlyPaymentEl = document.getElementById('monthlyPayment');
+        const totalInterestEl = document.getElementById('totalInterest');
+        const payoffDateEl = document.getElementById('payoffDate');
+        const newPayoffDateEl = document.getElementById('newPayoffDate');
+
+        // --- Utility Functions ---
+        const formatCurrency = (num) => num.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+
+        // --- Core Calculation Logic ---
+
+        function calculateMonthlyPayment(p, i, n) {
+            if (i === 0) return p / n;
+            return p * (i * Math.pow(1 + i, n)) / (Math.pow(1 + i, n) - 1);
+        }
+
+        function generateSchedule() {
+            const principal = parseFloat(loanAmountEl.value);
+            const apr = parseFloat(aprEl.value);
+            const years = parseInt(loanTermEl.value);
+
+            if (isNaN(principal) || isNaN(apr) || isNaN(years) || principal <= 0 || apr < 0 || years <= 0) {
+                amortizationBody.innerHTML = `<tr><td colspan="9" class="text-center p-8 text-red-500">Please enter valid loan details.</td></tr>`;
+                summaryEl.classList.add('hidden');
+                return;
+            }
+
+            const monthlyInterestRate = apr / 100 / 12;
+            const numberOfMonths = years * 12;
+            const monthlyPayment = calculateMonthlyPayment(principal, monthlyInterestRate, numberOfMonths);
+
+            summaryEl.classList.remove('hidden');
+            monthlyPaymentEl.textContent = formatCurrency(monthlyPayment);
+
+            let currentBalance = principal;
+            let totalInterestPaid = 0;
+            let tableHTML = '';
+            
+            for (let month = 1; month <= numberOfMonths && currentBalance > 0.01; month++) {
+                // --- UPDATED: Date calculation starts from next month ---
+                const paymentDate = new Date();
+                paymentDate.setDate(1); // Set to the 1st to avoid month-end rollover issues
+                paymentDate.setMonth(paymentDate.getMonth() + month); // Start from next month
+                const formattedDate = paymentDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric'});
+
+                const interestForMonth = currentBalance * monthlyInterestRate;
+                const additionalPayment = 0;
+                const totalPayment = monthlyPayment + additionalPayment;
+                const principalPaid = totalPayment - interestForMonth;
+                const endingBalance = currentBalance - principalPaid;
+                totalInterestPaid += interestForMonth;
+
+                tableHTML += `
+                    <tr data-month="${month}" class="hover:bg-gray-50">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${month}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${formattedDate}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(currentBalance)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(monthlyPayment)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                             <div class="input-group">
+                                <span>$</span>
+                                <input type="number" min="0" step="10" value="0" class="additional-payment-input w-24 bg-gray-100 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                        </td>
+                        <td class="total-payment px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${formatCurrency(totalPayment)}</td>
+                        <td class="interest-paid px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(interestForMonth)}</td>
+                        <td class="principal-paid px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(principalPaid)}</td>
+                        <td class="ending-balance px-6 py-4 whitespace-nowrap text-sm font-semibold text-indigo-700">${formatCurrency(endingBalance)}</td>
+                    </tr>
+                `;
+                currentBalance = endingBalance;
+            }
+            
+            amortizationBody.innerHTML = tableHTML;
+
+            totalInterestEl.textContent = formatCurrency(totalInterestPaid);
+            const payoffDate = new Date();
+            payoffDate.setDate(1);
+            payoffDate.setMonth(payoffDate.getMonth() + numberOfMonths);
+            const formattedPayoffDate = payoffDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+            payoffDateEl.textContent = formattedPayoffDate;
+            newPayoffDateEl.textContent = formattedPayoffDate;
+            
+            document.querySelectorAll('.additional-payment-input').forEach(input => {
+                input.addEventListener('change', recalculateFromRow);
+            });
+        }
+        
+        function recalculateFromRow(event) {
+            const changedInput = event.target;
+            const startRow = changedInput.closest('tr');
+            const startMonth = parseInt(startRow.dataset.month);
+            const allRows = Array.from(amortizationBody.querySelectorAll('tr'));
+            const newAdditionalPaymentValue = changedInput.value;
+
+            for (let i = startMonth - 1; i < allRows.length; i++) {
+                const row = allRows[i];
+                const input = row.querySelector('.additional-payment-input');
+                if (input) {
+                    input.value = newAdditionalPaymentValue;
+                }
+            }
+            
+            const apr = parseFloat(aprEl.value);
+            const monthlyInterestRate = apr / 100 / 12;
+            const monthlyPayment = parseFloat(monthlyPaymentEl.textContent.replace(/[^0-9.-]+/g,""));
+
+            let currentBalance = startMonth === 1 
+                ? parseFloat(loanAmountEl.value) 
+                : parseFloat(allRows[startMonth - 2].querySelector('.ending-balance').textContent.replace(/[^0-9.-]+/g,""));
+
+            let totalInterestPaidRecalc = 0;
+            for (let i = 0; i < startMonth - 1; i++) {
+                 totalInterestPaidRecalc += parseFloat(allRows[i].querySelector('.interest-paid').textContent.replace(/[^0-9.-]+/g,""));
+            }
+
+            for (let i = startMonth - 1; i < allRows.length; i++) {
+                const row = allRows[i];
+                if (currentBalance < 0.01) {
+                    row.style.display = 'none';
+                    continue;
+                }
+                row.style.display = 'table-row';
+
+                const additionalPayment = parseFloat(row.querySelector('.additional-payment-input').value) || 0;
+                const totalPayment = monthlyPayment + additionalPayment;
+                const interestForMonth = currentBalance * monthlyInterestRate;
+                const principalPaid = Math.min(currentBalance, totalPayment - interestForMonth);
+                const actualTotalPayment = principalPaid + interestForMonth;
+                const endingBalance = currentBalance - principalPaid;
+                
+                totalInterestPaidRecalc += interestForMonth;
+
+                row.querySelector('td:nth-child(3)').textContent = formatCurrency(currentBalance); // Beginning Balance is now 3rd TD
+                row.querySelector('.total-payment').textContent = formatCurrency(actualTotalPayment);
+                row.querySelector('.interest-paid').textContent = formatCurrency(interestForMonth);
+                row.querySelector('.principal-paid').textContent = formatCurrency(principalPaid);
+                row.querySelector('.ending-balance').textContent = formatCurrency(endingBalance);
+                
+                currentBalance = endingBalance;
+            }
+            
+            let visibleMonths = 0;
+            allRows.forEach(row => {
+                if (row.style.display !== 'none') {
+                    visibleMonths++;
+                }
+            });
+
+            const newPayoffDate = new Date();
+            newPayoffDate.setDate(1);
+            newPayoffDate.setMonth(newPayoffDate.getMonth() + visibleMonths);
+            newPayoffDateEl.textContent = newPayoffDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+            totalInterestEl.textContent = formatCurrency(totalInterestPaidRecalc);
+        }
+
+        function downloadAsExcel() {
+            const table = document.querySelector('table');
+            const headers = Array.from(table.querySelectorAll('thead th')).map(th => th.textContent);
+            const rows = Array.from(table.querySelectorAll('tbody tr'));
+            
+            let csvContent = headers.join(',') + '\n';
+
+            rows.forEach(row => {
+                if (row.style.display === 'none') return;
+                
+                const cells = Array.from(row.querySelectorAll('td'));
+                const rowData = cells.map((cell, index) => {
+                    // --- UPDATED: Index is now 4 for Additional Payment column ---
+                    if (index === 4) { 
+                        return cell.querySelector('input').value;
+                    }
+                    let cellText = cell.textContent.replace(/[\$,]/g, '');
+                    return `"${cellText}"`;
+                });
+                csvContent += rowData.join(',') + '\n';
+            });
+            
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            if (link.download !== undefined) {
+                const url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', 'student_loan_schedule.csv');
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
+
+        // --- Event Listeners ---
+        calculateBtn.addEventListener('click', generateSchedule);
+        downloadBtn.addEventListener('click', downloadAsExcel);
+        
+        // --- Initial Load ---
+        window.addEventListener('load', generateSchedule);
+
+    </script>
+</body>
+</html>
