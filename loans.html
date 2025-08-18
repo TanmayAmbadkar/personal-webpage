@@ -11,6 +11,8 @@
     <meta name="author" content="Your Name or Company">
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- NEW: LZ-String library for compressing data into a URL-safe string -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <meta name="theme-color" content="#4f46e5"/>
     <style>
@@ -36,7 +38,7 @@
             border-bottom: 3px solid transparent;
             transition: all 0.2s ease-in-out;
             position: relative;
-            padding-right: 55px; /* Space for action buttons */
+            padding-right: 80px; /* Space for action buttons */
         }
         .tab.active {
             border-bottom-color: #4f46e5; /* indigo-600 */
@@ -152,6 +154,24 @@
         .highlight-hike td {
              background-color: #dcfce7; /* green-100 */
         }
+        /* Clipboard Message */
+        #clipboard-message {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #1f2937;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            z-index: 10001;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            pointer-events: none;
+        }
+        #clipboard-message.show {
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
@@ -170,7 +190,7 @@
         </div>
 
         <div class="bg-white p-6 rounded-2xl shadow-lg mb-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 <!-- Loan Amount, APR, Term Inputs -->
                 <div>
                     <label for="loanAmount" class="block text-sm font-medium text-gray-700 mb-1">Loan Amount</label>
@@ -190,41 +210,42 @@
                     <label for="loanTerm" class="block text-sm font-medium text-gray-700 mb-1">Loan Term (Years)</label>
                     <input type="number" id="loanTerm" value="10" class="w-full bg-gray-100 border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 px-3">
                 </div>
-                <div class="self-end">
-                    <button id="calculateBtn" class="w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-indigo-700">
-                        Calculate
-                    </button>
-                </div>
-                <div class="self-end">
-                    <button id="downloadBtn" class="w-full bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-green-700">
-                        Download csv
-                    </button>
-                </div>
             </div>
             <!-- Advanced Payoff Strategy Section -->
-            <!-- Advanced Payoff Strategy Section -->
-<div class="mt-6 pt-6 border-t border-gray-200">
-    <h3 class="text-lg font-medium text-gray-900 mb-4">Advanced Payoff Strategy</h3>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-            <label for="extraPaymentsPerYear" class="flex items-center text-sm font-medium text-gray-700 mb-1">
-                <span class="inline-block w-3 h-3 bg-yellow-100 border border-yellow-300 rounded-sm mr-2"></span>
-                <span>Number of Extra Payments in a Year</span>
-            </label>
-            <input type="number" id="extraPaymentsPerYear" min="0" value="0" placeholder="e.g., 1" class="w-full bg-gray-100 border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 px-3">
-        </div>
-        <div>
-            <label for="annualHikePercent" class="flex items-center text-sm font-medium text-gray-700 mb-1">
-                 <span class="inline-block w-3 h-3 bg-green-100 border border-green-300 rounded-sm mr-2"></span>
-                <span>Hike Payment by % Every Year</span>
-            </label>
-            <div class="relative">
-                <input type="number" id="annualHikePercent" min="0" value="0" class="w-full bg-gray-100 border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 pr-8 px-3">
-                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">%</span>
+            <div class="pt-6 border-t border-gray-200">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">Advanced Payoff Strategy</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label for="extraPaymentsPerYear" class="flex items-center text-sm font-medium text-gray-700 mb-1">
+                            <span class="inline-block w-3 h-3 bg-yellow-100 border border-yellow-300 rounded-sm mr-2"></span>
+                            <span>Number of Extra Payments in a Year</span>
+                        </label>
+                        <input type="number" id="extraPaymentsPerYear" min="0" value="0" placeholder="e.g., 1" class="w-full bg-gray-100 border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 px-3">
+                    </div>
+                    <div>
+                        <label for="annualHikePercent" class="flex items-center text-sm font-medium text-gray-700 mb-1">
+                            <span class="inline-block w-3 h-3 bg-green-100 border border-green-300 rounded-sm mr-2"></span>
+                            <span>Hike Payment by % Every Year</span>
+                        </label>
+                        <div class="relative">
+                            <input type="number" id="annualHikePercent" min="0" value="0" class="w-full bg-gray-100 border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 pr-8 px-3">
+                            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">%</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-</div>
+             <!-- Action Buttons -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-gray-200">
+                <button id="calculateBtn" class="w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-indigo-700">
+                    Calculate
+                </button>
+                <button id="downloadBtn" class="w-full bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-green-700">
+                    Download csv
+                </button>
+                <button id="shareBtn" class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-700">
+                    Share
+                </button>
+            </div>
         </div>
         
         <!-- Summary Section -->
@@ -271,6 +292,9 @@
             </div>
         </div>
     </div>
+    
+    <!-- Clipboard Message -->
+    <div id="clipboard-message">Link copied to clipboard!</div>
 
     <script>
         // --- SEO & AI Search Tools ---
@@ -334,6 +358,7 @@
             const loanTermEl = document.getElementById('loanTerm');
             const calculateBtn = document.getElementById('calculateBtn');
             const downloadBtn = document.getElementById('downloadBtn');
+            const shareBtn = document.getElementById('shareBtn');
             const amortizationBody = document.getElementById('amortization-body');
             const summaryEl = document.getElementById('summary');
             const monthlyPaymentEl = document.getElementById('monthlyPayment');
@@ -344,6 +369,7 @@
             const loanAmountCurrencySymbolEl = document.getElementById('loan-amount-currency-symbol');
             const extraPaymentsPerYearEl = document.getElementById('extraPaymentsPerYear');
             const annualHikePercentEl = document.getElementById('annualHikePercent');
+            const clipboardMessageEl = document.getElementById('clipboard-message');
 
             // --- Currency Management ---
             let userCurrency = 'USD';
@@ -400,6 +426,9 @@
                     tabEl.innerHTML = `
                         <span class="tab-name" contenteditable="false">${tab.name}</span>
                         <div class="tab-actions">
+                            <div class="tab-action-btn share-btn" onclick="event.stopPropagation(); shareTab(${tab.id});">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
+                            </div>
                             <div class="tab-action-btn rename-btn">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
                             </div>
@@ -417,8 +446,8 @@
                 tabsContainer.appendChild(addBtn);
             };
 
-            function addTab(shouldSave = true) {
-                const newTab = {
+            function addTab(shouldSave = true, tabData = null) {
+                const newTab = tabData ? { ...tabData, id: Date.now() } : {
                     id: Date.now(),
                     name: `Loan ${state.tabs.length + 1}`,
                     amount: 30000,
@@ -489,6 +518,44 @@
                 extraPaymentsPerYearEl.value = activeTab.extraPaymentsPerYear || 0;
                 annualHikePercentEl.value = activeTab.annualHikePercent || 0;
                 generateSchedule();
+            }
+
+            // --- Shareable Link Logic ---
+            function shareTab(tabId) {
+                const tabData = state.tabs.find(t => t.id === tabId);
+                if (!tabData) return;
+                const dataToShare = { ...tabData };
+                delete dataToShare.id;
+                const jsonString = JSON.stringify(dataToShare);
+                const compressedToken = LZString.compressToEncodedURIComponent(jsonString);
+                const shareUrl = new URL(window.location.href);
+                shareUrl.searchParams.set('loan', compressedToken);
+                const dummy = document.createElement('textarea');
+                document.body.appendChild(dummy);
+                dummy.value = shareUrl.href;
+                dummy.select();
+                document.execCommand('copy');
+                document.body.removeChild(dummy);
+                clipboardMessageEl.classList.add('show');
+                setTimeout(() => {
+                    clipboardMessageEl.classList.remove('show');
+                }, 2000);
+            }
+
+            function loadFromURL() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const loanDataToken = urlParams.get('loan');
+                if (loanDataToken) {
+                    try {
+                        const jsonString = LZString.decompressFromEncodedURIComponent(loanDataToken);
+                        const sharedTabData = JSON.parse(jsonString);
+                        sharedTabData.name = "Imported Loan";
+                        addTab(true, sharedTabData);
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                    } catch (error) {
+                        console.error("Failed to decode shared loan data:", error);
+                    }
+                }
             }
 
             // --- Lumpsum & Payment Management ---
@@ -691,6 +758,12 @@
 
             calculateBtn.addEventListener('click', generateSchedule);
             downloadBtn.addEventListener('click', downloadAsExcel);
+            shareBtn.addEventListener('click', () => {
+                const activeTab = getActiveTabData();
+                if (activeTab) {
+                    shareTab(activeTab.id);
+                }
+            });
             extraPaymentsPerYearEl.addEventListener('change', generateSchedule);
             annualHikePercentEl.addEventListener('change', generateSchedule);
             
@@ -700,6 +773,7 @@
                 const renameBtn = e.target.closest('.rename-btn');
                 if (renameBtn) { e.stopPropagation(); startRename(tabEl); return; }
                 if (e.target.closest('.delete-tab-btn')) { e.stopPropagation(); return; }
+                if (e.target.closest('.share-btn')) { e.stopPropagation(); return; }
                 switchTab(Number(tabEl.dataset.tabId));
             });
 
@@ -750,6 +824,7 @@
                 const currencySymbol = formatCurrency(0).replace(/[\d\.\s,]/g, '');
                 loanAmountCurrencySymbolEl.textContent = currencySymbol;
                 loadState();
+                loadFromURL();
                 renderTabs();
                 loadActiveTabDataIntoUI();
             });
