@@ -103,8 +103,14 @@
             background-color: #9ca3af; /* gray-400 */
             cursor: not-allowed;
         }
-        tr[data-type="monthly"] td:hover .lumpsum-btn {
-            display: block; /* Show on cell hover */
+        /* --- NEW LOGIC FOR HOVER vs CLICK --- */
+        /* Desktop: Show on cell hover */
+        .desktop-device tr[data-type="monthly"] td:hover .lumpsum-btn {
+            display: block; 
+        }
+        /* Mobile: Show when row is active */
+        .touch-device tr[data-type="monthly"].lumpsum-active td .lumpsum-btn {
+            display: block;
         }
         .lumpsum-above {
             top: 0;
@@ -641,7 +647,6 @@
                 return;
             }
             if (deleteBtn) {
-                // The deleteTab function is called directly from the onclick attribute
                 e.stopPropagation();
                 return;
             }
@@ -665,6 +670,44 @@
                  tabNameEl.blur();
              }
         });
+
+        // --- NEW: Mobile/Touch specific event handling ---
+        const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        
+        if (isTouchDevice) {
+            document.body.classList.add('touch-device');
+
+            amortizationBody.addEventListener('click', (e) => {
+                const row = e.target.closest('tr[data-type="monthly"]');
+                if (!row) return;
+
+                // If a button was clicked, let it do its action
+                if (e.target.closest('.lumpsum-btn')) {
+                    return;
+                }
+                
+                // Remove active class from any other row
+                const currentlyActive = document.querySelector('.lumpsum-active');
+                if (currentlyActive && currentlyActive !== row) {
+                    currentlyActive.classList.remove('lumpsum-active');
+                }
+                
+                // Toggle the class on the clicked row
+                row.classList.toggle('lumpsum-active');
+            });
+
+            // Global click to close any active row
+            document.addEventListener('click', (e) => {
+                const activeRow = document.querySelector('.lumpsum-active');
+                if (activeRow && !activeRow.contains(e.target)) {
+                    activeRow.classList.remove('lumpsum-active');
+                }
+            });
+
+        } else {
+            document.body.classList.add('desktop-device');
+        }
+
 
         // --- Initial Load ---
         window.addEventListener('load', () => {
