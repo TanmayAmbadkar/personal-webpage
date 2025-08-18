@@ -6,6 +6,7 @@
     <title>Multi-Loan Payment Estimator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#4f46e5"/>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -97,6 +98,10 @@
         }
         .lumpsum-btn:hover {
             background-color: #4338ca;
+        }
+        .lumpsum-btn:disabled {
+            background-color: #9ca3af; /* gray-400 */
+            cursor: not-allowed;
         }
         tr[data-type="monthly"] td:hover .lumpsum-btn {
             display: block; /* Show on cell hover */
@@ -232,6 +237,26 @@
     </div>
 
     <script>
+        // --- PWA Setup ---
+        const setupPWA = () => {
+            const manifest = {
+                "name": "Multi-Loan Payment Estimator", "short_name": "LoanCalc", "start_url": ".", "display": "standalone", "background_color": "#f9fafb", "theme_color": "#4f46e5", "description": "A powerful, offline-first student loan calculator with tabs.",
+                "icons": [{"src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTIgMTkyIj48cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgcng9IjM4LjQiIGZpbGw9IiM0ZjQ2ZTUiLz48dGV4dCB4PSI5NiIgeT0iMTM1IiBmb250LXNpemU9IjEwMCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9ImJvbGQiPiQ8L3RleHQ+PC9zdmc+", "sizes": "192x192", "type": "image/svg+xml"}, {"src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEwMi40IiBmaWxsPSIjNGY0NmU1IiLz48dGV4dCB4PSIyNTYiIHk9IjM2NSIgZm9udC1zaXplPSIyODAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSJib2xkIj4kPC90ZXh0Pjwvc3ZnPg==", "sizes": "512x512", "type": "image/svg+xml"}]
+            };
+            const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+            const manifestUrl = URL.createObjectURL(manifestBlob);
+            const linkEl = document.createElement('link');
+            linkEl.rel = 'manifest';
+            linkEl.href = manifestUrl;
+            document.head.appendChild(linkEl);
+            if ('serviceWorker' in navigator) {
+                const swContent = `const CACHE_NAME = 'loan-calculator-cache-v1'; const urlsToCache = ['${location.href}']; self.addEventListener('install', event => { event.waitUntil( caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache)) ); }); self.addEventListener('fetch', event => { event.respondWith( caches.match(event.request).then(response => response || fetch(event.request)) ); });`;
+                const swBlob = new Blob([swContent], { type: 'application/javascript' });
+                const swUrl = URL.createObjectURL(swBlob);
+                navigator.serviceWorker.register(swUrl).then(reg => console.log('SW registered!', reg)).catch(err => console.log('SW registration failed: ', err));
+            }
+        };
+
         // --- DOM Element References ---
         const loanAmountEl = document.getElementById('loanAmount');
         const aprEl = document.getElementById('apr');
@@ -476,7 +501,7 @@
                 const endingBalance = currentBalance - principalPaid;
                 
                 totalInterestPaid += interestForMonth;
-                tableHTML += createMonthlyRowHTML(month, formattedDate, currentBalance, monthlyPayment, additionalPayment, actualTotalPayment, interestForMonth, principalPaid, endingBalance);
+                tableHTML += createMonthlyRowHTML(activeTab, month, formattedDate, currentBalance, monthlyPayment, additionalPayment, actualTotalPayment, interestForMonth, principalPaid, endingBalance);
                 currentBalance = endingBalance;
                 visibleMonths++;
             }
@@ -498,10 +523,13 @@
             attachRowEventListeners();
         }
         
-        function createMonthlyRowHTML(month, date, balance, minPay, addPay, totalPay, interest, principal, endBalance) {
+        function createMonthlyRowHTML(activeTab, month, date, balance, minPay, addPay, totalPay, interest, principal, endBalance) {
+            const lumpsumAboveExists = activeTab.lumpsums.some(l => l.afterMonth === month - 1);
+            const lumpsumBelowExists = activeTab.lumpsums.some(l => l.afterMonth === month);
+
             const lumpsumButtonsHTML = `
-                <button class="lumpsum-btn lumpsum-above" onclick="addLumpsum(${month - 1})">Add Lumpsum</button>
-                <button class="lumpsum-btn lumpsum-below" onclick="addLumpsum(${month})">Add Lumpsum</button>
+                <button class="lumpsum-btn lumpsum-above" onclick="addLumpsum(${month - 1})" ${lumpsumAboveExists ? 'disabled' : ''}>Add Lumpsum</button>
+                <button class="lumpsum-btn lumpsum-below" onclick="addLumpsum(${month})" ${lumpsumBelowExists ? 'disabled' : ''}>Add Lumpsum</button>
             `;
             const createCell = (content) => `<td class="px-6 py-4 whitespace-nowrap text-sm relative">${content}${lumpsumButtonsHTML}</td>`;
 
@@ -640,6 +668,7 @@
 
         // --- Initial Load ---
         window.addEventListener('load', () => {
+            setupPWA();
             loadState();
             renderTabs();
             loadActiveTabDataIntoUI();
