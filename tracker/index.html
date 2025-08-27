@@ -26,6 +26,20 @@
             color: #4f46e5;
             font-weight: 600;
         }
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 8px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+        .tag-remove {
+            margin-left: 4px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
@@ -72,6 +86,10 @@
                 <canvas id="ticker-perf-chart"></canvas>
             </div>
         </div>
+        <div class="bg-white p-6 rounded-2xl shadow-lg mb-8">
+            <h3 class="text-lg font-semibold text-center mb-4">Performance by Tag</h3>
+            <canvas id="tag-perf-chart"></canvas>
+        </div>
 
 
         <!-- Trades List Section -->
@@ -95,6 +113,7 @@
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ticker</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tags</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">P/L</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
@@ -144,9 +163,13 @@
                     <label for="trade-notes" class="block text-sm font-medium text-gray-700">Notes</label>
                     <textarea id="trade-notes" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder="Trade thesis, emotional state, lessons learned..."></textarea>
                 </div>
-                <div>
-                    <label for="trade-tags" class="block text-sm font-medium text-gray-700">Tags</label>
-                    <input type="text" id="trade-tags" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder="e.g., Earnings, Scalp, Covered Call">
+                <!-- Tag Input Dropdown -->
+                <div class="relative">
+                    <label for="tag-input" class="block text-sm font-medium text-gray-700">Tags</label>
+                    <div id="tag-container" class="mt-1 flex flex-wrap items-center gap-2 p-2 border border-gray-300 rounded-md">
+                        <input type="text" id="tag-input" class="flex-grow outline-none" placeholder="Add a tag...">
+                    </div>
+                    <div id="tag-dropdown" class="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1 hidden max-h-48 overflow-y-auto"></div>
                 </div>
             </div>
 
@@ -158,6 +181,29 @@
         </div>
     </div>
     
+    <!-- View Notes Modal -->
+    <div id="view-notes-modal" class="fixed inset-0 modal-overlay z-50 hidden flex items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-lg">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Trade Journal</h2>
+                <button id="close-notes-modal-btn" class="text-gray-400 hover:text-gray-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+            <div class="mb-4">
+                <h3 class="font-semibold mb-2">Tags:</h3>
+                <div id="notes-modal-tags" class="flex flex-wrap gap-2"></div>
+            </div>
+            <div>
+                <h3 class="font-semibold mb-2">Notes:</h3>
+                <p id="notes-modal-content" class="text-gray-700 whitespace-pre-wrap"></p>
+            </div>
+            <div class="mt-8 flex justify-end">
+                <button id="edit-from-notes-btn" class="bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-indigo-700">Edit Trade</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Update Prices Modal -->
     <div id="update-prices-modal" class="fixed inset-0 modal-overlay z-50 hidden flex items-center justify-center">
         <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-lg">
@@ -174,78 +220,6 @@
 
 
     <script>
-        // --- PWA Setup ---
-        const setupPWA = () => {
-            const manifest = {
-                "name": "Trade Tracker - Stocks & Options",
-                "short_name": "TradeTracker",
-                "start_url": ".",
-                "display": "standalone",
-                "background_color": "#f3f4f6",
-                "theme_color": "#1f2937",
-                "description": "A PWA for tracking stock and options trades.",
-                "icons": [
-                    {
-                        "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTIgMTkyIj48cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgcng9IjM4LjQiIGZpbGw9IiMxZjI5MzciLz48cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxMiIgZD0iTTQwIDEzMmwzMi0zMiA0MCA0MCA0MC04MCIvPjwvc3ZnPg==",
-                        "sizes": "192x192",
-                        "type": "image/svg+xml"
-                    },
-                    {
-                        "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEwMi40IiBmaWxsPSIjMWYyOTM3Ii8+PHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMzIiIGQ9Im0xMDcgMzUybDg1LTg1IDEwNyAxMDcgMTA3LTIxMyIvPjwvc3ZnPg==",
-                        "sizes": "512x512",
-                        "type": "image/svg+xml"
-                    }
-                ]
-            };
-            const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
-            const manifestUrl = URL.createObjectURL(manifestBlob);
-            const linkEl = document.createElement('link');
-            linkEl.rel = 'manifest';
-            linkEl.href = manifestUrl;
-            document.head.appendChild(linkEl);
-
-            if ('serviceWorker' in navigator) {
-                const swContent = `
-                    const CACHE_NAME = 'trade-tracker-cache-v1';
-                    const urlsToCache = [
-                        '${location.href}',
-                        'https://cdn.tailwindcss.com',
-                        'https://cdn.jsdelivr.net/npm/chart.js',
-                        'https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js',
-                        'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap'
-                    ];
-
-                    self.addEventListener('install', event => {
-                        event.waitUntil(
-                            caches.open(CACHE_NAME)
-                                .then(cache => {
-                                    console.log('Opened cache');
-                                    return cache.addAll(urlsToCache);
-                                })
-                        );
-                    });
-
-                    self.addEventListener('fetch', event => {
-                        event.respondWith(
-                            caches.match(event.request)
-                                .then(response => {
-                                    if (response) {
-                                        return response;
-                                    }
-                                    return fetch(event.request);
-                                }
-                            )
-                        );
-                    });
-                `;
-                const swBlob = new Blob([swContent], { type: 'application/javascript' });
-                const swUrl = URL.createObjectURL(swBlob);
-                navigator.serviceWorker.register(swUrl)
-                    .then(registration => console.log('ServiceWorker registration successful with scope: ', registration.scope))
-                    .catch(err => console.log('ServiceWorker registration failed: ', err));
-            }
-        };
-
         // --- DOM Element References ---
         const addTradeBtn = document.getElementById('add-trade-btn');
         const tradeModal = document.getElementById('trade-modal');
@@ -263,6 +237,14 @@
         const tradeNotesEl = document.getElementById('trade-notes');
         const tradeTagsEl = document.getElementById('trade-tags');
         const exportBtn = document.getElementById('export-btn');
+        const tagInput = document.getElementById('tag-input');
+        const tagContainer = document.getElementById('tag-container');
+        const tagDropdown = document.getElementById('tag-dropdown');
+        const viewNotesModal = document.getElementById('view-notes-modal');
+        const closeNotesModalBtn = document.getElementById('close-notes-modal-btn');
+        const notesModalTags = document.getElementById('notes-modal-tags');
+        const notesModalContent = document.getElementById('notes-modal-content');
+        const editFromNotesBtn = document.getElementById('edit-from-notes-btn');
         
         const totalRealizedPlEl = document.getElementById('total-realized-pl');
         const totalUnrealizedPlEl = document.getElementById('total-unrealized-pl');
@@ -276,6 +258,7 @@
         let plLineChartInstance = null;
         let winLossPieChartInstance = null;
         let tickerPerfChartInstance = null;
+        let tagPerfChartInstance = null;
 
         // --- State Management ---
         let state = {
@@ -284,6 +267,22 @@
             activeFilter: 'all'
         };
         let editingTradeId = null;
+        let currentTradeTags = new Set();
+        
+        const ALL_TAGS = {
+            'Covered Call': 'bg-blue-100 text-blue-800',
+            'Cash-Secured Put': 'bg-green-100 text-green-800',
+            'Vertical Spread': 'bg-indigo-100 text-indigo-800',
+            'Iron Condor': 'bg-purple-100 text-purple-800',
+            'Scalp': 'bg-yellow-100 text-yellow-800',
+            'Swing Trade': 'bg-pink-100 text-pink-800',
+            'Long-term': 'bg-gray-100 text-gray-800',
+            'Earnings Play': 'bg-orange-100 text-orange-800',
+            'FOMO Entry': 'bg-red-100 text-red-800',
+            'Revenge Trade': 'bg-red-200 text-red-900',
+            'Followed Plan': 'bg-teal-100 text-teal-800',
+            'Broke Rules': 'bg-rose-100 text-rose-800',
+        };
 
         const saveState = () => {
             localStorage.setItem('tradeTrackerState', JSON.stringify(state));
@@ -308,19 +307,19 @@
                 tickerEl.value = trade.ticker;
                 tradeTypeEl.value = trade.type;
                 tradeNotesEl.value = trade.notes || '';
-                tradeTagsEl.value = trade.tags ? trade.tags.join(', ') : '';
+                currentTradeTags = new Set(trade.tags || []);
                 tradeTypeEl.disabled = true;
                 trade.legs.forEach(leg => addLegToForm(leg));
             } else {
                 modalTitle.textContent = 'Add New Trade';
                 tickerEl.value = '';
                 tradeNotesEl.value = '';
-                tradeTagsEl.value = '';
+                currentTradeTags = new Set();
                 tradeTypeEl.value = state.activeFilter; 
                 tradeTypeEl.disabled = true;
                 addLegToForm();
             }
-            
+            renderSelectedTags();
             tradeModal.classList.remove('hidden');
         }
 
@@ -399,7 +398,7 @@
                 legs: [],
                 status: 'open',
                 notes: tradeNotesEl.value,
-                tags: tradeTagsEl.value.split(',').map(t => t.trim()).filter(t => t)
+                tags: Array.from(currentTradeTags)
             };
 
             const legElements = legsContainer.querySelectorAll('.trade-leg');
@@ -517,17 +516,27 @@
             }
 
             if (filteredTrades.length === 0) {
-                tradesTableBody.innerHTML = `<tr><td colspan="5" class="text-center p-8 text-gray-500">No ${state.activeFilter !== 'all' ? state.activeFilter : ''} trades logged yet.</td></tr>`;
+                tradesTableBody.innerHTML = `<tr><td colspan="6" class="text-center p-8 text-gray-500">No ${state.activeFilter !== 'all' ? state.activeFilter : ''} trades logged yet.</td></tr>`;
                 return;
             }
             filteredTrades.sort((a, b) => new Date(b.legs[0].date) - new Date(a.legs[0].date)).forEach(trade => {
                 const pl = calculateTradePL(trade);
                 const plColor = pl > 0 ? 'text-green-600' : pl < 0 ? 'text-red-600' : 'text-gray-800';
                 
+                const tags = trade.tags || [];
+                let tagsHtml = '';
+                if (tags.length > 2) {
+                    tagsHtml = tags.slice(0, 2).map(tag => `<span class="tag ${ALL_TAGS[tag] || 'bg-gray-200 text-gray-800'}">${tag}</span>`).join('');
+                    tagsHtml += `<span class="text-xs text-indigo-600 cursor-pointer hover:underline" onclick="openNotesModal(${trade.id})">+${tags.length - 2} more</span>`;
+                } else {
+                    tagsHtml = tags.map(tag => `<span class="tag ${ALL_TAGS[tag] || 'bg-gray-200 text-gray-800'}">${tag}</span>`).join('');
+                }
+
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td class="px-6 py-4 whitespace-nowrap font-bold">${trade.ticker}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm capitalize">${trade.type}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${tagsHtml}</td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${trade.status === 'open' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'}">
                             ${trade.status}
@@ -535,7 +544,8 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium ${plColor}">${pl.toFixed(2)}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <button class="text-indigo-600 hover:text-indigo-900" onclick="openTradeModal(${trade.id})">Edit</button>
+                        <button class="text-indigo-600 hover:text-indigo-900" onclick="openNotesModal(${trade.id})">Notes</button>
+                        <button class="text-indigo-600 hover:text-indigo-900 ml-4" onclick="openTradeModal(${trade.id})">Edit</button>
                         <button class="text-red-600 hover:text-red-900 ml-4" onclick="deleteTrade(${trade.id})">Delete</button>
                     </td>
                 `;
@@ -565,6 +575,7 @@
             renderPLChart(closedTrades);
             renderWinLossChart(closedTrades);
             renderTickerPerfChart(closedTrades);
+            renderTagPerfChart(closedTrades);
         }
         
         function renderPLChart(closedTrades) {
@@ -658,6 +669,37 @@
             });
         }
         
+        function renderTagPerfChart(closedTrades) {
+            const pnlByTag = {};
+            closedTrades.forEach(trade => {
+                (trade.tags || []).forEach(tag => {
+                    const pl = calculateTradePL(trade);
+                    pnlByTag[tag] = (pnlByTag[tag] || 0) + pl;
+                });
+            });
+
+            const sortedTags = Object.entries(pnlByTag).sort((a, b) => b[1] - a[1]);
+            const labels = sortedTags.map(item => item[0]);
+            const data = sortedTags.map(item => item[1]);
+
+            if (tagPerfChartInstance) tagPerfChartInstance.destroy();
+            tagPerfChartInstance = new Chart(document.getElementById('tag-perf-chart'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Realized P/L by Tag',
+                        data: data,
+                        backgroundColor: data.map(v => v >= 0 ? '#10b981' : '#ef4444'),
+                    }]
+                },
+                options: {
+                     indexAxis: 'y',
+                     scales: { y: { beginAtZero: true } }
+                }
+            });
+        }
+        
         function openUpdatePricesModal() {
             priceInputsContainer.innerHTML = '';
             const openTrades = state.trades.filter(t => t.status === 'open');
@@ -695,12 +737,12 @@
                 return;
             }
             try {
-                const response = await fetch(`https://financialmodelingprep.com/api/v3/search-ticker?query=${query}&limit=5&apikey=${FMP_API_KEY}`);
+                const response = await fetch(`https://financialmodelingprep.com/stable/search-symbol?query=${query}&limit=5&apikey=${FMP_API_KEY}`);
                 const data = await response.json();
                 tickerSearchResults.innerHTML = '';
                 data.forEach(stock => {
                     const resultItem = document.createElement('div');
-                    resultItem.className = 'p-2 hover:bg-indigo-100 dark:hover:bg-indigo-700 cursor-pointer';
+                    resultItem.className = 'p-2 hover:bg-indigo-100 cursor-pointer';
                     resultItem.innerHTML = `<span class="font-bold">${stock.symbol}</span> <span class="text-gray-500">${stock.name}</span>`;
                     resultItem.onclick = () => {
                         tickerEl.value = stock.symbol;
@@ -732,6 +774,70 @@
             document.body.removeChild(link);
         }
 
+        // --- Tagging UI Logic ---
+        function renderSelectedTags() {
+            tagContainer.querySelectorAll('.tag').forEach(t => t.remove());
+            currentTradeTags.forEach(tag => {
+                const tagEl = document.createElement('span');
+                tagEl.className = `tag ${ALL_TAGS[tag] || 'bg-gray-200 text-gray-800'}`;
+                tagEl.textContent = tag;
+                const removeBtn = document.createElement('span');
+                removeBtn.textContent = 'x';
+                removeBtn.className = 'tag-remove';
+                removeBtn.onclick = () => {
+                    currentTradeTags.delete(tag);
+                    renderSelectedTags();
+                };
+                tagEl.appendChild(removeBtn);
+                tagContainer.insertBefore(tagEl, tagInput);
+            });
+        }
+
+        function renderTagDropdown() {
+            tagDropdown.innerHTML = '';
+            const filter = tagInput.value.toLowerCase();
+            Object.keys(ALL_TAGS).forEach(tag => {
+                if (!currentTradeTags.has(tag) && tag.toLowerCase().includes(filter)) {
+                    const item = document.createElement('div');
+                    item.className = 'p-2 hover:bg-gray-100 cursor-pointer';
+                    item.textContent = tag;
+                    item.onclick = () => {
+                        currentTradeTags.add(tag);
+                        tagInput.value = '';
+                        renderSelectedTags();
+                        tagDropdown.classList.add('hidden');
+                    };
+                    tagDropdown.appendChild(item);
+                }
+            });
+            tagDropdown.classList.toggle('hidden', tagDropdown.children.length === 0);
+        }
+        
+        // --- View Notes Modal Logic ---
+        function openNotesModal(tradeId) {
+            const trade = state.trades.find(t => t.id === tradeId);
+            if (!trade) return;
+            
+            notesModalTags.innerHTML = '';
+            (trade.tags || []).forEach(tag => {
+                const tagEl = document.createElement('span');
+                tagEl.className = `tag ${ALL_TAGS[tag] || 'bg-gray-200 text-gray-800'}`;
+                tagEl.textContent = tag;
+                notesModalTags.appendChild(tagEl);
+            });
+
+            notesModalContent.textContent = trade.notes || 'No notes for this trade.';
+            editFromNotesBtn.onclick = () => {
+                closeNotesModal();
+                openTradeModal(tradeId);
+            };
+            viewNotesModal.classList.remove('hidden');
+        }
+
+        function closeNotesModal() {
+            viewNotesModal.classList.add('hidden');
+        }
+
         // --- Event Listeners ---
         addTradeBtn.addEventListener('click', () => openTradeModal());
         cancelBtn.addEventListener('click', closeTradeModal);
@@ -750,9 +856,19 @@
         totalUnrealizedPlEl.parentElement.addEventListener('click', openUpdatePricesModal);
         closePricesModalBtn.addEventListener('click', closeUpdatePricesModal);
 
+        tagInput.addEventListener('focus', renderTagDropdown);
+        tagInput.addEventListener('input', renderTagDropdown);
+        tagContainer.addEventListener('click', () => tagInput.focus());
+        closeNotesModalBtn.addEventListener('click', closeNotesModal);
+
+        document.addEventListener('click', (e) => {
+            if (!tagContainer.parentElement.contains(e.target)) {
+                tagDropdown.classList.add('hidden');
+            }
+        });
+
         // --- Initial Load ---
         window.addEventListener('load', () => {
-            setupPWA();
             loadState();
             renderAll();
         });
