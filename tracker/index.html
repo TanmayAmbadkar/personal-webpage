@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trade Tracker - Stocks & Options</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#1f2937"/>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .modal-overlay { background-color: rgba(0,0,0,0.5); }
+        .trade-leg { border-left: 3px solid; }
+        .trade-leg.buy { border-color: #10b981; } /* green-500 */
+        .trade-leg.sell { border-color: #ef4444; } /* red-500 */
+        .filter-tab {
+            cursor: pointer;
+            padding: 8px 16px;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease-in-out;
+        }
+        .filter-tab.active {
+            border-color: #4f46e5;
+            color: #4f46e5;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-7xl">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-900">Trade Tracker</h1>
+            <p class="mt-2 text-md text-gray-600">Log and analyze your stock and options trades. All data is saved locally.</p>
+        </header>
+
+        <!-- Dashboard Section -->
+        <div id="dashboard" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-2xl shadow-lg text-center">
+                <h3 class="text-sm font-medium text-gray-500">Realized P/L</h3>
+                <p id="total-realized-pl" class="text-2xl font-semibold mt-1 text-gray-800">$0.00</p>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-lg text-center">
+                <h3 class="text-sm font-medium text-gray-500">Unrealized P/L</h3>
+                <p id="total-unrealized-pl" class="text-2xl font-semibold mt-1 text-gray-800">$0.00</p>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-lg text-center">
+                <h3 class="text-sm font-medium text-gray-500">Win Rate</h3>
+                <div class="flex items-center justify-center mt-1 gap-4">
+                    <p id="win-rate" class="text-2xl font-semibold text-gray-800">N/A</p>
+                    <div class="w-12 h-12">
+                         <canvas id="win-loss-pie-chart-small"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-lg text-center">
+                <h3 class="text-sm font-medium text-gray-500">Total Trades</h3>
+                <p id="total-trades" class="text-2xl font-semibold mt-1 text-gray-800">0</p>
+            </div>
+        </div>
+        
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 gap-8 mb-8">
+            <div class="bg-white p-6 rounded-2xl shadow-lg">
+                <h3 class="text-lg font-semibold text-center mb-4">P/L Over Time</h3>
+                <canvas id="pl-line-chart"></canvas>
+            </div>
+        </div>
+
+
+        <!-- Trades List Section -->
+        <div class="bg-white rounded-2xl shadow-lg">
+            <div class="p-6 flex justify-between items-center border-b border-gray-200">
+                <h2 class="text-xl font-bold text-gray-900">My Trades</h2>
+                <button id="add-trade-btn" class="bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-indigo-700 transition">
+                    + Add New Trade
+                </button>
+            </div>
+            <!-- Filter Tabs -->
+            <div id="filter-tabs-container" class="px-6 border-b border-gray-200 flex items-center space-x-4">
+                <!-- Filter tabs will be rendered here -->
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ticker</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">P/L</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="trades-table-body" class="bg-white divide-y divide-gray-200">
+                        <!-- Trades will be rendered here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Trade Modal -->
+    <div id="trade-modal" class="fixed inset-0 modal-overlay z-50 hidden flex items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-2xl max-h-screen overflow-y-auto relative">
+            <button id="close-modal-btn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+            <h2 id="modal-title" class="text-2xl font-bold mb-6">Add New Trade</h2>
+            
+            <!-- Ticker and Type -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+                <div>
+                    <label for="ticker" class="block text-sm font-medium text-gray-700">Ticker</label>
+                    <input type="text" id="ticker" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder="e.g., AAPL">
+                </div>
+                <div>
+                    <label for="trade-type" class="block text-sm font-medium text-gray-700">Trade Type</label>
+                    <select id="trade-type" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 bg-gray-50">
+                        <option value="stock">Stock</option>
+                        <option value="option">Option</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Legs Section -->
+            <div id="legs-container" class="space-y-4 mb-6">
+                <!-- Legs will be rendered here -->
+            </div>
+            <button id="add-leg-btn" class="text-sm text-indigo-600 font-semibold hover:text-indigo-800">+ Add Leg</button>
+
+            <!-- Action Buttons -->
+            <div class="mt-8 flex justify-end gap-4">
+                <button id="cancel-btn" class="bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300">Cancel</button>
+                <button id="save-trade-btn" class="bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-indigo-700">Save Trade</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Update Prices Modal -->
+    <div id="update-prices-modal" class="fixed inset-0 modal-overlay z-50 hidden flex items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-lg">
+            <h2 class="text-2xl font-bold mb-6">Update Current Prices</h2>
+            <p class="text-sm text-gray-600 mb-4">Enter the current market price for your open positions to calculate unrealized P/L.</p>
+            <div id="price-inputs-container" class="space-y-4 max-h-64 overflow-y-auto">
+                <!-- Price inputs will be rendered here -->
+            </div>
+            <div class="mt-8 flex justify-end">
+                <button id="close-prices-modal-btn" class="bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-indigo-700">Done</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // --- PWA Setup ---
+        // (PWA setup code from previous project would go here)
+
+        // --- DOM Element References ---
+        const addTradeBtn = document.getElementById('add-trade-btn');
+        const tradeModal = document.getElementById('trade-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const cancelBtn = document.getElementById('cancel-btn');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        const saveTradeBtn = document.getElementById('save-trade-btn');
+        const tickerEl = document.getElementById('ticker');
+        const tradeTypeEl = document.getElementById('trade-type');
+        const legsContainer = document.getElementById('legs-container');
+        const addLegBtn = document.getElementById('add-leg-btn');
+        const tradesTableBody = document.getElementById('trades-table-body');
+        const filterTabsContainer = document.getElementById('filter-tabs-container');
+        
+        const totalRealizedPlEl = document.getElementById('total-realized-pl');
+        const totalUnrealizedPlEl = document.getElementById('total-unrealized-pl');
+        const winRateEl = document.getElementById('win-rate');
+        const totalTradesEl = document.getElementById('total-trades');
+
+        const updatePricesModal = document.getElementById('update-prices-modal');
+        const priceInputsContainer = document.getElementById('price-inputs-container');
+        const closePricesModalBtn = document.getElementById('close-prices-modal-btn');
+        
+        let plLineChartInstance = null;
+        let winLossPieChartInstance = null;
+
+        // --- State Management ---
+        let state = {
+            trades: [],
+            currentPrices: {}, // To store user-inputted current prices
+            activeFilter: 'all' 
+        };
+        let editingTradeId = null;
+
+        const saveState = () => {
+            localStorage.setItem('tradeTrackerState', JSON.stringify(state));
+        };
+
+        const loadState = () => {
+            const savedState = localStorage.getItem('tradeTrackerState');
+            if (savedState) {
+                state = JSON.parse(savedState);
+                if (!state.activeFilter) state.activeFilter = 'all'; // Add filter for older states
+            }
+        };
+
+        // --- Core Application Logic ---
+        function openTradeModal(tradeId = null) {
+            editingTradeId = tradeId;
+            legsContainer.innerHTML = '';
+            
+            if (tradeId) {
+                modalTitle.textContent = 'Edit Trade';
+                const trade = state.trades.find(t => t.id === tradeId);
+                tickerEl.value = trade.ticker;
+                tradeTypeEl.value = trade.type;
+                tradeTypeEl.disabled = true; // Cannot change type when editing
+                trade.legs.forEach(leg => addLegToForm(leg));
+            } else {
+                modalTitle.textContent = 'Add New Trade';
+                tickerEl.value = '';
+                // Pre-fill based on active tab
+                tradeTypeEl.value = state.activeFilter; 
+                tradeTypeEl.disabled = true; // Lock the type based on the tab
+                addLegToForm(); // Add one default leg
+            }
+            
+            tradeModal.classList.remove('hidden');
+        }
+
+        function closeTradeModal() {
+            tradeModal.classList.add('hidden');
+            editingTradeId = null;
+            tradeTypeEl.disabled = false; // Re-enable for next time
+        }
+        
+        function addLegToForm(legData = null) {
+            const legId = legData ? legData.legId : Date.now();
+            const isOption = tradeTypeEl.value === 'option';
+
+            const legDiv = document.createElement('div');
+            legDiv.dataset.legId = legId;
+            legDiv.className = 'trade-leg p-4 rounded-lg bg-gray-50';
+            legDiv.classList.add(legData?.direction || 'buy');
+
+            legDiv.innerHTML = `
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <div>
+                        <label class="text-xs font-medium">Direction</label>
+                        <select class="direction-select mt-1 block w-full rounded-md border-gray-300 text-sm">
+                            <option value="buy" ${legData?.direction === 'buy' ? 'selected' : ''}>Buy</option>
+                            <option value="sell" ${legData?.direction === 'sell' ? 'selected' : ''}>Sell</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-xs font-medium">Quantity</label>
+                        <input type="number" class="quantity-input mt-1 block w-full rounded-md border-gray-300 text-sm" value="${legData?.quantity || 1}">
+                    </div>
+                    <div>
+                        <label class="text-xs font-medium">Price</label>
+                        <input type="number" class="price-input mt-1 block w-full rounded-md border-gray-300 text-sm" value="${legData?.price || 0}">
+                    </div>
+                    <div>
+                        <label class="text-xs font-medium">Date</label>
+                        <input type="date" class="date-input mt-1 block w-full rounded-md border-gray-300 text-sm" value="${legData?.date || new Date().toISOString().split('T')[0]}">
+                    </div>
+                </div>
+                ${isOption ? `
+                <div class="grid grid-cols-3 gap-4 mt-4">
+                    <div>
+                        <label class="text-xs font-medium">Type</label>
+                        <select class="option-type-select mt-1 block w-full rounded-md border-gray-300 text-sm">
+                            <option value="call" ${legData?.optionType === 'call' ? 'selected' : ''}>Call</option>
+                            <option value="put" ${legData?.optionType === 'put' ? 'selected' : ''}>Put</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-xs font-medium">Strike</label>
+                        <input type="number" class="strike-input mt-1 block w-full rounded-md border-gray-300 text-sm" value="${legData?.strike || 0}">
+                    </div>
+                    <div>
+                        <label class="text-xs font-medium">Expiry</label>
+                        <input type="date" class="expiry-input mt-1 block w-full rounded-md border-gray-300 text-sm" value="${legData?.expiry || ''}">
+                    </div>
+                </div>
+                ` : ''}
+                <button class="remove-leg-btn text-xs text-red-500 hover:text-red-700 mt-2">Remove</button>
+            `;
+            legsContainer.appendChild(legDiv);
+        }
+
+        function saveTrade() {
+            const ticker = tickerEl.value.toUpperCase().trim();
+            if (!ticker) {
+                // simple validation
+                alert('Ticker is required.');
+                return;
+            }
+
+            const tradeData = {
+                id: editingTradeId || Date.now(),
+                ticker: ticker,
+                type: tradeTypeEl.value,
+                legs: [],
+                status: 'open' // Default status
+            };
+
+            const legElements = legsContainer.querySelectorAll('.trade-leg');
+            legElements.forEach(legEl => {
+                const leg = {
+                    legId: parseInt(legEl.dataset.legId),
+                    direction: legEl.querySelector('.direction-select').value,
+                    quantity: parseFloat(legEl.querySelector('.quantity-input').value),
+                    price: parseFloat(legEl.querySelector('.price-input').value),
+                    date: legEl.querySelector('.date-input').value,
+                };
+                if (tradeData.type === 'option') {
+                    leg.optionType = legEl.querySelector('.option-type-select').value;
+                    leg.strike = parseFloat(legEl.querySelector('.strike-input').value);
+                    leg.expiry = legEl.querySelector('.expiry-input').value;
+                }
+                tradeData.legs.push(leg);
+            });
+
+            // Determine if trade is closed
+            const buys = tradeData.legs.filter(l => l.direction === 'buy').reduce((sum, l) => sum + l.quantity, 0);
+            const sells = tradeData.legs.filter(l => l.direction === 'sell').reduce((sum, l) => sum + l.quantity, 0);
+            if (buys === sells && buys > 0) {
+                tradeData.status = 'closed';
+            }
+
+            if (editingTradeId) {
+                const index = state.trades.findIndex(t => t.id === editingTradeId);
+                state.trades[index] = tradeData;
+            } else {
+                state.trades.push(tradeData);
+            }
+
+            saveState();
+            renderAll();
+            closeTradeModal();
+        }
+        
+        function deleteTrade(tradeId) {
+            if (confirm('Are you sure you want to delete this trade?')) {
+                state.trades = state.trades.filter(t => t.id !== tradeId);
+                saveState();
+                renderAll();
+            }
+        }
+
+        // --- Calculation Functions ---
+        function calculateTradePL(trade) {
+            if (trade.status !== 'closed') return 0;
+            
+            const multiplier = trade.type === 'option' ? 100 : 1;
+            
+            return trade.legs.reduce((pl, leg) => {
+                const cost = leg.quantity * leg.price * multiplier;
+                return leg.direction === 'sell' ? pl + cost : pl - cost;
+            }, 0);
+        }
+
+        function calculateUnrealizedPL() {
+            let totalUnrealized = 0;
+            state.trades.filter(t => t.status === 'open').forEach(trade => {
+                const currentPrice = state.currentPrices[trade.ticker] || 0;
+                if (currentPrice === 0) return;
+
+                const multiplier = trade.type === 'option' ? 100 : 1;
+                
+                const openPositionValue = trade.legs.reduce((value, leg) => {
+                    const cost = leg.quantity * leg.price * multiplier;
+                    return leg.direction === 'sell' ? value + cost : value - cost;
+                }, 0);
+                
+                const netQuantity = trade.legs.reduce((qty, leg) => {
+                    return leg.direction === 'buy' ? qty + leg.quantity : qty - leg.quantity;
+                }, 0);
+
+                const currentValue = netQuantity * currentPrice * multiplier;
+                totalUnrealized += (openPositionValue + currentValue);
+            });
+            return totalUnrealized;
+        }
+
+        // --- Rendering Functions ---
+        function renderAll() {
+            renderFilterTabs();
+            renderTradesList();
+            renderDashboard();
+        }
+
+        function renderFilterTabs() {
+            filterTabsContainer.innerHTML = '';
+            const filters = ['all', 'stock', 'option'];
+            filters.forEach(filter => {
+                const tab = document.createElement('div');
+                tab.className = `filter-tab ${state.activeFilter === filter ? 'active' : ''}`;
+                tab.textContent = filter.charAt(0).toUpperCase() + filter.slice(1) + 's';
+                tab.onclick = () => {
+                    state.activeFilter = filter;
+                    renderFilterTabs();
+                    renderTradesList();
+                };
+                filterTabsContainer.appendChild(tab);
+            });
+            // Show/hide add trade button based on filter
+            addTradeBtn.style.display = state.activeFilter === 'all' ? 'none' : 'block';
+        }
+
+        function renderTradesList() {
+            tradesTableBody.innerHTML = '';
+            
+            let filteredTrades = state.trades;
+            if (state.activeFilter === 'stock') {
+                filteredTrades = state.trades.filter(t => t.type === 'stock');
+            } else if (state.activeFilter === 'option') {
+                filteredTrades = state.trades.filter(t => t.type === 'option');
+            }
+
+            if (filteredTrades.length === 0) {
+                tradesTableBody.innerHTML = `<tr><td colspan="5" class="text-center p-8 text-gray-500">No ${state.activeFilter !== 'all' ? state.activeFilter : ''} trades logged yet.</td></tr>`;
+                return;
+            }
+            filteredTrades.sort((a, b) => new Date(b.legs[0].date) - new Date(a.legs[0].date)).forEach(trade => {
+                const pl = calculateTradePL(trade);
+                const plColor = pl > 0 ? 'text-green-600' : pl < 0 ? 'text-red-600' : 'text-gray-800';
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap font-bold">${trade.ticker}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm capitalize">${trade.type}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${trade.status === 'open' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'}">
+                            ${trade.status}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium ${plColor}">${pl.toFixed(2)}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <button class="text-indigo-600 hover:text-indigo-900" onclick="openTradeModal(${trade.id})">Edit</button>
+                        <button class="text-red-600 hover:text-red-900 ml-4" onclick="deleteTrade(${trade.id})">Delete</button>
+                    </td>
+                `;
+                tradesTableBody.appendChild(row);
+            });
+        }
+        
+        function renderDashboard() {
+            const closedTrades = state.trades.filter(t => t.status === 'closed');
+            const totalRealizedPL = closedTrades.reduce((sum, trade) => sum + calculateTradePL(trade), 0);
+            
+            const winningTrades = closedTrades.filter(t => calculateTradePL(t) > 0).length;
+            const winRate = closedTrades.length > 0 ? (winningTrades / closedTrades.length) * 100 : 0;
+
+            const totalUnrealizedPL = calculateUnrealizedPL();
+
+            totalRealizedPlEl.textContent = `$${totalRealizedPL.toFixed(2)}`;
+            totalRealizedPlEl.className = `text-2xl font-semibold mt-1 ${totalRealizedPL >= 0 ? 'text-green-600' : 'text-red-600'}`;
+            
+            totalUnrealizedPlEl.textContent = `$${totalUnrealizedPL.toFixed(2)}`;
+            totalUnrealizedPlEl.className = `text-2xl font-semibold mt-1 ${totalUnrealizedPL >= 0 ? 'text-green-600' : 'text-red-600'}`;
+
+            winRateEl.textContent = closedTrades.length > 0 ? `${winRate.toFixed(1)}%` : 'N/A';
+            totalTradesEl.textContent = state.trades.length;
+            
+            // Render Charts
+            renderPLChart(closedTrades);
+            renderWinLossChart(closedTrades);
+        }
+        
+        function renderPLChart(closedTrades) {
+            const chartData = closedTrades
+                .slice() // Create a copy to avoid mutating state
+                .sort((a, b) => new Date(a.legs[a.legs.length-1].date) - new Date(b.legs[b.legs.length-1].date))
+                .map(trade => ({
+                    x: trade.legs[trade.legs.length-1].date,
+                    y: calculateTradePL(trade)
+                }));
+            
+            let cumulativePL = 0;
+            const cumulativeData = chartData.map(data => {
+                cumulativePL += data.y;
+                return {x: data.x, y: cumulativePL};
+            });
+
+            if (plLineChartInstance) plLineChartInstance.destroy();
+            plLineChartInstance = new Chart(document.getElementById('pl-line-chart'), {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        label: 'Cumulative P/L',
+                        data: cumulativeData,
+                        borderColor: '#4f46e5',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: { type: 'time', time: { unit: 'day' } }
+                    }
+                }
+            });
+        }
+
+        function renderWinLossChart(closedTrades) {
+            const wins = closedTrades.filter(t => calculateTradePL(t) > 0).length;
+            const losses = closedTrades.filter(t => calculateTradePL(t) <= 0).length;
+
+            if (winLossPieChartInstance) winLossPieChartInstance.destroy();
+            const ctx = document.getElementById('win-loss-pie-chart-small');
+            if (!ctx) return;
+            winLossPieChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Wins', 'Losses'],
+                    datasets: [{
+                        data: [wins, losses],
+                        backgroundColor: ['#10b981', '#ef4444'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false }
+                    }
+                }
+            });
+        }
+        
+        function openUpdatePricesModal() {
+            priceInputsContainer.innerHTML = '';
+            const openTrades = state.trades.filter(t => t.status === 'open');
+            const tickersToUpdate = [...new Set(openTrades.map(t => t.ticker))];
+
+            if (tickersToUpdate.length === 0) {
+                priceInputsContainer.innerHTML = `<p class="text-sm text-gray-500">No open positions to update.</p>`;
+            } else {
+                tickersToUpdate.forEach(ticker => {
+                    const div = document.createElement('div');
+                    div.innerHTML = `
+                        <label class="block text-sm font-medium">${ticker}</label>
+                        <input type="number" data-ticker="${ticker}" class="price-update-input mt-1 block w-full rounded-md border-gray-300" value="${state.currentPrices[ticker] || ''}">
+                    `;
+                    priceInputsContainer.appendChild(div);
+                });
+            }
+            updatePricesModal.classList.remove('hidden');
+        }
+
+        function closeUpdatePricesModal() {
+            priceInputsContainer.querySelectorAll('.price-update-input').forEach(input => {
+                state.currentPrices[input.dataset.ticker] = parseFloat(input.value) || 0;
+            });
+            saveState();
+            renderDashboard();
+            updatePricesModal.classList.add('hidden');
+        }
+
+        // --- Event Listeners ---
+        addTradeBtn.addEventListener('click', () => openTradeModal());
+        cancelBtn.addEventListener('click', closeTradeModal);
+        closeModalBtn.addEventListener('click', closeTradeModal);
+        saveTradeBtn.addEventListener('click', saveTrade);
+        addLegBtn.addEventListener('click', () => addLegToForm());
+        tradeTypeEl.addEventListener('change', () => {
+            // Re-render legs when type changes
+            const legsData = [];
+            legsContainer.querySelectorAll('.trade-leg').forEach(legEl => {
+                legsData.push({
+                    direction: legEl.querySelector('.direction-select').value,
+                    quantity: parseFloat(legEl.querySelector('.quantity-input').value),
+                    price: parseFloat(legEl.querySelector('.price-input').value),
+                    date: legEl.querySelector('.date-input').value,
+                });
+            });
+            legsContainer.innerHTML = '';
+            legsData.forEach(leg => addLegToForm(leg));
+        });
+        
+        legsContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('remove-leg-btn')) {
+                e.target.closest('.trade-leg').remove();
+            }
+        });
+        
+        totalUnrealizedPlEl.parentElement.addEventListener('click', openUpdatePricesModal);
+        closePricesModalBtn.addEventListener('click', closeUpdatePricesModal);
+
+        // --- Initial Load ---
+        window.addEventListener('load', () => {
+            loadState();
+            renderAll();
+        });
+    </script>
+</body>
+</html>
