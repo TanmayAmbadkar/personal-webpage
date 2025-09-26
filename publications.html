@@ -3,6 +3,40 @@
 
     <!-- Publication Item 1 -->
     <div class="mb-4">
+        <h5 class="fw-bold">Robust Adaptive Multi-Step Predictive Shielding</h5>
+        <p class="mb-1"><em><b>Tanmay Ambadkar</b>, Darshan Chudiwal, Greg Anderson, Abhinav Verma</em></p>
+        <p class="text-muted mb-2">In Submission</p>
+        <div>
+            <a href="https://ambadkar.com/RAMPS" target="_blank" rel="noopener noreferrer">Homepage</a>
+        </div>
+        <details>
+            <summary><strong>Abstract</strong></summary>
+            <div style="padding-left: 1rem; margin-top: 0.5rem;">
+                <p>
+                    Reinforcement learning for safety-critical tasks requires policies that are both high-performing and safe throughout the learning process. While model-predictive shielding is a promising approach, existing methods are often computationally intractable for the high-dimensional, nonlinear systems where deep RL excels, as they typically rely on a patchwork of local models. We introduce RAMPS, a scalable shielding framework that overcomes this limitation by leveraging a learned, linear representation of the environment's dynamics. This model can range from a linear regression in the original state space to a more complex operator learned in a high-dimensional feature space. The key is that this linear structure enables a robust, look-ahead safety technique based on a multi-step Control Barrier Function (CBF). By moving beyond myopic one-step formulations, RAMPS accounts for model error and control delays to provide reliable, real-time interventions. The resulting framework is minimally invasive, computationally efficient, and built upon robust control-theoretic foundations. Our experiments demonstrate that RAMPS significantly reduces safety violations compared to existing safe RL methods while maintaining high task performance in complex control environments.    
+                </p>
+            </div>
+        </details>
+    </div>
+
+    <div class="mb-4">
+        <h5 class="fw-bold">Preference Conditioned Multi-Objective Reinforcement Learning: Decomposed, Diversity-Driven Policy Optimization</h5>
+        <p class="mb-1"><em><b>Tanmay Ambadkar</b>, Sourav Panda, Shreyas Kale, Abhinav Verma, Jonathan Dodge</em></p>
+        <p class="text-muted mb-2">In Submission</p>
+        <div>
+            <a href="https://ambadkar.com/D3PO" target="_blank" rel="noopener noreferrer">Homepage</a>
+        </div>
+        <details>
+            <summary><strong>Abstract</strong></summary>
+            <div style="padding-left: 1rem; margin-top: 0.5rem;">
+                <p>
+                    Multi-objective reinforcement learning (MORL) aims to optimize policies in environments with multiple, often conflicting objectives. While a single, preference-conditioned policy offers the most flexible and efficient solution, existing methods often struggle to cover the entire spectrum of optimal trade-offs. This is frequently due to two underlying challenges: destructive gradient interference between conflicting objectives and representational mode collapse, where the policy fails to produce diverse behaviors. In this work, we introduce D3PO, a novel algorithm that trains a single preference conditioned policy to directly address these issues. Our framework features a decomposed optimization process to encourage stable credit assignment and a scaled diversity regularizer to explicitly encourage a robust mapping from preferences to policies. Empirical evaluations across standard MORL benchmarks show that D3PO discovers more comprehensive and higher-quality Pareto fronts, establishing a new state-of-the-art in terms of hypervolume and expected utility, particularly in complex and many-objective environments.
+                </p>
+            </div>
+        </details>
+    </div>
+
+    <div class="mb-4">
         <h5 class="fw-bold">Safer Policies via Affine Representations using Koopman Dynamics</h5>
         <p class="mb-1"><em><b>Tanmay Ambadkar</b>, Darshan Chudiwal, Greg Anderson, Abhinav Verma</em></p>
         <p class="text-muted mb-2">In Submission</p>
@@ -25,7 +59,7 @@
             <summary><strong>Abstract</strong></summary>
             <div style="padding-left: 1rem; margin-top: 0.5rem;">
                 <p>
-                    Logical specifications have been shown to help reinforcement learning algorithms in achieving complex tasks. However, when a task is under-specified, agents might fail to learn useful policies. In this work, we explore the possibility of improving coarse-grained logical specifications via an exploration-guided strategy. We propose AutoSpec a framework that searches for a logical specification refinement whose satisfaction implies satisfaction of the original specification, but which provide additional guidance therefore making it easier for reinforcement learning algorithms to learn useful policies. AutoSpec is applicable to reinforcement learning tasks specified via the SpectRL specification logic. We exploit the compositional nature of specifications written in SpectRL, and design an algorithm that refines the abstract graph of the specification by either refining its existing edge specifications or by introducing new edge specifications. We then show how AutoSpec can be used with existing reinforcement learning algorithms for learning policies from logical specifications. Our experiments demonstrate that AutoSpec yields promising improvements in terms of the complexity of control tasks that can be solved, when refined logical specifications produced by AutoSpec are utilized.
+                    Logical specifications have been shown to help reinforcement learning algorithms in achieving complex tasks. However, when a task is under-specified, agents might fail to learn useful policies. In this work, we explore the possibility of improving coarse-grained logical specifications via an exploration-guided strategy. We propose AutoSpec, a framework that searches for a logical specification refinement whose satisfaction implies satisfaction of the original specification, but which provides additional guidance therefore making it easier for reinforcement learning algorithms to learn useful policies. AutoSpec is applicable to reinforcement learning tasks specified via the SpectRL specification logic. We exploit the compositional nature of specifications written in SpectRL, and design four refinement procedures that modify the abstract graph of the specification by either refining its existing edge specifications or by introducing new edge specifications. We prove that all four procedures maintain specification soundness, i.e. any trajectory satisfying the refined specification also satisfies the original. We then show how AutoSpec can be integrated with existing reinforcement learning algorithms for learning policies from logical specifications. Our experiments demonstrate that AutoSpec yields promising improvements in terms of the complexity of control tasks that can be solved, when refined logical specifications produced by AutoSpec are utilized.
                 </p>
             </div>
         </details>
