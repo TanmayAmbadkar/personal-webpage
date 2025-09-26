@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D³PO: Preference Conditioned Multi-Objective Reinforcement Learning</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- KaTeX for rendering mathematical formulas -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" xintegrity="sha384-n8MVd4RsNIU0KOVEMmg9ikewadVpGNIJIHwATVNSC1A7MMdGuDRBQwjsOh9kWDEQ" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" xintegrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmFAILfpeV" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" xintegrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+        }
+        .section-title {
+            @apply text-3xl font-bold text-slate-800 mb-6;
+        }
+        .card {
+            @apply bg-white rounded-xl shadow-lg overflow-hidden p-8 transition-all duration-300;
+        }
+        .hero-bg {
+            background-color: #f1f5f9;
+            background-image: radial-gradient(#d1d5db 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .primary-btn {
+             @apply inline-flex flex-col items-center gap-2 bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-blue-700 transition-transform duration-300 hover:scale-105;
+        }
+        .secondary-btn {
+             @apply inline-flex flex-col items-center gap-2 bg-slate-800 text-white font-semibold px-6 py-3 rounded-lg hover:bg-slate-900 transition-transform duration-300 hover:scale-105;
+        }
+        /* Styles for LaTeX-like table */
+        .latex-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+        .latex-table th, .latex-table td {
+            text-align: left;
+            padding: 0.5rem 0.75rem;
+            vertical-align: top;
+        }
+        .latex-table thead th {
+            border-top: 2px solid #1e293b; /* slate-900 */
+            border-bottom: 1px solid #1e293b;
+        }
+        .latex-table tbody tr.env-group-last-row td {
+            border-bottom: 1px solid #cbd5e1; /* slate-300 */
+        }
+        .latex-table tbody {
+             border-bottom: 2px solid #1e293b;
+        }
+    </style>
+</head>
+<body class="text-slate-700">
+
+    <!-- Header -->
+    <!-- <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4 flex items-center gap-3">
+            <h1 class="text-2xl font-bold text-slate-900">D³PO</h1>
+        </div>
+    </header> -->
+
+    <main class="container mx-auto px-6 py-12">
+
+        <!-- Main Title and Abstract -->
+        <section class="text-center py-16 mb-12 rounded-xl hero-bg">
+            <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 leading-tight mb-4">
+                Preference Conditioned Multi-Objective Reinforcement Learning: Decomposed, Diversity-Driven Policy Optimization
+            </h2>
+            <p class="text-lg text-slate-600 max-w-4xl mx-auto">
+                A novel algorithm that trains a single, preference-conditioned policy to efficiently discover a diverse and high-quality set of trade-off solutions in multi-objective environments.
+            </p>
+
+            <!-- Teaser Image -->
+            <div class="mt-10 max-w-5xl mx-auto px-4">
+                <img src="images/D3PPO_page-0001.jpg" alt="D³PO Algorithm Overview" class="rounded-xl shadow-2xl w-full border-4 border-white">
+                <p class="text-sm text-slate-500 mt-3">Overview of the D³PO algorithm architecture.</p>
+            </div>
+
+            <div class="mt-10 flex justify-center space-x-4">
+                 <a href="#" class="primary-btn">
+                     <i data-lucide="file-text"></i>
+                     <!-- <span>View Paper</span> -->
+                 </a>
+                 <a href="#" class="secondary-btn">
+                     <i data-lucide="github"></i>
+                     <!-- <span>Source Code</span> -->
+                </a>
+            </div>
+        </section>
+
+        <!-- The Challenge Section -->
+        <section class="mb-16">
+            <div class="card">
+                <h3 class="text-2xl font-semibold mb-4 text-slate-800">The Challenge: Balancing Conflicting Goals</h3>
+                <div>
+                    <div>
+                        <p class="mb-4">
+                            Many real-world problems, from autonomous driving to logistics, require balancing multiple, often conflicting, objectives—like speed versus safety, or cost versus environmental impact. This is the domain of Multi-Objective Reinforcement Learning (MORL).
+                        </p>
+                        <p class="mb-4">
+                            Training a single, flexible policy that can adapt to different user preferences is the most efficient approach. However, existing methods face two major obstacles:
+                        </p>
+                        <ul class="list-disc list-inside space-y-2 mb-4">
+                            <li><strong class="text-blue-600">Destructive Gradient Interference:</strong> When objectives conflict, their learning signals can cancel each other out, leading to unstable training and suboptimal policies.</li>
+                            <li><strong class="text-blue-600">Representational Mode Collapse:</strong> The policy often "forgets" how to achieve certain trade-offs, collapsing to a few similar behaviors regardless of the user's preference.</li>
+                        </ul>
+                        <p>How can we train a single policy that masters the full spectrum of possible solutions without succumbing to these issues?</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Our Solution Section -->
+        <section class="mb-16">
+             <div class="card">
+                <h3 class="text-2xl font-semibold mb-4 text-slate-800">Our Solution: D³PO</h3>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto mb-10">
+                    D³PO (Decomposed, Diversity-Driven Policy Optimization) is a new algorithm that directly tackles these core challenges to train a robust, single multi-objective policy.
+                </p>
+                <div class="grid md:grid-cols-3 gap-6 text-center">
+                    <div class="bg-slate-100 p-6 rounded-lg">
+                        <h4 class="text-2xl font-semibold mb-4 text-slate-800">Decomposed Optimization</h4>
+                        <p class="text-slate-600">We compute advantages for each objective independently, preserving their distinct signals to prevent them from destructively interfering with each other during updates.</p>
+                    </div>
+                    <div class="bg-slate-100 p-6 rounded-lg">
+                        <h4 class="text-2xl font-semibold mb-4 text-slate-800">Late-Stage Weighting</h4>
+                        <p class="text-slate-600">User preferences (weights) are applied only at the final stage of the loss calculation, after stabilization, ensuring a clean and stable integration of objectives.</p>
+                    </div>
+                    <div class="bg-slate-100 p-6 rounded-lg">
+                        <h4 class="text-2xl font-semibold mb-4 text-slate-800">Scaled Diversity Regularizer</h4>
+                        <p class="text-slate-600">A novel loss term explicitly encourages the policy to produce different behaviors for different preferences, directly preventing mode collapse and ensuring full coverage of solutions.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Theoretical Foundations Section -->
+        <section class="mb-16">
+            <div class="card">
+                <h3 class="text-2xl font-semibold mb-4 text-slate-800">Theoretical Foundations</h3>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto mb-10">
+                    D³PO's design is grounded in a formal analysis that guarantees more stable and diverse policy learning compared to previous approaches.
+                </p>
+                <div class="grid md:grid-cols-2 gap-12">
+                    <!-- Left Column: Key Formulas -->
+                    <div>
+                        <h4 class="text-2xl font-semibold mb-4 text-slate-800">Key Formulas</h4>
+                        <div class="space-y-6">
+                            <div>
+                                <h5 class="font-semibold text-slate-700">1. Final Actor Objective</h5>
+                                <p class="text-slate-600 mb-2">The final update combines the preference-weighted PPO losses with the diversity regularizer:</p>
+                                <div class="p-4 bg-slate-100 rounded-lg text-center text-sm overflow-x-auto">
+                                    $$\mathcal{L}_{actor}(\theta)=-(\sum_{i=1}^{d}\omega_{i}\mathcal{L}_{clip}^{(i)}(\theta))+\lambda_{div}\mathcal{L}_{diversity}(\theta)$$
+                                </div>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold text-slate-700">2. Scaled Diversity Regularizer</h5>
+                                <p class="text-slate-600 mb-2">This loss ensures policy divergence scales with preference divergence to prevent mode collapse:</p>
+                                 <div class="p-4 bg-slate-100 rounded-lg text-center text-sm overflow-x-auto">
+                                   $$\mathcal{L}_{diversity}(\theta)=\mathbb{E}_{t}[(D_{KL}(\pi_{\theta}(\cdot|s_{t},\omega)||\pi_{\theta}(\cdot|s_{t},\omega^{\prime}))-\alpha||\omega-\omega^{\prime}||_{1})^{2}]$$
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Right Column: Safety Guarantees -->
+                    <div>
+                        <h4 class="text-2xl font-semibold mb-4 text-slate-800">Formal Guarantees</h4>
+                        <div class="space-y-6">
+                            <div class="p-6 border-l-4 border-blue-500 bg-blue-50 rounded-r-lg">
+                                <h5 class="font-semibold text-slate-800">No Advantage Cancellation</h5>
+                                <p class="text-slate-700">
+                                    We prove that scalarizing rewards too early (a common practice) causes "advantage cancellation," where conflicting objective signals are lost. D³PO's <strong class="text-blue-600">decomposed approach avoids this information loss entirely.</strong>
+                                </p>
+                            </div>
+                             <div class="p-6 border-l-4 border-green-500 bg-green-50 rounded-r-lg">
+                                <h5 class="font-semibold text-slate-800">No Mode Collapse</h5>
+                                <p class="text-slate-700">
+                                    We provide the first formal guarantee against mode collapse in preference-conditioned MORL. We prove that any policy that minimizes our objective <strong class="text-green-600">cannot produce the same behavior for different preferences</strong>, ensuring a diverse Pareto front.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Results Section -->
+        <section class="mb-16">
+            <div class="card">
+                <h3 class="text-2xl font-semibold mb-4 text-slate-800">Key Results: State-of-the-Art Pareto Front Discovery</h3>
+                <p class="text-lg text-center max-w-3xl mx-auto mb-10 text-slate-600">
+                    D³PO discovers more comprehensive and higher-quality Pareto fronts across a range of challenging MORL benchmarks, establishing a new state-of-the-art.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
+                    <!-- Hopper -->
+                    <div class="text-center bg-slate-100 p-2 rounded-lg">
+                        <img src="images/hopper_rewards.png" alt="Hopper Pareto Front" class="rounded-lg shadow-md w-full">
+                        <p class="mt-2 font-semibold text-slate-700">Hopper</p>
+                    </div>
+                    <!-- Ant -->
+                    <div class="text-center bg-slate-100 p-2 rounded-lg">
+                        <img src="images/ant_rewards.png" alt="Ant Pareto Front" class="rounded-lg shadow-md w-full">
+                        <p class="mt-2 font-semibold text-slate-700">Ant</p>
+                    </div>
+                    <!-- Humanoid -->
+                    <div class="text-center bg-slate-100 p-2 rounded-lg">
+                        <img src="images/humanoid_rewards.png" alt="Humanoid Pareto Front" class="rounded-lg shadow-md w-full">
+                        <p class="mt-2 font-semibold text-slate-700">Humanoid</p>
+                    </div>
+                </div>
+                
+                <p class="text-center text-slate-600 mb-12">Visual comparison of discovered Pareto fronts. D³PO (red) consistently finds a more uniform and complete set of solutions compared to other leading methods.</p>
+
+                <!-- Continuous Environments Table -->
+                <div class="mb-12 overflow-x-auto">
+                    <h4 class="text-2xl font-semibold mb-4 text-slate-800 text-center">Performance on Continuous Environments</h4>
+                    <table class="latex-table">
+                         <thead>
+                            <tr>
+                                <th>Environment</th>
+                                <th>Metrics</th>
+                                <th>PG-MORL</th>
+                                <th>GPI-LS</th>
+                                <th>C-MORL</th>
+                                <th>D³PO</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Hopper-2d -->
+                            <tr>
+                                <td rowspan="3" class="font-bold">Hopper-2d</td>
+                                <td>HV (10⁵ &uarr;)</td>
+                                <td>1.20 &plusmn; 0.09</td>
+                                <td>1.19 &plusmn; 0.10</td>
+                                <td class="font-bold">1.37 &plusmn; 0.03</td>
+                                <td>1.30 &plusmn; 0.03</td>
+                            </tr>
+                            <tr>
+                                <td>EU (10² &uarr;)</td>
+                                <td>2.34 &plusmn; 0.10</td>
+                                <td>2.33 &plusmn; 0.10</td>
+                                <td class="font-bold">2.53 &plusmn; 0.02</td>
+                                <td>2.47 &plusmn; 0.01</td>
+                            </tr>
+                            <tr class="env-group-last-row">
+                                <td>SP (10² &darr;)</td>
+                                <td>5.13 &plusmn; 5.81</td>
+                                <td>0.49 &plusmn; 0.37</td>
+                                <td>1.13 &plusmn; 0.19</td>
+                                <td class="font-bold">0.26 &plusmn; 0.31</td>
+                            </tr>
+                            <!-- Hopper-3d -->
+                             <tr>
+                                <td rowspan="3" class="font-bold">Hopper-3d</td>
+                                <td>HV (10⁷ &uarr;)</td>
+                                <td>1.59 &plusmn; 0.45</td>
+                                <td>1.70 &plusmn; 0.29</td>
+                                <td class="font-bold">2.19 &plusmn; 0.32</td>
+                                <td>2.12 &plusmn; 0.16</td>
+                            </tr>
+                            <tr>
+                                <td>EU (10² &uarr;)</td>
+                                <td>1.47 &plusmn; 0.25</td>
+                                <td>1.62 &plusmn; 0.10</td>
+                                <td class="font-bold">1.81 &plusmn; 0.01</td>
+                                <td>1.74 &plusmn; 4.9</td>
+                            </tr>
+                            <tr class="env-group-last-row">
+                                <td>SP (10² &darr;)</td>
+                                <td>0.76 &plusmn; 0.91</td>
+                                <td>0.74 &plusmn; 1.22</td>
+                                <td>0.53 &plusmn; 0.34</td>
+                                <td class="font-bold">0.04 &plusmn; 0.01</td>
+                            </tr>
+                            <!-- Ant-2d -->
+                             <tr>
+                                <td rowspan="3" class="font-bold">Ant-2d</td>
+                                <td>HV (10⁵ &uarr;)</td>
+                                <td>0.35 &plusmn; 0.08</td>
+                                <td>1.17 &plusmn; 0.25</td>
+                                <td>1.31 &plusmn; 0.16</td>
+                                <td class="font-bold">1.91 &plusmn; 0.18</td>
+                            </tr>
+                            <tr>
+                                <td>EU (10² &uarr;)</td>
+                                <td>0.81 &plusmn; 0.23</td>
+                                <td>4.28 &plusmn; 0.19</td>
+                                <td>2.50 &plusmn; 0.25</td>
+                                <td class="font-bold">3.14 &plusmn; 0.21</td>
+                            </tr>
+                            <tr class="env-group-last-row">
+                                <td>SP (10³ &darr;)</td>
+                                <td>2.20 &plusmn; 3.48</td>
+                                <td>3.61 &plusmn; 2.13</td>
+                                <td>2.65 &plusmn; 1.25</td>
+                                <td>0.66 &plusmn; 0.40</td>
+                            </tr>
+                            <!-- Ant-3d -->
+                            <tr>
+                                <td rowspan="3" class="font-bold">Ant-3d</td>
+                                <td>HV (10⁷ &uarr;)</td>
+                                <td>0.94 &plusmn; 0.12</td>
+                                <td>0.55 &plusmn; 0.81</td>
+                                <td>2.61 &plusmn; 0.26</td>
+                                <td class="font-bold">2.68 &plusmn; 0.21</td>
+                            </tr>
+                            <tr>
+                                <td>EU (10² &uarr;)</td>
+                                <td>1.07 &plusmn; 0.07</td>
+                                <td>2.41 &plusmn; 0.20</td>
+                                <td class="font-bold">2.06 &plusmn; 0.14</td>
+                                <td>1.99 &plusmn; 0.08</td>
+                            </tr>
+                            <tr class="env-group-last-row">
+                                <td>SP (10³ &darr;)</td>
+                                <td>0.02 &plusmn; 0.01</td>
+                                <td>1.96 &plusmn; 0.79</td>
+                                <td>0.06 &plusmn; 0.07</td>
+                                <td class="font-bold">0.004 &plusmn; 0.002</td>
+                            </tr>
+                            <!-- Humanoid-2d -->
+                            <tr>
+                                <td rowspan="3" class="font-bold">Humanoid-2d</td>
+                                <td>HV (10⁵ &uarr;)</td>
+                                <td>2.62 &plusmn; 0.32</td>
+                                <td>1.98 &plusmn; 0.02</td>
+                                <td>3.43 &plusmn; 0.06</td>
+                                <td class="font-bold">3.76 &plusmn; 0.11</td>
+                            </tr>
+                            <tr>
+                                <td>EU (10² &uarr;)</td>
+                                <td>4.06 &plusmn; 0.32</td>
+                                <td>3.67 &plusmn; 0.02</td>
+                                <td>4.78 &plusmn; 0.05</td>
+                                <td class="font-bold">5.11 &plusmn; 0.09</td>
+                            </tr>
+                            <tr class="env-group-last-row">
+                                <td>SP (10⁴ &darr;)</td>
+                                <td>0.13 &plusmn; 0.17</td>
+                                <td>0<sup>*</sup></td>
+                                <td>2.21 &plusmn; 3.47</td>
+                                <td class="font-bold">0.003 &plusmn; 0.001</td>
+                            </tr>
+                            <!-- Building-9d -->
+                             <tr>
+                                <td rowspan="3" class="font-bold">Building-9d</td>
+                                <td>HV (10³¹ &uarr;)</td>
+                                <td class="italic">T/O</td>
+                                <td class="italic">T/O</td>
+                                <td>7.93 &plusmn; 0.07</td>
+                                <td class="font-bold">8.00 &plusmn; 0.11</td>
+                            </tr>
+                            <tr>
+                                <td>EU (10³ &uarr;)</td>
+                                <td class="italic">T/O</td>
+                                <td class="italic">T/O</td>
+                                <td>3.50 &plusmn; 0.00</td>
+                                <td class="font-bold">3.50 &plusmn; 0.003</td>
+                            </tr>
+                            <tr>
+                                <td>SP (10³ &darr;)</td>
+                                <td class="italic">T/O</td>
+                                <td class="italic">T/O</td>
+                                <td>2.79 &plusmn; 0.40</td>
+                                <td class="font-bold">0.03 &plusmn; 0.01</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
+                    <div class="border-t-4 border-blue-500 pt-4">
+                        <p class="text-4xl font-bold text-blue-600">Superior Coverage</p>
+                        <p class="text-slate-600">Achieves state-of-the-art Hypervolume and Expected Utility, especially in complex tasks like Humanoid.</p>
+                    </div>
+                    <div class="border-t-4 border-blue-500 pt-4">
+                        <p class="text-4xl font-bold text-blue-600">Solves Many-Objective</p>
+                        <p class="text-slate-600">Succeeds in the 9-objective Building-9d task where other methods time out or fail.</p>
+                    </div>
+                    <div class="border-t-4 border-blue-500 pt-4">
+                        <p class="text-4xl font-bold text-blue-600">Highly Efficient</p>
+                        <p class="text-slate-600">Significantly faster training times by avoiding expensive multi-policy or evolutionary approaches.</p>
+                    </div>
+                </div> -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t">
+        <div class="container mx-auto px-6 py-6 text-center text-slate-600">
+            <p>&copy; 2026 Anonymous Authors. Paper under double-blind review for ICLR 2026.</p>
+        </div>
+    </footer>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            lucide.createIcons();
+            
+            renderMathInElement(document.body, {
+              delimiters: [
+                  {left: '$$', right: '$$', display: true},
+                  {left: '$', right: '$', display: false},
+                  {left: '\\(', right: '\\)', display: false},
+                  {left: '\\[', right: '\\]', display: true}
+              ],
+              throwOnError : false
+            });
+        });
+    </script>
+
+</body>
+</html>
+
