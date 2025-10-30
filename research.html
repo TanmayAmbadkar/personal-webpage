@@ -23,23 +23,41 @@
       <summary><strong>Objective 2: Building a Scalable Safety Shield for RL Agents</strong></summary>
       <div style="padding-left: 1rem; margin-top: 0.5rem;">
         <p>
-          <strong>The Problem:</strong> An RL agent trained to maximize a reward will do so at all costs, potentially violating critical safety constraints and causing catastrophic failures in the real world.
+            <strong>The Problem:</strong> An RL agent trained to maximize a reward will do so at all costs, potentially violating critical safety constraints. Furthermore, standard safe RL algorithms (like CMDPs) often fail to learn when given only sparse, binary cost signals (e.g., "safe" or "unsafe").
         </p>
         <p>
-          <strong>My Approach (SPARKD):</strong> I am developing an algorithm-agnostic safety shield that acts as a runtime monitor. It works by learning a globally linear model of the environment's non-linear dynamics to predict the consequences of an agent's actions. If a proposed action is deemed unsafe, the shield intervenes by providing a safe alternative. This approach ensures the agent satisfies safety constraints while still giving it the freedom to explore and learn effectively, bridging the gap between theoretical RL and practical, safe deployment.
+            <strong>My Approach (SPARKD):</strong> I developed <strong>SPARKD</strong>, a scalable framework that learns a globally linear model of the environment's complex non-linear dynamics using <strong>Deep Koopman Operators</strong>. This "lifted" representation allows the shield to use formal methods, specifically <strong>weakest precondition calculus</strong>, to efficiently analyze the safety of an agent's actions over a finite horizon. If a proposed action could lead to an unsafe state, the shield intervenes with a safe alternative.
+        </p>
+        <p>
+            <strong>My Approach (RAMPS):</strong> Building on this, <strong>RAMPS</strong> (Robust Adaptive Multi-Step Predictive Shielding) advances the state-of-the-art by introducing a <strong>robust, multi-step Control Barrier Function (CBF)</strong>. This method not only uses a learned linear model but also explicitly accounts for model error and control delays. This allows RAMPS to provide stronger, continuous safety guarantees and has demonstrated over a 90% reduction in safety violations in complex, high-dimensional robotic simulations.
+        </p>
+        <!-- === PARAGRAPH EDITED === -->
+        <p>
+            <strong>Next Steps (AutoCost):</strong> To solve the sparse cost problem, I am developing <strong>AutoCost</strong>, which extracts a rich, continuous cost signal directly from these safety shields. When an agent's proposed action is unsafe, the safety Quadratic Program (QP) in RAMPS or SPARKD requires a large "slack" value to find a safe alternative. <strong>AutoCost</strong> captures the magnitude of this slack variable, which directly quantifies *how unsafe* the proposed action was. This provides a dense, informative cost gradient, enabling non-shielded CMDP agents to learn safe policies far more effectively than with traditional binary costs.
         </p>
       </div>
     </details>
+
     
     <details>
       <summary><strong>Objective 3: Enabling User-Driven Trade-offs in Multi-Objective RL</strong></summary>
       <div style="padding-left: 1rem; margin-top: 0.5rem;">
         <p>
-          <strong>The Problem:</strong> Real-world applications rarely have a single goal. More often, they involve balancing a set of conflicting objectives, such as maximizing performance while minimizing cost and energy consumption.
+            <strong>The Problem:</strong> Real-world applications rarely have a single goal. More often, they involve balancing a set of conflicting objectives, such as maximizing performance while minimizing cost and energy consumption.
         </p>
         <p>
-          <strong>My Approach:</strong> My work on this DoD-funded project focuses on training a single RL policy that can generate a wide spectrum of optimal behaviors, each representing a different trade-off between objectives. This allows a human operator to interactively tune the agent's priorities at runtime, without any retraining, to adapt its strategy to changing mission requirements. This creates more flexible, transparent, and human-tunable AI systems.
+            <strong>My Approach (D³PO):</strong> <strong>Decomposed, Diversity-Driven Policy Optimization</strong> My work on the DoD-funded <strong>MIXTAPE</strong> initiative addresses this with <strong>D³PO</strong>. This framework trains a single, robust policy capable of generating a wide spectrum of optimal behaviors. This allows a human operator to interactively tune the agent's objective priorities at runtime (without retraining) to adapt its strategy to changing mission requirements.
         </p>
+        
+        <h4 class="font-semibold text-gray-800 pt-2">Next Steps:</h4>
+        <ul class="list-disc list-outside pl-5 space-y-2 text-gray-700">
+            <li>
+                <strong>Negative Preferences (Symmetric Scalarization):</strong> We are introducing a fundamentally new paradigm where negative preferences can be allowed, enabling an operator to <em>actively penalize</em> an objective. We will explore its impact by designing new environments and metrics and modifying D³PO to support this symmetric instruction space.
+            </li>
+            <li>
+                <strong>Non-Linear Scalarization:</strong> We are moving from linear combinations of objectives to non-linear scalarization functions. This will allow the agent to learn a richer class of non-convex trade-offs, giving the user a choice between multiple possible scalarization options.
+            </li>
+        </ul>
       </div>
     </details>
     <hr>
