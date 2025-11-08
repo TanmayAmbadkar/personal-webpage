@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tanmay Ambadkar - Research Statement</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Google Font: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom styles for the printed-page look */
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+            }
+            .page-container {
+                box-shadow: none;
+                margin: 0;
+                max-width: 100%;
+                border: none;
+            }
+        }
+        h2 {
+            border-bottom: 2px solid #2563eb; /* blue-600 */
+            padding-bottom: 8px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+
+    <!-- === ADDED: Download Button === -->
+    <div class="max-w-4xl mx-auto mb-4 text-right print:hidden">
+        <button onclick="window.print()" class="bg-blue-600 text-white font-semibold py-2 px-5 rounded-lg shadow hover:bg-blue-700 transition duration-300 ease-in-out">
+            <!-- Download Icon (SVG) -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block -mt-1 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            Download as PDF
+        </button>
+    </div>
+    <!-- === END: Download Button === -->
+
+
+    <main class="page-container max-w-4xl mx-auto bg-white p-10 sm:p-12 lg:p-16 shadow-lg rounded-lg border border-gray-200">
+        
+        <!-- Header Section -->
+        <header class="mb-8 border-b pb-8">
+            <h1 class="text-4xl font-bold text-gray-900 mb-2">
+                Research Statement
+            </h1>
+            <div class="text-lg text-gray-700 font-semibold">
+                Tanmay Ambadkar
+            </div>
+            <p class="text-base text-gray-600 mb-4">
+                Ph.D. Candidate, Computer Science & Engineering, The Pennsylvania State University
+            </p>
+            <!-- Contact Links -->
+            <div class="flex flex-wrap gap-x-6 gap-y-2 text-base text-blue-600">
+                <a href="mailto:tanmay.ambadkar@gmail.com" class="hover:underline">tanmay.ambadkar@gmail.com</a>
+                <a href="https://ambadkar.com" target="_blank" rel="noopener noreferrer" class="hover:underline">ambadkar.com</a>
+                <a href="https://www.linkedin.com/in/tanmayambadkar/" target="_blank" rel="noopener noreferrer" class="hover:underline">LinkedIn</a>
+            </div>
+        </header>
+
+        <!-- 1. Overview and Research Vision -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">
+                1. Overview and Research Vision
+            </h2>
+            <p class="mb-4 text-base leading-relaxed text-gray-800">
+                My research is dedicated to building trustworthy and reliable autonomous systems. While deep Reinforcement Learning (RL) has demonstrated superhuman capabilities in simulated domains, its application in the real world is critically hindered by a fundamental reliance on hand-engineered, scalar reward functions. This process is brittle, labor-intensive, and often leads to "reward hacking"—a critical failure of <strong>interpretability and alignment</strong> where the agent discovers a misalignment between the simple reward and the complex, high-level human intent.
+            </p>
+            <p class="mb-4 text-base leading-relaxed text-gray-800">
+                My research thesis is that to build truly robust AI, we must move beyond scalar rewards and instead use <strong>Specification-Guided Reinforcement Learning</strong>. My work develops a unified, <strong>human-centric</strong> framework that makes this approach practical by <strong>democratizing access</strong> to sophisticated AI, solving the three primary bottlenecks that prevent its widespread adoption:
+            </p>
+            <ol class="list-decimal list-outside pl-8 mb-4 space-y-2 text-base text-gray-800">
+                <li><strong>Scalable Safety:</strong> Formal safety guarantees are computationally intractable in complex, high-dimensional systems. My work creates "safety shields" that scale to these systems.</li>
+                <li><strong>Flexible Objectives:</strong> Real-world tasks have multiple, conflicting goals. My work provides a provably stable algorithm for training a single, flexible agent to manage these trade-offs.</li>
+                <!-- === MODIFIED: Replaced *word* with <em>word</em> === -->
+                <li><strong>Imperfect Specifications:</strong> High-level specifications are often ambiguous or flawed. My work provides a method for an agent to <em>automatically</em> refine and correct these imperfect instructions.</li>
+            </ol>
+            <p class="text-base leading-relaxed text-gray-800">
+                Collectively, these pillars form a comprehensive foundation for building autonomous agents that are not only powerful but also provably safe, <strong>interpretable</strong>, <strong>ethically-grounded,</strong> and aligned with human values.
+            </p>
+        </section>
+
+        <!-- 2. Core Research Contributions -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">
+                2. Core Research Contributions
+            </h2>
+
+            <!-- 2.1. Scalable Enforcement -->
+            <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-3">
+                2.1. Scalable Enforcement of Safety Specifications (RAMPS & SPARKD)
+            </h3>
+            <p class="mb-4 text-base leading-relaxed text-gray-800">
+                The most significant barrier to deploying RL in safety-critical domains (e.g., robotics, autonomous driving) is the trade-off between safety and scalability. Formal methods (like Control Barrier Functions or Weakest Precondition) provide mathematical safety guarantees but are computationally intractable in high-dimensional, non-linear systems.
+            </p>
+            <p class="mb-4 text-base leading-relaxed text-gray-800">
+                My research solves this by using <strong>learned linear representations</strong> to make formal methods tractable. My frameworks, <strong>SPARKD</strong> and <strong>RAMPS</strong>, are built on the insight that we can use <strong>Deep Koopman Operators</strong> to "lift" the system's state into a higher-dimensional space where its complex, non-linear dynamics become globally linear (<em>i.e.,</em> <em>z'</em> = <em>A</em>z + <em>B</em>u).
+            </p>
+            <p class="mb-4 text-base leading-relaxed text-gray-800">
+                This "lift-and-linearize" approach reduces the intractable, non-linear verification problem into a simple, convex Quadratic Program (QP) that can be solved in real-time.
+            </p>
+            <ul class="list-disc list-outside pl-8 mb-4 space-y-2 text-base text-gray-800">
+                <li><strong>SPARKD</strong> leverages this linear model to apply formal <strong>Weakest Precondition (WP) calculus</strong>, efficiently computing safe action spaces over a finite horizon.</li>
+                <li><strong>RAMPS</strong> (Accepted at the AAAI-26 Student Abstract and Poster Program) builds on this, introducing a novel <strong>multi-step robust Control Barrier Function (CBF)</strong>. This formulation is provably robust to the <em>&epsilon;</em>-error of the learned linear model and explicitly handles control delays (high relative degree), which is critical for real-world robotics.</li>
+            </ul>
+            <p class="mb-4 text-base leading-relaxed text-gray-800">
+                This research is the first to successfully scale these formal methods to high-dimensional MuJoCo environments, <strong>reducing safety violations by over 90%</strong> where prior formal methods failed. My future work, <strong>AutoCost</strong>, uses the slack variables from these QPs to generate a dense, non-binary cost signal, bridging the gap between "shielding" and traditional "cost-based" (CMDP) approaches.
+            </p>
+
+            <!-- 2.2. Flexible Adaptation -->
+            <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-3">
+                2.2. Flexible Adaptation to Conflicting Objectives (D³PO)
+            </h3>
+            <p class="mb-4 text-base leading-relaxed text-gray-800">
+                Real-world tasks are rarely single-objective. They require balancing a set of conflicting goals, such as maximizing performance while minimizing cost and energy. Training a single, preference-conditioned policy is the most flexible approach, but it is notoriously unstable due to (1) destructive gradient interference and (2) representational mode collapse.
+            </p>
+            <p class="mb-4 text-base leading-relaxed text-gray-800">
+                My algorithm, <strong>D³PO</strong> (Decomposed, Diversity-Driven Policy Optimization), is a novel framework that provides formal guarantees against both of these failure modes. This work is a core component of the <strong>DoD-funded MIXTAPE initiative</strong>, where my goal is to enable <strong>user-modifiable policy behavior</strong> at runtime.
+            </p>
+            <ul class="list-disc list-outside pl-8 mb-4 space-y-2 text-base text-gray-800">
+                <li><strong>Decomposed Optimization:</strong> D³PO uses <strong>Late-Stage Weighting (LSW)</strong>, which provably prevents gradient interference by preserving the raw, per-objective advantages before applying preferences (Lemma 1).</li>
+                <li><strong>Diversity-Driven Regularization:</strong> D³PO introduces a <strong>Scaled Diversity Regularizer</strong> that I formally prove <em>guarantees</em> the policy cannot suffer from mode collapse (Proposition 3).</li>
+            </ul>
+            <p class="mb-4 text-base leading-relaxed text-gray-800">
+                These theoretical guarantees translate to SOTA performance, allowing D³PO to be the first preference-conditioned algorithm to successfully scale to a complex, 9-objective building control problem where all baselines failed. My immediate future work extends this architecture to support <strong>Symmetric Scalarization</strong>, a new paradigm that allows for <em>negative</em> preference weights, enabling an agent to <em>actively penalize</em> undesirable behaviors and discover a richer, "extended" Pareto front.
+            </p>
+
+            <!-- 2.3. Automated Refinement -->
+            <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-3">
+                2.3. Automated Refinement of Imperfect Specifications (AutoSpec)
+            </h3>
+            <p class="mb-4 text-base leading-relaxed text-gray-800">
+                A final, practical bottleneck is that even formal specifications can be flawed. A human operator may provide a specification that is logically correct but "coarse" or under-specified, containing trap states or unachievable subgoals that make the task impossible for an RL agent to learn.
+            </p>
+            <p class="mb-4 text-base leading-relaxed text-gray-800">
+                My work, <strong>AutoSpec</strong> (Accepted at <strong>The Workshop on Post-AI Formal Methods at AAAI-26,</strong> Presented at <strong>PLDI-SRC 2024</strong>), is a framework that automates the refinement of these imperfect specifications. It operates as a "wrapper" that monitors the agent's learning. When the agent fails to satisfy a subgoal, AutoSpec automatically identifies the failing component in the specification's abstract graph and applies one of four <em>sound</em> refinement procedures (e.g., <strong>SeqRefine</strong> to add waypoints, <strong>PastRefine</strong> to partition states). This process improves learnability while guaranteeing the refined specification remains true to the user's original intent, making specification-guided RL more practical and accessible to <strong>domain experts who are not RL specialists.</strong>
+            </p>
+        </section>
+
+        <!-- 3. Interdisciplinary Application -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">
+                3. Interdisciplinary Application & Broader Impact
+            </h2>
+            <p class="text-base leading-relaxed text-gray-800">
+                My interdisciplinary approach extends to collaborations in other domains, where I integrate these advanced AI techniques into applications such as <strong>energy systems optimization</strong> (achieving a 32% cost reduction for grid-integrated district energy systems) and <strong>defense applications</strong> (via the MIXTAPE initiative). These experiences have broadened my perspective on the societal impact of AI and equipped me with the skills to translate advanced computational methods into tangible benefits for industry and public welfare, ensuring that these powerful technologies are both innovative and responsibly deployed.
+            </p>
+        </section>
+
+        <!-- 4. Future Work -->
+        <section>
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">
+                4. Future Work and Broader Vision
+            </h2>
+            <p class="mb-4 text-base leading-relaxed text-gray-800">
+                I am actively pursuing the application of Reinforcement Learning to materials science, specifically for the <strong>discovery of novel, stable, high-entropy alloys</strong>. This domain is a perfect, high-dimensional testbed for my research:
+            </p>
+            <ul class="list-disc list-outside pl-8 mb-4 space-y-2 text-base text-gray-800">
+                <li><strong>Multi-Objective Discovery:</strong> The search for a new alloy is a classic multi-objective problem (e.g., balancing stability, cost, and manufacturability), making my work on <strong>D³PO</strong> directly applicable.</li>
+                <li><strong>Discovering Diverse Synthesis Paths:</strong> The goal is not just to find <em>one</em> stable alloy, but to discover <em>multiple, novel synthesis paths</em>. My research on <strong>D³PO</strong>'s diversity-driven regularization can be extended to find a diverse set of "policies" that each correspond to a viable synthesis route.</li>
+                <li><strong>Scaling & Interpretability:</strong> The chemical search space is enormous. My experience in <strong>scaling RL</strong> to high-D systems (RAMPS, D³PO) is critical. Furthermore, the <strong>interpretability</strong> of my frameworks (e.g., the user-driven nature of D³PO and the explicit logic of AutoSpec) provides a foundation for building agents that scientists can understand, trust, and collaborate with, allowing them to inject their own intuition into the discovery process.</li>
+            </ul>
+        </section>
+
+    </main>
+
+</body>
+</html>
