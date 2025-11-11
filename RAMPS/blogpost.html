@@ -245,7 +245,7 @@
       <!-- 8. Experiments & results (lifted + expanded) -->
       <h2>8. Experiments and results</h2>
 
-      <p>This section pulls in the experimental highlights from the paper and the homepage. We evaluate on classical and locomotion benchmarks with state constraints, comparing RAMPS variants to constrained/penalty RL and model-based shielding baselines.</p>
+      <p>We evaluate on classical and locomotion benchmarks from safety-gymnasium with state constraints, comparing RAMPS variants to constrained/penalty RL and model-based shielding baselines.</p>
 
       <h3>Environments</h3>
       <div class="grid md:grid-cols-2 gap-4 my-4">
@@ -270,12 +270,12 @@
       <h3>Baselines and variants</h3>
       <ul class="list-disc ml-6">
         <li>SauteRL, P3O, CUP: constrained/penalty RL baselines</li>
-        <li>SPICE + L / SPICE + K: model-based one-step shielding with linear or Koopman model</li>
+        <li>SPICE + L / SPICE + K: model-based multi-step weakest-preconditions shielding with linear or Koopman model</li>
         <li>RAMPS + L: RAMPS with direct linear model</li>
         <li>RAMPS + K: RAMPS with Deep Koopman lifted model</li>
       </ul>
 
-      <h3>Key numeric highlights (from paper & homepage)</h3>
+      <h3>Key highlights</h3>
       <div class="grid md:grid-cols-3 gap-4 my-6 text-center">
         <div class="p-4 bg-slate-50 rounded-lg">
           <p class="text-2xl font-bold text-blue-600">Up to 90%</p>
@@ -291,7 +291,7 @@
         </div>
       </div>
 
-      <h3>Full quantitative table (cumulative safety violations during training)</h3>
+      <h3>Cumulative safety violations during training</h3>
       <div class="overflow-x-auto my-4">
         <table class="min-w-full bg-white border border-slate-300 rounded-lg">
           <thead class="bg-slate-100">
@@ -359,7 +359,7 @@
       </div>
 
       <h3>Figures and qualitative curves</h3>
-      <p>Included in the paper and on the homepage are cumulative violation curves and reward learning curves for each environment. These show that RAMPS flattens violation accumulation and preserves reward. Drop-in images are referenced below; keep your <code>images/</code> folder aligned with these names:</p>
+      <!-- <p>Included in the paper and on the homepage are cumulative violation curves and reward learning curves for each environment. These show that RAMPS flattens violation accumulation and preserves reward. </p> -->
       <div class="space-y-8">
                     <!-- Row 1: Safety Violations -->
                     <div>
@@ -416,7 +416,7 @@
                     </div>
                 </div>
 
-      <h3>Empirical takeaways (concise)</h3>
+      <h3>Empirical takeaways</h3>
       <ul class="list-disc ml-6">
         <li>RAMPS yields large reductions in cumulative safety violations (often an order of magnitude vs baselines).</li>
         <li>RAMPS scales to large, lifted state dimensions where one-step shields fail.</li>
@@ -502,8 +502,8 @@ loop each timestep:
 
   <footer class="bg-white border-t mt-12">
     <div class="container mx-auto px-6 py-8 text-center text-slate-600">
-      <p class="mb-2">&copy; 2026 Anonymous Authors. Paper under double-blind review for ICLR 2026.</p>
-      <p class="text-sm">This blog post is an engineer-focused summary of the RAMPS framework, with equations and implementation notes.</p>
+      <p class="mb-2">&copy;Paper under double-blind review for ICLR 2026.</p>
+      <!-- <p class="text-sm">This blog post is an engineer-focused summary of the RAMPS framework, with equations and implementation notes.</p> -->
     </div>
   </footer>
 
