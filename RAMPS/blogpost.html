@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>RAMPS — Deep Dive & Experiments</title>
+
+  <!-- Tailwind (utility classes still available) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- KaTeX for math rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+
+  <style>
+    :root{
+      --bg:#f8fafc; --card:#ffffff; --muted:#64748b; --text:#0f172a; --accent:#2563eb; --green:#10b981;
+    }
+    html,body{height:100%;margin:0;font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+    .card{background:var(--card);border-radius:12px;box-shadow:0 10px 25px rgba(2,6,23,0.06);padding:1.75rem}
+    .hero-bg{background:#f1f5f9;background-image:radial-gradient(#d1d5db 1px, transparent 1px);background-size:20px 20px}
+    .math-block{padding:1rem;background:#f1f5f9;border-radius:8px;text-align:center;overflow:auto;margin:1rem 0}
+    .info-box{background:#eff6ff;border-left:4px solid var(--accent);padding:1rem;border-radius:6px;margin:1rem 0}
+    .success-box{background:#ecfdf5;border-left:4px solid var(--green);padding:1rem;border-radius:6px;margin:1rem 0}
+    .warning-box{background:#fffbeb;border-left:4px solid #f59e0b;padding:1rem;border-radius:6px;margin:1rem 0}
+    .highlight-box{padding:1rem;border-left:4px solid #3b82f6;background:#eff6ff;border-radius:6px;margin:1rem 0}
+    .code-block{background:#0f172a;color:#f8fafc;padding:1rem;border-radius:8px;overflow:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,"Roboto Mono",monospace;font-size:.9rem}
+    pre.katex-display{overflow:auto;padding:.75rem;background:#f8fafc;border-radius:8px}
+    article h2{font-size:1.7rem;font-weight:700;margin-top:1.5rem;margin-bottom:.75rem}
+    article h3{font-size:1.25rem;font-weight:600;margin-top:1rem;margin-bottom:.5rem}
+    article p, article li{color:#1e293b;line-height:1.6;margin-bottom:.75rem}
+    .max-w-5xl{max-width:80rem}
+    table{border-collapse:collapse;width:100%}
+    th,td{text-align:left;padding:.75rem;border-bottom:1px solid #e6eef7}
+    @media (min-width: 768px){ .lead { font-size:1.05rem } }
+  </style>
+</head>
+<body class="antialiased">
+
+  <!-- Header: minimal nav with Home link and implicit Blog current -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="container mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="index.html" class="text-2xl font-bold text-slate-900">RAMPS</a>
+      <nav class="flex gap-6 items-center">
+        <a href="index.html" class="text-slate-600 hover:text-slate-900">Home</a>
+        <!-- <span class="text-blue-600 font-semibold">Blog</span> -->
+      </nav>
+    </div>
+  </header>
+
+  <main class="container mx-auto px-6 py-12 max-w-5xl">
+
+    <!-- Title -->
+    <section class="text-center py-12 mb-8 rounded-xl hero-bg">
+      <h1 class="text-3xl md:text-4xl font-extrabold leading-tight mb-3">RAMPS: Robust Adaptive Multi-Step Predictive Shielding — Deep Dive</h1>
+      <!-- <p class="text-slate-600 max-w-3xl mx-auto lead">Engineering-focused exposition: full equations, algorithmic details, experiments, and implementation notes. No fluff.</p> -->
+      <!-- <p class="text-sm text-slate-500 mt-4">Anonymous authors — ICLR 2026 submission</p> -->
+      
+            <p class="text-base text-slate-600 max-w-4xl mx-auto">
+                <em>Tanmay Ambadkar, Darshan Chudiwal, Greg Anderson, Abhinav Verma</em>
+            </p>
+    </section>
+
+    <article class="card">
+
+      <!-- TL;DR -->
+      <div class="info-box">
+        <p class="text-lg font-semibold mb-2">TL;DR</p>
+        <p>RAMPS enforces state-based safety for RL by learning a single linear dynamics model (optionally in a lifted Koopman space), constructing multi-step robust Control Barrier Function constraints that account for accumulated model error, and solving a minimally invasive QP per step with an adaptive horizon. Scales to high-dimensional tasks and runs in real-time.</p>
+      </div>
+
+      <!-- 1. Introduction & Motivation (expanded) -->
+      <h2>1. Introduction and motivation</h2>
+      <p>Reinforcement learning (RL) agents discover policies by trial and error. In real systems, that trial and error may physically damage equipment or people. We want an agent that can improve its policy while guaranteeing safety at every interaction, not only after offline validation.</p>
+
+      <p>Existing approaches fall into three rough categories:</p>
+      <ul class="list-disc ml-6">
+        <li><strong>Formal/shielding:</strong> Build a model and compute safe actions with formal certificates. These can give guarantees but usually do not scale beyond low-dimensional dynamics because they require many local approximations or expensive nonlinear reachability.</li>
+        <li><strong>Cost-based constrained RL:</strong> Optimize reward with constraints turned into costs. These scale, but they allow violations while learning since the constraint is enforced only in expectation or via penalties.</li>
+        <li><strong>Purely data-driven:</strong> Learn safe behavior from data (imitation or offline RL). This requires safe demonstrations or large offline datasets, not always available.</li>
+      </ul>
+
+      <p>RAMPS aims to get the best of the first and second: formal-style certificates that are computationally tractable at scale by using a single global linear model and multi-step reasoning with robust tightening. The approach keeps online per-step computation small (warm-started QPs, binary search over horizons), enabling real-time control.</p>
+
+      <!-- 2. The Core Idea (expanded) -->
+      <h2>2. Core idea</h2>
+      <p>In one sentence: learn a linear predictive model, derive linear multi-step safety constraints that account for accumulated model error, and solve a minimally invasive quadratic program to enforce them, choosing the largest feasible prediction horizon to resolve delayed control authority (relative degree) while avoiding excessive conservatism.</p>
+
+      <h3>Why a single linear model?</h3>
+      <p>Using many local linear models creates a combinatorial explosion in high dimensions and complicates certificate composition. A single global linear model is efficient: we can precompute powers of A, constant constraint rows, and reuse them across steps. For nonlinear systems, we lift the state with a learned encoder (Deep Koopman) so dynamics in lifted space are approximately linear.</p>
+
+      <h3>The high relative-degree trap</h3>
+      <p>If the safety variable does not respond immediately to control (relative degree > 1), a one-step certificate cannot change the safety outcome. Multi-step predictions let the shield pick actions now that influence the constraint later. The adaptive horizon ensures the shield uses the shortest horizon that provides authority, minimizing conservatism.</p>
+
+      <!-- 3. Background: formal definitions (expanded) -->
+      <h2>3. Background: safe sets, CBFs, relative degree</h2>
+
+      <h3>Safe sets</h3>
+      <p>We represent safety as a polyhedron:</p>
+      <div class="math-block">$$\mathcal{C}=\bigcap_{i=1}^M\{z\mid p_i^\top z + b_i \le 0\}$$</div>
+      <p>Each face i corresponds to constraint \(p_i^\top z + b_i \le 0\). Define the safety function \(h_i(z) = -(p_i^\top z + b_i)\), so the safe set is \(\{z\mid h_i(z)\ge 0\ \forall i\}\).</p>
+
+      <h3>Discrete-time control barrier functions (CBFs)</h3>
+      <p>In discrete time, a CBF enforces a relation between current and next-step safety:</p>
+      <div class="math-block">$$h(F(x_k,u_k)) \ge \lambda h(x_k),\quad \lambda\in[0,1]$$</div>
+      <p>This ensures the safety margin does not shrink faster than allowed. The value of \(\lambda\) trades off conservatism and feasibility.</p>
+
+      <h3>Relative degree (practical viewpoint)</h3>
+      <p>Relative degree r for a constraint means control u_k influences the constraint only after r steps. Formally, smallest r such that \(p^\top A^{r-1}B\ne 0\) for linearized dynamics. If r>1, one-step CBFs cannot enforce the constraint because the control does not appear in z_{k+1} for that face.</p>
+
+      <!-- 4. How RAMPS Works (expanded) -->
+      <h2>4. RAMPS components and algorithm</h2>
+
+      <h3>4.1 Learned linear dynamics</h3>
+      <p>We fit a model of the form:</p>
+      <div class="math-block">$$z_{k+1} = A z_k + B u_k + c + w_k,\qquad \|w_k\|_\infty \le \epsilon$$</div>
+      <p>Training options:</p>
+      <ul class="list-disc ml-6">
+        <li><strong>Linear regression:</strong> ridge regression on features \([z_k,u_k,1]\) suitable for near-linear systems.</li>
+        <li><strong>Deep Koopman:</strong> encoder \(\phi\) that maps z to a lifted z^, with linear A,B,c in the lifted space. Loss includes one-step prediction and optionally multi-step consistency.</li>
+      </ul>
+      <p>Model updates are periodic. After each update we recompute precomputed matrices and the error bound ε from hold-out validation samples (high percentile, e.g., 99th).</p>
+
+      <h3>4.2 Multi-step robust CBF</h3>
+      <p>Nominal multi-step prediction (closed form):</p>
+      <div class="math-block">$$z_j(z,u)=A^j z + \sum_{k=0}^{j-1} A^{j-1-k} B u_k + \sum_{k=0}^{j-1} A^k c$$</div>
+      <p>Accumulated worst-case error bound over j steps:</p>
+      <div class="math-block">$$\mathcal{E}_j(p_i)=\sum_{k=0}^{j-1} \epsilon\|p_i^\top A^k\|_1$$</div>
+      <p>Robust safety constraint for face i at step j:</p>
+      <div class="math-block">$$p_i^\top z_j(z,u) + b_i \le \lambda^j (p_i^\top z + b_i) - \mathcal{E}_j(p_i)$$</div>
+      <p>Important properties:</p>
+      <ul class="list-disc ml-6">
+        <li>Each such constraint is linear in the control sequence u.</li>
+        <li>We only need constraints for j >= relative degree r_i, since earlier j do not include control terms for that face.</li>
+        <li>All constraints together form G u <= h, where G is precomputable given A,B and p_i.</li>
+      </ul>
+
+      <h3>4.3 Minimally invasive QP</h3>
+      <p>Given agent action \(a_\pi\), we solve:</p>
+      <div class="math-block">
+        $$\begin{aligned}
+        \min_{u_0,\dots,u_{H-1}}&\quad \|u_0 - a_\pi\|_2^2 \\
+        \text{s.t.}&\quad G_H u \le h_H(z) \\
+        &\quad u_k \in \mathcal{U},\quad k=0..H-1
+        \end{aligned}$$
+      </div>
+      <p>Only \(u_0\) is executed. The objective keeps corrections small and localized. The QP is convex and small (dimension m*H variables where m is action dim), and warm-starting from previous solves makes it fast.</p>
+
+      <h3>4.4 Adaptive horizon (practical algorithm)</h3>
+      <p>We search for largest feasible H in \([H_{\min}, H_{\max}]\) by binary search. Rationale:</p>
+      <ul class="list-disc ml-6">
+        <li>Larger H gives more authority for constraints with larger relative degree.</li>
+        <li>Larger H also increases accumulated tightening and may reduce feasibility.</li>
+      </ul>
+      <p>Binary search minimizes QP solves. Each candidate QP uses precomputed \(G_H\) and warm-start from nearest feasible H. If no feasible H is found, call a deterministic backup policy that solves a small LP to steer away from the tightest constraint.</p>
+
+      <h3>4.5 Online loop and model updates</h3>
+      <ol class="list-decimal ml-6">
+        <li>Observe \(z_k\), propose \(a_\pi \leftarrow \pi(z_k)\).</li>
+        <li>Binary search \(H\) and solve QPs until largest feasible \(H^*\) found.</li>
+        <li>Apply \(u_0\) (or backup), observe \(z_{k+1}\), store \((z,u,z')\).</li>
+        <li>Periodically retrain/update model and recompute \(\epsilon\) and precomputations.</li>
+      </ol>
+
+      <!-- 5. Multi-step CBF deep dive (expanded) -->
+      <h2>5. The multi-step robust CBF — equations and intuition</h2>
+      <p>We show how the tightening term arises and how constraints become linear in \(u\).</p>
+
+      <h3>Unrolling true dynamics and bounding error</h3>
+      <div class="math-block">
+        $$z_{k+1}=Az_k+Bu_k+c+w_k,\quad \|w_k\|_\infty\le\epsilon$$
+      </div>
+      <p>Unroll \(j\) steps:</p>
+      <div class="math-block">
+        $$z_j=A^j z + \sum_{k=0}^{j-1} A^{j-1-k} B u_k + \sum_{k=0}^{j-1} A^k c + \sum_{k=0}^{j-1} A^{j-1-k} w_k$$
+      </div>
+      <p>Projecting on face \(p_i\):</p>
+      <div class="math-block">
+        $$p_i^\top z_j = p_i^\top A^j z + \sum_{k=0}^{j-1} p_i^\top A^{j-1-k} B u_k + p_i^\top\sum_{k=0}^{j-1}A^k c + p_i^\top\sum_{k=0}^{j-1} A^{j-1-k} w_k$$
+      </div>
+      <p>Bound the error term in absolute value using \(\|w_k\|_\infty\le\epsilon\):</p>
+      <div class="math-block">
+        $$\left|p_i^\top\sum_{k=0}^{j-1} A^{j-1-k} w_k\right| \le \sum_{k=0}^{j-1} \|p_i^\top A^{j-1-k}\|_1 \, \|w_k\|_\infty \le \mathcal{E}_j(p_i)$$
+      </div>
+      <p>Thus we tighten the RHS of the nominal inequality by \(\mathcal{E}_j(p_i)\) to remain conservative for worst-case errors.</p>
+
+      <h3>Linear constraint form</h3>
+      <p>Collect coefficients of the control sequence \(u=(u_0,\dots,u_{H-1})\). For a given \(j\) and face \(i\):</p>
+      <div class="math-block">
+        $$\sum_{k=0}^{j-1} (p_i^\top A^{j-1-k} B) u_k \le \lambda^j (p_i^\top z + b_i) - p_i^\top A^j z - p_i^\top \sum_{k=0}^{j-1} A^k c - b_i - \mathcal{E}_j(p_i)$$
+      </div>
+      <p>Each row is a constant vector times \(u\), so we can assemble \(G\) and \(h\) efficiently. This is the key computational advantage: the problem reduces to a small convex QP with linear constraints.</p>
+
+      <!-- 6. Formal guarantees (expanded) -->
+      <h2>6. Formal guarantees</h2>
+
+      <h3>Theorem 1: Model-relative forward invariance</h3>
+      <div class="highlight-box">
+        <p class="font-semibold">Statement</p>
+        <p>If at each time step the robust multi-step QP is feasible under the learned model and the true residuals satisfy \(\|w_k\|_\infty \le \epsilon\), then the closed-loop trajectory stays in \(\mathcal{C}\) for all times \(k\ge 0\).</p>
+      </div>
+      <p>Proof sketch: induction. Feasibility gives a control sequence \(u\) that keeps all predicted \(z_{k+1..k+H}\) inside \(\mathcal{C}\) given the \(\epsilon\) tightening. Applying \(u_0\) moves the system to \(z_{k+1}\) which is in \(\mathcal{C}\); repeat.</p>
+
+      <h3>Theorem 2: High-probability model accuracy</h3>
+      <div class="highlight-box" style="border-left-color:var(--green);background:#ecfdf5">
+        <p class="font-semibold">Statement (informal)</p>
+        <p>Estimating \(\epsilon\) as a high quantile (e.g., 99th) of validation errors gives a bound on the probability that future model errors exceed \(\epsilon\). Using concentration results, one can quantify this tail probability and thereby convert the deterministic guarantee into a high-probability one for the real system.</p>
+      </div>
+      <p>Practical implication: choose \(\epsilon\) at a high percentile and recalibrate periodically to maintain the guarantee under distribution shift.</p>
+
+      <!-- 7. Implementation & complexity (expanded) -->
+      <h2>7. Implementation and complexity</h2>
+
+      <h3>Precomputation</h3>
+      <ul class="list-disc ml-6">
+        <li>Compute \(A^k\) for \(k=0..\!H_{\max}\) (dominant cost: O(H·s^3)).</li>
+        <li>Compute \(p_i^\top A^k B\) rows for all faces \(i\) and k (O(m·H·s^2)).</li>
+        <li>Compute drift sums \(\sum A^k c\) and error terms \(\mathcal{E}_j(p_i)\).</li>
+      </ul>
+
+      <h3>Per-step work</h3>
+      <ul class="list-disc ml-6">
+        <li>Compute state-dependent vector \(h = M_h z + v_h\) (O(m·H·s)).</li>
+        <li>Binary search over H with O(log H) QP solves; each QP warm-started.</li>
+        <li>QP variables = action_dim × H; constraints ≈ faces × H.</li>
+      </ul>
+
+      <h3>Run-time numbers (empirical)</h3>
+      <p>From the experiments (see below), average per-step shield time is under 0.5 ms across environments, making RAMPS compatible with real-time control loops.</p>
+
+      <h3>Estimating ε in practice</h3>
+      <p>Procedure:</p>
+      <ol class="list-decimal ml-6">
+        <li>Hold out a validation set (e.g., 20% of collected data, capped).</li>
+        <li>Compute one-step prediction residuals \(\|z_{k+1} - (Az_k + Bu_k + c)\|_\infty\).</li>
+        <li>Set \(\epsilon\) to a high quantile (99th recommended).</li>
+        <li>Recompute after each model update or if residual statistics drift.</li>
+      </ol>
+
+      <!-- 8. Experiments & results (lifted + expanded) -->
+      <h2>8. Experiments and results</h2>
+
+      <p>This section pulls in the experimental highlights from the paper and the homepage. We evaluate on classical and locomotion benchmarks with state constraints, comparing RAMPS variants to constrained/penalty RL and model-based shielding baselines.</p>
+
+      <h3>Environments</h3>
+      <div class="grid md:grid-cols-2 gap-4 my-4">
+        <div class="bg-slate-100 p-4 rounded-lg">
+          <p class="font-semibold">Pendulum</p>
+          <p class="text-sm text-slate-600">State dim: 3 | Action dim: 1 | Constraint: \(|\theta| \le 0.4\)</p>
+        </div>
+        <div class="bg-slate-100 p-4 rounded-lg">
+          <p class="font-semibold">SafeHopper</p>
+          <p class="text-sm text-slate-600">State dim: 11 | Action dim: 3</p>
+        </div>
+        <div class="bg-slate-100 p-4 rounded-lg">
+          <p class="font-semibold">SafeCheetah</p>
+          <p class="text-sm text-slate-600">State dim: 17 | Action dim: 6</p>
+        </div>
+        <div class="bg-slate-100 p-4 rounded-lg">
+          <p class="font-semibold">SafeAnt</p>
+          <p class="text-sm text-slate-600">State dim: 27 (105 lifted) | Action dim: 8</p>
+        </div>
+      </div>
+
+      <h3>Baselines and variants</h3>
+      <ul class="list-disc ml-6">
+        <li>SauteRL, P3O, CUP: constrained/penalty RL baselines</li>
+        <li>SPICE + L / SPICE + K: model-based one-step shielding with linear or Koopman model</li>
+        <li>RAMPS + L: RAMPS with direct linear model</li>
+        <li>RAMPS + K: RAMPS with Deep Koopman lifted model</li>
+      </ul>
+
+      <h3>Key numeric highlights (from paper & homepage)</h3>
+      <div class="grid md:grid-cols-3 gap-4 my-6 text-center">
+        <div class="p-4 bg-slate-50 rounded-lg">
+          <p class="text-2xl font-bold text-blue-600">Up to 90%</p>
+          <p class="text-sm text-slate-600">Reduction in safety violations vs state-of-the-art safe RL</p>
+        </div>
+        <div class="p-4 bg-slate-50 rounded-lg">
+          <p class="text-2xl font-bold text-blue-600">100+</p>
+          <p class="text-sm text-slate-600">Scales to >100 lifted state dimensions</p>
+        </div>
+        <div class="p-4 bg-slate-50 rounded-lg">
+          <p class="text-2xl font-bold text-blue-600">&lt;0.5 ms</p>
+          <p class="text-sm text-slate-600">Average per-step shield computation time</p>
+        </div>
+      </div>
+
+      <h3>Full quantitative table (cumulative safety violations during training)</h3>
+      <div class="overflow-x-auto my-4">
+        <table class="min-w-full bg-white border border-slate-300 rounded-lg">
+          <thead class="bg-slate-100">
+            <tr>
+              <th>Algorithm</th>
+              <th class="text-center">SafeHopper</th>
+              <th class="text-center">SafeCheetah</th>
+              <th class="text-center">SafeAnt</th>
+              <th class="text-center">Pendulum</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>SauteRL</td>
+              <td class="text-center">703 ± 78</td>
+              <td class="text-center">183 ± 25</td>
+              <td class="text-center">1221 ± 203</td>
+              <td class="text-center">91 ± 22</td>
+            </tr>
+            <tr class="bg-slate-50">
+              <td>CUP</td>
+              <td class="text-center">673 ± 63</td>
+              <td class="text-center">122 ± 22</td>
+              <td class="text-center">1883 ± 221</td>
+              <td class="text-center">184 ± 225</td>
+            </tr>
+            <tr>
+              <td>P3O</td>
+              <td class="text-center">620 ± 6</td>
+              <td class="text-center">185 ± 8</td>
+              <td class="text-center">1481 ± 446</td>
+              <td class="text-center">173 ± 166</td>
+            </tr>
+            <tr class="bg-slate-50 italic">
+              <td>SPICE + L</td>
+              <td class="text-center italic">Failed</td>
+              <td class="text-center italic">Failed</td>
+              <td class="text-center italic">Failed</td>
+              <td class="text-center">495 ± 128</td>
+            </tr>
+            <tr>
+              <td>SPICE + K</td>
+              <td class="text-center">459 ± 105</td>
+              <td class="text-center">169 ± 70</td>
+              <td class="text-center italic">Failed</td>
+              <td class="text-center">87 ± 8</td>
+            </tr>
+            <tr class="bg-blue-50">
+              <td class="font-semibold">RAMPS + L</td>
+              <td class="text-center font-semibold text-blue-700">193 ± 44</td>
+              <td class="text-center font-semibold text-blue-700">7 ± 7</td>
+              <td class="text-center font-semibold text-blue-700">162 ± 42</td>
+              <td class="text-center font-semibold text-blue-700">69 ± 6</td>
+            </tr>
+            <tr class="bg-green-50">
+              <td class="font-semibold">RAMPS + K</td>
+              <td class="text-center font-semibold text-green-700">172 ± 15</td>
+              <td class="text-center font-semibold text-green-700">26 ± 17</td>
+              <td class="text-center font-semibold text-green-700">111 ± 23</td>
+              <td class="text-center font-semibold text-green-700">53 ± 6</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="text-sm text-slate-600 mt-2 text-center">Lower is better. "Failed" indicates training instability or inability to complete safe episodes.</p>
+      </div>
+
+      <h3>Figures and qualitative curves</h3>
+      <p>Included in the paper and on the homepage are cumulative violation curves and reward learning curves for each environment. These show that RAMPS flattens violation accumulation and preserves reward. Drop-in images are referenced below; keep your <code>images/</code> folder aligned with these names:</p>
+      <div class="space-y-8">
+                    <!-- Row 1: Safety Violations -->
+                    <div>
+                        <h4 class="text-xl font-semibold mb-4 text-slate-800 text-center">Cumulative Safety Violations</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                            <!-- Pendulum -->
+                            <div class="text-center bg-slate-100 p-2 rounded-lg">
+                                <img src="images/violations_pendulum.png" alt="Pendulum Violations Graph" class="rounded-lg shadow-md w-full">
+                                <p class="mt-2 font-semibold text-slate-700">(a) Pendulum</p>
+                            </div>
+                            <!-- Cheetah -->
+                            <div class="text-center bg-slate-100 p-2 rounded-lg">
+                                <img src="images/violations_cheetah.png" alt="Cheetah Violations Graph" class="rounded-lg shadow-md w-full">
+                                <p class="mt-2 font-semibold text-slate-700">(b) Cheetah</p>
+                            </div>
+                            <!-- Hopper -->
+                            <div class="text-center bg-slate-100 p-2 rounded-lg">
+                                <img src="images/violations_hopper.png" alt="Hopper Violations Graph" class="rounded-lg shadow-md w-full">
+                                <p class="mt-2 font-semibold text-slate-700">(c) Hopper</p>
+                            </div>
+                            <!-- Ant -->
+                            <div class="text-center bg-slate-100 p-2 rounded-lg">
+                                <img src="images/violations_ant.png" alt="Ant Violations Graph" class="rounded-lg shadow-md w-full">
+                                <p class="mt-2 font-semibold text-slate-700">(d) Ant</p>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Row 2: Reward -->
+                    <div>
+                        <h4 class="text-xl font-semibold mb-4 text-slate-800 text-center">Reward Curves</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                            <!-- Pendulum -->
+                            <div class="text-center bg-slate-100 p-2 rounded-lg">
+                                <img src="images/reward_pendulum.png" alt="Pendulum Reward Graph" class="rounded-lg shadow-md w-full">
+                                <p class="mt-2 font-semibold text-slate-700">(a) Pendulum</p>
+                            </div>
+                            <!-- Cheetah -->
+                            <div class="text-center bg-slate-100 p-2 rounded-lg">
+                                <img src="images/reward_cheetah.png" alt="Cheetah Reward Graph" class="rounded-lg shadow-md w-full">
+                                <p class="mt-2 font-semibold text-slate-700">(b) Cheetah</p>
+                            </div>
+                            <!-- Hopper -->
+                            <div class="text-center bg-slate-100 p-2 rounded-lg">
+                                <img src="images/reward_hopper.png" alt="Hopper Reward Graph" class="rounded-lg shadow-md w-full">
+                                <p class="mt-2 font-semibold text-slate-700">(c) Hopper</p>
+                            </div>
+                            <!-- Ant -->
+                            <div class="text-center bg-slate-100 p-2 rounded-lg">
+                                <img src="images/reward_ant.png" alt="Ant Reward Graph" class="rounded-lg shadow-md w-full">
+                                <p class="mt-2 font-semibold text-slate-700">(d) Ant</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+      <h3>Empirical takeaways (concise)</h3>
+      <ul class="list-disc ml-6">
+        <li>RAMPS yields large reductions in cumulative safety violations (often an order of magnitude vs baselines).</li>
+        <li>RAMPS scales to large, lifted state dimensions where one-step shields fail.</li>
+        <li>Minimally invasive objective preserves task reward; in some tasks it improves learning stability.</li>
+        <li>Robust tightening is mandatory; removing it breaks safety guarantees.</li>
+      </ul>
+
+      <!-- 9. Ablations (summarized) -->
+      <h2>9. Ablation studies and diagnostics</h2>
+      <p>Key ablations from the paper that inform implementation choices:</p>
+      <ul class="list-disc ml-6">
+        <li><strong>Tightening removal:</strong> Removing \(\mathcal{E}_j\) causes optimism: shields certify unsafe actions and violations increase.</li>
+        <li><strong>H variation:</strong> \(H\approx 5\) often best; too small cannot resolve relative-degree traps; too large compounds error and reduces feasibility.</li>
+        <li><strong>\(\lambda\) variation:</strong> Very large \(\lambda\) (close to 1) is too strict and makes QPs infeasible; \(\lambda\) in [0.4,0.7] works well across tasks.</li>
+        <li><strong>\(\epsilon\) percentile:</strong> high-percentile (99th) is recommended—underestimating ε leads to violations; being conservative helps learning stability.</li>
+      </ul>
+
+      <!-- 10. Takeaways and limitations -->
+      <h2>10. Takeaways, limitations, and future directions</h2>
+
+      <h3>Takeaways</h3>
+      <ul class="list-disc ml-6">
+        <li>Linear models plus multi-step robust CBF give practical, near-formal safety guarantees at scale.</li>
+        <li>Adaptive horizon and warm-started QPs keep per-step time low while resolving delayed control authority.</li>
+        <li>Explicit worst-case tightening is necessary for reliability during learning.</li>
+      </ul>
+
+      <h3>Limitations</h3>
+      <ul class="list-disc ml-6">
+        <li><strong>Cold-start:</strong> Without a pre-trained model the earliest steps may violate safety while collecting model-fitting data. Mitigation: pretrain on offline data where possible.</li>
+        <li><strong>Linearity assumption:</strong> Works best when dynamics are approximately linear in raw or lifted space; strongly hybrid/discontinuous systems may need piecewise-linear extensions.</li>
+        <li><strong>Probabilistic guarantee:</strong> Safety is guaranteed conditioned on ε; in practice ε is estimated and thus guarantees are high-probability, not absolute.</li>
+      </ul>
+
+      <h3>Future directions</h3>
+      <ul class="list-disc ml-6">
+        <li>Online / conformal calibration of ε.</li>
+        <li>Safety-aware representation learning that minimizes the tightening term directly.</li>
+        <li>Extensions to hierarchical and multi-agent settings.</li>
+        <li>Hardware demonstrations to validate sim-to-real behavior.</li>
+      </ul>
+
+      <!-- 11. Appendix: detailed pseudocode (kept) -->
+      <h2>11. Appendix: pseudocode</h2>
+      <div class="code-block">
+<pre>
+Given: model (A,B,c), error bound ε, safety faces {p_i,b_i}, agent π, H_min, H_max, QP solver
+
+loop each timestep:
+  observe z
+  a_π ← π(z)
+  best_u ← None; best_H ← None
+  H_lo ← H_min; H_hi ← H_max
+  while H_lo ≤ H_hi:
+    H_mid ← floor((H_lo + H_hi)/2)
+    build G,u ≤ h for horizon H_mid (use precomputed A^k)
+    solve QP: min ||u_0 - a_π||^2 s.t. G u ≤ h, u_k ∈ U
+    if feasible:
+      best_u ← solution; best_H ← H_mid; H_lo ← H_mid + 1
+    else:
+      H_hi ← H_mid - 1
+  if best_u is None:
+    apply u_backup(z)
+  else:
+    apply best_u[0]
+  collect data; periodically retrain model and recompute ε; update precomputations
+</pre>
+      </div>
+
+      <!-- Learn more -->
+      <div class="info-box mt-6">
+        <p class="font-semibold mb-2">Learn more</p>
+        <p>Full proofs, additional ablations, and code are in the paper and accompanying repository.</p>
+        <div class="flex gap-4 mt-3">
+          <a href="https://openreview.net/forum?id=2bbqHOWFTU" class="text-blue-600 hover:text-blue-800 font-semibold" target="_blank" rel="noopener noreferrer">Read the paper →</a>
+          <a href="https://github.com/TanmayAmbadkar/sparkd" class="text-blue-600 hover:text-blue-800 font-semibold" target="_blank" rel="noopener noreferrer">View code →</a>
+        </div>
+      </div>
+
+    </article>
+
+  </main>
+
+  <footer class="bg-white border-t mt-12">
+    <div class="container mx-auto px-6 py-8 text-center text-slate-600">
+      <p class="mb-2">&copy; 2026 Anonymous Authors. Paper under double-blind review for ICLR 2026.</p>
+      <p class="text-sm">This blog post is an engineer-focused summary of the RAMPS framework, with equations and implementation notes.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Render icons
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
+    });
+
+    // Robust KaTeX auto-render initialization
+    document.addEventListener('DOMContentLoaded', function () {
+      function doRender() {
+        if (typeof renderMathInElement === 'function') {
+          renderMathInElement(document.body, {
+            delimiters: [
+              { left: "$$", right: "$$", display: true },
+              { left: "$", right: "$", display: false },
+              { left: "\\(", right: "\\)", display: false },
+              { left: "\\[", right: "\\]", display: true }
+            ],
+            throwOnError: false
+          });
+          return true;
+        }
+        return false;
+      }
+
+      if (!doRender()) {
+        var tries = 0;
+        var max = 50;
+        var id = setInterval(function () {
+          tries++;
+          if (doRender() || tries >= max) clearInterval(id);
+        }, 100);
+      }
+    });
+  </script>
+</body>
+</html>
