@@ -1,0 +1,38 @@
+{
+    "name": "Tanmay Ambadkar",
+    "role": "PhD Student @ Penn State",
+    "email": "tanmay.ambadkar@gmail.com",
+    "socialLinks": [
+        {
+            "name": "Email",
+            "url": "mailto:tanmay.ambadkar@gmail.com",
+            "icon": "Mail"
+        },
+        {
+            "name": "LinkedIn",
+            "url": "https://linkedin.com/in/tanmay-ambadkar/",
+            "icon": "Linkedin"
+        },
+        {
+            "name": "GitHub",
+            "url": "https://github.com/TanmayAmbadkar/",
+            "icon": "Github"
+        },
+        {
+            "name": "Scholar",
+            "url": "https://scholar.google.com/citations?user=1k2Vf9wAAAAJ&hl=en",
+            "icon": "GraduationCap"
+        },
+        {
+            "name": "Resume",
+            "url": "/files/resume.pdf",
+            "icon": "FileText"
+        }
+    ],
+    "about": {
+        "greeting": "Hello, I'm",
+        "name": "Tanmay Ambadkar.",
+        "tagline": "I build trustworthy AI.",
+        "description": "I am a PhD student in Computer Science at Penn State, advised by Dr. Abhinav Verma. My research focuses on integrating reinforcement learning with the safety and verification principles of programming languages to create reliable, interpretable, and safe AI systems."
+    }
+}

@@ -1,0 +1,49 @@
+[
+    {
+        "role": "Research Assistant",
+        "company": "Dept. of Architectural Engineering, Penn State",
+        "period": "Aug 2023 - Jan 2025",
+        "description": [
+            "Integrated Dymola simulation tools with Gymnasium, defining a robust multi-objective reward system.",
+            "Trained multiple RL agents for energy optimization."
+        ]
+    },
+    {
+        "role": "Research Assistant",
+        "company": "Dept. of Industrial and Manufacturing Engineering, Penn State",
+        "period": "May 2023 - July 2023",
+        "description": [
+            "Predicted Autism Spectrum Disorder in children using EHR data and time-series models.",
+            "Preprocessed over 500GB of data using PySpark for 600,000+ patients."
+        ]
+    },
+    {
+        "role": "Research & Digitization Automation Intern",
+        "company": "Siemens Technology and Services",
+        "period": "Jan 2022 - July 2022",
+        "description": [
+            "Detected anomalies in data using AutoEncoders and SHAP for explainability.",
+            "Developed a plug-and-play library for time-series anomaly detection.",
+            "Performed EDA on Starbucks coffee roaster data to predict burner cuts."
+        ]
+    },
+    {
+        "role": "Research & Digitization Automation Intern",
+        "company": "Siemens Technology and Services",
+        "period": "May 2021 - July 2021",
+        "description": [
+            "Integrated workflow creation and management using Celery, Redis, and Flask for the Industrial Predictive Analytics Engine (IPAE).",
+            "Reduced pipeline execution time by 30%."
+        ]
+    },
+    {
+        "role": "Teaching Assistant",
+        "company": "The Pennsylvania State University",
+        "period": "Various Semesters",
+        "description": [
+            "CMPEN 270: Digital Design: Theory and Practice",
+            "CMPSC 221: Object Oriented Design & Web Programming",
+            "CMPSC 448: Machine Learning and Algorithmic AI"
+        ]
+    }
+]

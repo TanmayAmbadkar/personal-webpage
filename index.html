@@ -1,153 +1,16 @@
 <!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Tanmay Ambadkar's professional website. PhD student at Penn State focusing on trustworthy AI and reinforcement learning."/>
-    <meta name="author" content="Tanmay Ambadkar">
-    <meta name="robots" content="all" />
-    <meta name="keywords" content="Tanmay Ambadkar, Reinforcement Learning, Deep Learning, Machine Learning, Penn State, AI Safety">
-    
-    <title>Tanmay Ambadkar</title>
-    
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    <!-- Bootstrap Avatar CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-avatar@latest/dist/avatar.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <style>
-        /* Ensures the sticky sidebar doesn't overlap the main content on small screens */
-        @media (min-width: 768px) {
-            .sidebar {
-                position: sticky;
-                top: 0;
-                height: 100vh;
-                overflow-y: auto;
-            }
-        }
-        /* Custom style for the icon links */
-        .icon-link {
-            font-size: 1.5rem; /* Makes icons larger */
-            transition: color 0.2s ease-in-out;
-        }
-        /* Hiding Navbar styles */
-        #main-navbar {
-            transition: top 0.3s ease-in-out;
-        }
-        .navbar-hidden {
-            top: -70px; 
-        }
-        
-        
-    </style>
-</head>
-
-<!-- Add data-bs-spy and data-bs-target for scrollspy functionality -->
-<body data-bs-target="#main-navbar" data-bs-offset="100">
-<!-- <body> -->
-
-    <!-- Sticky Top Navbar -->
-    <nav id="main-navbar" class="navbar navbar-expand-lg navbar-light bg-body-tertiary border-bottom sticky-top">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="#">Tanmay Ambadkar</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#homepage">About Me</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#research">Research</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#publications">Publications</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#education">Education</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#work-experience">Work Experience</a>
-                    </li>
-                </ul>
-                <button class="btn btn-link nav-link py-2 px-0 px-lg-2" type="button" id="theme-toggle">
-                    <i class="bi" id="theme-icon"></i>
-                </button>
-            </div>
-        </div>
-    </nav>
-
-    <div class="container mt-4" data-bs-spy="scroll" data-bs-target="#main-navbar" data-bs-root-margin="0px 0px -40%" data-bs-smooth-scroll="true"  >
-        <div class="row">
-
-            <!-- Left Column (Sidebar) -->
-            <div class="sidebar col-md-4">
-                <div class="pt-4">
-                    <div class="text-center">
-                        <img class="avatar avatar-128 bg-light rounded-circle text-white p-2 mb-3"
-                             src="files/profile.jpg" alt="Tanmay Ambadkar">
-                        <h2 class="mb-0">Tanmay Ambadkar</h2>
-                        <!-- <p class="text-muted">Making Computers Smart</p> -->
-                    </div>
-                    
-                    <!-- Horizontal Icon Navigation -->
-                    <ul class="nav justify-content-center mt-4 border-top pt-3">
-                        <li class="nav-item">
-                            <a href="mailto:tanmay.ambadkar@gmail.com" class="nav-link px-2 text-muted icon-link" target="_blank" rel="noopener noreferrer" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Email">
-                                <i class="bi bi-envelope-fill"></i>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="https://linkedin.com/in/tanmay-ambadkar/" class="nav-link px-2 text-muted icon-link" target="_blank" rel="noopener noreferrer" data-bs-toggle="tooltip" data-bs-placement="bottom" title="LinkedIn">
-                                <i class="bi bi-linkedin"></i>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="https://github.com/TanmayAmbadkar/" class="nav-link px-2 text-muted icon-link" target="_blank" rel="noopener noreferrer" data-bs-toggle="tooltip" data-bs-placement="bottom" title="GitHub">
-                                <i class="bi bi-github"></i>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="files/resume.pdf" class="nav-link px-2 text-muted icon-link" target="_blank" rel="noopener noreferrer" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Resume">
-                                <i class="bi bi-file-earmark-text-fill"></i>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/statement" class="nav-link px-2 text-muted icon-link" target="_blank" rel="noopener noreferrer" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Research Statement">
-                                <i class="bi bi-journal-text"></i>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="https://scholar.google.com/citations?user=1k2Vf9wAAAAJ&hl=en" class="nav-link px-2 text-muted icon-link" target="_blank" rel="noopener noreferrer" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Google Scholar">
-                                <i class="bi bi-mortarboard-fill"></i>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Right Column (Main Content) -->
-            <div class="col-md-8">
-                
-
-                <!-- Placeholders for dynamically loaded content -->
-                <div id="homepage"></div>
-                <div id="research"></div>
-                <div id="publications"></div>
-                <div id="education"></div>
-                <div id="work-experience"></div>
-                <!-- <div id="projects-placeholder"></div> -->
-
-                <footer class="mt-auto py-3 my-4 border-top">
-                    <p class="text-center text-muted">Made with <i class="bi bi-heart-fill text-danger"></i>, Tanmay</p>
-                </footer>
-            </div>
-        </div>
-    </div>
-
-    <script src="app.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-</body>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tanmay Ambadkar | PhD Student</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body class="bg-primary text-text antialiased selection:bg-accent selection:text-primary">
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>

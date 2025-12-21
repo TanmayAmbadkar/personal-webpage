@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Dark Mode (Default) */
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --text-primary: #f8fafc;
+  --text-muted: #94a3b8;
+  --color-accent: #38bdf8;
+  --scrollbar-thumb: #334155;
+  --color-separator: #334155;
+}
+
+.light {
+  /* Light Mode */
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --text-primary: #0f172a;
+  --text-muted: #64748b;
+  --color-accent: #0284c7;
+  --scrollbar-thumb: #cbd5e1;
+  --color-separator: #e2e8f0;
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-secondary/50 backdrop-blur-md border border-gray-500/10;
+  }
+
+  .border-gray {
+    border-color: rgb(80 82 85);
+  }
+
+  .light .border-gray {
+    border-color: rgb(191 198 210);
+  }
+}
+
+/* Custom Scrollbar for main page */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}

@@ -1,0 +1,20 @@
+[
+    {
+        "school": "The Pennsylvania State University",
+        "degree": "Ph.D in Computer Science and Engineering",
+        "period": "Jan 2024 - May 2027",
+        "gpa": "3.56"
+    },
+    {
+        "school": "The Pennsylvania State University",
+        "degree": "M.S. in Computer Science and Engineering",
+        "period": "Aug 2022 - Dec 2023",
+        "gpa": "3.9"
+    },
+    {
+        "school": "Indian Institute of Information Technology, Vadodara",
+        "degree": "B.Tech in Computer Science and Engineering",
+        "period": "Aug 2018 - May 2022",
+        "gpa": "9.4"
+    }
+]

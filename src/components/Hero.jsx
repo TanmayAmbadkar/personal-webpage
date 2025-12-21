@@ -1,0 +1,48 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-scroll';
+import profileData from '../data/profile.json';
+
+const Hero = () => {
+    const { about } = profileData;
+
+    return (
+        <section id="about" className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-12 pt-16 lg:pt-0">
+            <div className="max-w-4xl w-full">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8 }}
+                >
+                    <h2 className="text-accent font-medium text-base lg:text-lg mb-3 lg:mb-4">{about.greeting}</h2>
+                    <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-text mb-4 lg:mb-6 tracking-tight leading-tight">
+                        {about.name}
+                    </h1>
+                    <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-muted mb-6 lg:mb-8 leading-tight">
+                        {about.tagline}
+                    </h2>
+                    <p className="text-base sm:text-lg text-muted max-w-2xl mb-8 lg:mb-12 leading-relaxed">
+                        {about.description}
+                    </p>
+
+                    <div className="flex flex-col sm:flex-row gap-4">
+                        <Link to="research" smooth={true} offset={-50} duration={500}>
+                            <button className="w-full sm:w-auto px-8 py-4 bg-accent/10 text-accent border border-accent/20 rounded-lg font-medium hover:bg-accent/20 transition-all flex items-center justify-center gap-2 group">
+                                View Research
+                                <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                            </button>
+                        </Link>
+                        <Link to="publications" smooth={true} offset={-50} duration={500}>
+                            <button className="w-full sm:w-auto px-8 py-4 bg-secondary text-text border border-accent/10 rounded-lg font-medium hover:bg-accent/5 transition-all">
+                                Publications
+                            </button>
+                        </Link>
+                    </div>
+                </motion.div>
+            </div>
+        </section>
+    );
+};
+
+export default Hero;

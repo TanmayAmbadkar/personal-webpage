@@ -1,0 +1,74 @@
+[
+    {
+        "title": "Shared Critic PPO for Building Control",
+        "description": "Developed a shared-critic PPO algorithm optimizing energy and comfort for buildings using multiple agents in a Sinergym environment.",
+        "links": [
+            {
+                "name": "Code",
+                "url": "https://github.com/TanmayAmbadkar/shared-critic-ppo"
+            },
+            {
+                "name": "Report",
+                "url": "/files/Building Control report.pdf"
+            }
+        ]
+    },
+    {
+        "title": "Robust and Secure Deep Learning",
+        "description": "Designed test-time evasion attacks on MNIST and implemented dataset poisoning with imperceptible patterns.",
+        "links": [
+            {
+                "name": "Code",
+                "url": "https://github.com/TanmayAmbadkar/robust-secure-dl"
+            }
+        ]
+    },
+    {
+        "title": "Deep Learning for Gravitational Lensing",
+        "description": "Solved dark matter related tasks using CNNs and Vision Transformers for classification, denoising, and super-resolution.",
+        "links": [
+            {
+                "name": "Code",
+                "url": "https://github.com/TanmayAmbadkar/deeplense-tests"
+            }
+        ]
+    },
+    {
+        "title": "Lead Scoring System",
+        "description": "Created a logistic regression model and lead rating system for marketing teams to identify potential customers.",
+        "links": [
+            {
+                "name": "Code",
+                "url": "https://github.com/TanmayAmbadkar/LeadScoring"
+            }
+        ]
+    },
+    {
+        "title": "Certificate Generator",
+        "description": "Developed a system for mass-mailing and verifying event certificates for IIIT Vadodara.",
+        "links": [
+            {
+                "name": "Code",
+                "url": "https://github.com/TanmayAmbadkar/CertificateGenerator"
+            },
+            {
+                "name": "Website",
+                "url": "https://mycertificatesgymkhana.iiitvadodara.ac.in/"
+            }
+        ]
+    },
+    {
+        "title": "Gymkhana Website",
+        "description": "Developed the student gymkhana website with role management and event calendars.",
+        "links": [
+            {
+                "name": "Code",
+                "url": "https://github.com/TanmayAmbadkar/gymkhana"
+            },
+            {
+                "name": "Website",
+                "url": "https://gymkhana.iiitvadodara.ac.in/"
+            }
+        ]
+    }
+]
