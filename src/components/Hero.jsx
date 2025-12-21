@@ -15,14 +15,20 @@ const Hero = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8 }}
                 >
-                    <h2 className="text-accent font-medium text-base lg:text-lg mb-3 lg:mb-4">{about.greeting}</h2>
-                    <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-text mb-4 lg:mb-6 tracking-tight leading-tight">
+                    {/* Mobile Profile Picture */}
+                    <div className="lg:hidden flex justify-center mb-8">
+                        <div className="w-32 h-32 rounded-full overflow-hidden border-2 border-accent shadow-lg shadow-accent/20">
+                            <img src="/files/profile.jpg" alt={profileData.name} className="w-full h-full object-cover" />
+                        </div>
+                    </div>
+                    <h2 className="text-accent font-medium text-base lg:text-lg mb-3 lg:mb-4 text-center lg:text-left">{about.greeting}</h2>
+                    <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-text mb-4 lg:mb-6 tracking-tight leading-tight text-center lg:text-left">
                         {about.name}
                     </h1>
-                    <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-muted mb-6 lg:mb-8 leading-tight">
+                    <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-muted mb-6 lg:mb-8 leading-tight text-center lg:text-left">
                         {about.tagline}
                     </h2>
-                    <p className="text-base sm:text-lg text-muted max-w-2xl mb-8 lg:mb-12 leading-relaxed">
+                    <p className="text-base sm:text-lg text-muted max-w-2xl mb-8 lg:mb-12 leading-relaxed text-center lg:text-left mx-auto lg:mx-0">
                         {about.description}
                     </p>
 
