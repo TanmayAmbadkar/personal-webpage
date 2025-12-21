@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { FileText, Github, BookOpen } from 'lucide-react';
 import 'katex/dist/katex.min.css';
 import renderMathInElement from 'katex/dist/contrib/auto-render';
+import SEO from '../components/SEO';
 
 const RampsPage = () => {
     const contentRef = useRef(null);
@@ -23,6 +24,11 @@ const RampsPage = () => {
 
     return (
         <div className="font-sans bg-slate-50 text-slate-700 min-h-screen" ref={contentRef}>
+            <SEO
+                title="RAMPS: Robust Adaptive Multi-Step Predictive Shielding"
+                description="RAMPS is a scalable shielding framework for safe reinforcement learning in high-dimensional, nonlinear systems."
+                keywords="RAMPS, Safe RL, Control Barrier Functions, Reinforcement Learning, Shielding"
+            />
             <main className="container mx-auto px-6 py-12">
                 {/* Main Title and Abstract */}
                 <section className="text-center py-16 mb-12 rounded-xl bg-slate-100" style={{

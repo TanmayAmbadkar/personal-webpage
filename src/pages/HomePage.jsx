@@ -7,6 +7,7 @@ import Education from '../components/Education';
 import Experience from '../components/Experience';
 import Projects from '../components/Projects';
 import { motion } from 'framer-motion';
+import SEO from '../components/SEO';
 
 function HomePage() {
     const [isDark, setIsDark] = useState(true);
@@ -41,6 +42,11 @@ function HomePage() {
 
     return (
         <div className="min-h-screen text-text font-sans selection:bg-accent selection:text-primary overflow-x-hidden transition-colors duration-300 relative bg-primary">
+            <SEO
+                title="Tanmay Ambadkar | PhD Student @ Penn State"
+                description="Personal portfolio of Tanmay Ambadkar, a PhD student at Penn State University. Researching Reinforcement Learning, Safe RL, and Multi-Objective RL."
+                keywords="Tanmay Ambadkar, Reinforcement Learning, Safe RL, Multi-Objective RL, Penn State, PhD, Portfolio"
+            />
             {/* Background Gradients & Animation */}
             <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
                 <motion.div

@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { FileText, Github } from 'lucide-react';
 import 'katex/dist/katex.min.css';
 import renderMathInElement from 'katex/dist/contrib/auto-render';
+import SEO from '../components/SEO';
 
 const D3poPage = () => {
     const contentRef = useRef(null);
@@ -22,6 +23,11 @@ const D3poPage = () => {
 
     return (
         <div className="font-sans bg-slate-50 text-slate-700 min-h-screen" ref={contentRef}>
+            <SEO
+                title="D3PO: Decomposed, Diversity-Driven Policy Optimization"
+                description="D3PO is a novel algorithm for preference-conditioned multi-objective reinforcement learning that avoids gradient interference and mode collapse."
+                keywords="D3PO, Multi-Objective RL, MORL, Reinforcement Learning, Pareto Front"
+            />
             <main className="container mx-auto px-6 py-12">
                 {/* Main Title and Abstract */}
                 <section className="text-center py-16 mb-12 rounded-xl bg-slate-100" style={{
