@@ -33,13 +33,13 @@ const Hero = () => {
                     </p>
 
                     <div className="flex flex-col sm:flex-row gap-4">
-                        <Link to="research" smooth={true} offset={-50} duration={500}>
+                        <Link to="research" smooth="easeInOutQuart" offset={-50} duration={900}>
                             <button className="w-full sm:w-auto px-8 py-4 bg-accent/10 text-accent border border-accent/20 rounded-lg font-medium hover:bg-accent/20 transition-all flex items-center justify-center gap-2 group">
                                 View Research
                                 <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
                             </button>
                         </Link>
-                        <Link to="publications" smooth={true} offset={-50} duration={500}>
+                        <Link to="publications" smooth="easeInOutQuart" offset={-50} duration={900}>
                             <button className="w-full sm:w-auto px-8 py-4 bg-secondary text-text border border-accent/10 rounded-lg font-medium hover:bg-accent/5 transition-all">
                                 Publications
                             </button>

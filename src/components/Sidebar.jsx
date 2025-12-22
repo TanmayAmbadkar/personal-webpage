@@ -124,9 +124,9 @@ const Sidebar = ({ isDark, toggleTheme }) => {
                         key={item.name}
                         to={item.to}
                         spy={true}
-                        smooth={true}
+                        smooth="easeInOutQuart"
                         offset={-50}
-                        duration={500}
+                        duration={900}
                         activeClass="bg-accent/10 text-accent border-l-2 border-accent"
                         className="flex items-center gap-4 px-4 py-3 text-muted hover:text-text hover:bg-accent/5 rounded-lg cursor-pointer transition-all group"
                     >
@@ -154,10 +154,37 @@ const Sidebar = ({ isDark, toggleTheme }) => {
 
                 <button
                     onClick={toggleTheme}
-                    className="flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 text-accent hover:bg-accent/20 transition-colors text-sm font-medium"
+                    className="relative flex items-center justify-center w-full gap-2 px-4 py-3 rounded-full bg-accent/10 text-accent hover:bg-accent/20 transition-colors text-sm font-medium overflow-hidden group"
                 >
-                    {isDark ? <Sun size={16} /> : <Moon size={16} />}
-                    {isDark ? 'Light Mode' : 'Dark Mode'}
+                    <div className="relative w-6 h-6">
+                        <motion.div
+                            initial={false}
+                            animate={{
+                                y: isDark ? 20 : 0,
+                                opacity: isDark ? 0 : 1,
+                                rotate: isDark ? 90 : 0
+                            }}
+                            transition={{ duration: 0.5, ease: "easeInOut" }}
+                            className="absolute inset-0 flex items-center justify-center"
+                        >
+                            <Sun size={20} />
+                        </motion.div>
+                        <motion.div
+                            initial={false}
+                            animate={{
+                                y: isDark ? 0 : -20,
+                                opacity: isDark ? 1 : 0,
+                                rotate: isDark ? 0 : -90
+                            }}
+                            transition={{ duration: 0.5, ease: "easeInOut" }}
+                            className="absolute inset-0 flex items-center justify-center"
+                        >
+                            <Moon size={20} />
+                        </motion.div>
+                    </div>
+                    <span className="relative z-10">
+                        {isDark ? 'Dark Mode' : 'Light Mode'}
+                    </span>
                 </button>
             </div>
         </motion.div>

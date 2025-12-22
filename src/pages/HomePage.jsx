@@ -29,15 +29,55 @@ function HomePage() {
         }
     }, []);
 
-    const toggleTheme = () => {
-        setIsDark(!isDark);
-        if (isDark) {
-            document.documentElement.classList.add('light');
-            localStorage.setItem('theme', 'light');
-        } else {
-            document.documentElement.classList.remove('light');
-            localStorage.setItem('theme', 'dark');
+    const toggleTheme = (e) => {
+        if (!document.startViewTransition) {
+            setIsDark(!isDark);
+            if (isDark) {
+                document.documentElement.classList.add('light');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.classList.remove('light');
+                localStorage.setItem('theme', 'dark');
+            }
+            return;
         }
+
+        const x = e?.clientX ?? window.innerWidth / 2;
+        const y = e?.clientY ?? window.innerHeight / 2;
+
+        const endRadius = Math.hypot(
+            Math.max(x, window.innerWidth - x),
+            Math.max(y, window.innerHeight - y)
+        );
+
+        const transition = document.startViewTransition(() => {
+            setIsDark(!isDark);
+            if (isDark) {
+                document.documentElement.classList.add('light');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.classList.remove('light');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        transition.ready.then(() => {
+            const clipPath = [
+                `circle(0px at ${x}px ${y}px)`,
+                `circle(${endRadius}px at ${x}px ${y}px)`,
+            ];
+
+            document.documentElement.animate(
+                {
+                    clipPath: clipPath,
+                },
+                {
+                    duration: 500,
+                    easing: 'ease-in-out',
+                    pseudoElement: '::view-transition-new(root)',
+                }
+            );
+        });
     };
 
     return (
