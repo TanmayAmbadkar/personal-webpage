@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-scroll';
 import { Github, Linkedin, Mail, FileText, GraduationCap, BookOpen, Briefcase, Code, User, Menu, X, Sun, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import profileData from '../data/profile.json';
+import { useScroll } from '../context/ScrollContext';
 
 const iconMap = {
     Mail: <Mail size={20} />,
@@ -15,6 +15,8 @@ const iconMap = {
 const Sidebar = ({ isDark, toggleTheme }) => {
     const [isMobile, setIsMobile] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
+    const [activeSection, setActiveSection] = useState('about');
+    const { lenis } = useScroll();
 
     useEffect(() => {
         const checkMobile = () => {
@@ -24,6 +26,33 @@ const Sidebar = ({ isDark, toggleTheme }) => {
         window.addEventListener('resize', checkMobile);
         return () => window.removeEventListener('resize', checkMobile);
     }, []);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        setActiveSection(entry.target.id);
+                    }
+                });
+            },
+            {
+                rootMargin: '-50% 0px -50% 0px'
+            }
+        );
+
+        const sections = document.querySelectorAll('section[id]');
+        sections.forEach((section) => observer.observe(section));
+
+        return () => {
+            sections.forEach((section) => observer.unobserve(section));
+        };
+    }, []);
+
+    const handleNavClick = (to) => {
+        lenis?.scrollTo(`#${to}`, { offset: -50, duration: 1.2 });
+        setIsOpen(false);
+    };
 
     const navItems = [
         { name: 'About', to: 'about', icon: <User size={20} /> },
@@ -66,19 +95,17 @@ const Sidebar = ({ isDark, toggleTheme }) => {
                         >
                             <nav className="flex flex-col p-6 gap-2">
                                 {navItems.map((item) => (
-                                    <Link
+                                    <button
                                         key={item.name}
-                                        to={item.to}
-                                        spy={true}
-                                        smooth={true}
-                                        offset={-80}
-                                        duration={500}
-                                        onClick={() => setIsOpen(false)}
-                                        className="flex items-center gap-4 px-4 py-4 text-muted hover:text-text hover:bg-accent/5 rounded-lg text-lg font-medium transition-colors"
+                                        onClick={() => handleNavClick(item.to)}
+                                        className={`flex items-center gap-4 px-4 py-4 rounded-lg text-lg font-medium transition-colors ${activeSection === item.to
+                                                ? 'text-accent bg-accent/5'
+                                                : 'text-muted hover:text-text hover:bg-accent/5'
+                                            }`}
                                     >
                                         {item.icon}
                                         {item.name}
-                                    </Link>
+                                    </button>
                                 ))}
 
                                 <div className="flex justify-center gap-6 mt-8 pt-8 border-t border-gray">
@@ -120,19 +147,19 @@ const Sidebar = ({ isDark, toggleTheme }) => {
 
             <nav className="flex flex-col gap-1 px-4 my-6">
                 {navItems.map((item) => (
-                    <Link
+                    <button
                         key={item.name}
-                        to={item.to}
-                        spy={true}
-                        smooth="easeInOutQuart"
-                        offset={-50}
-                        duration={900}
-                        activeClass="bg-accent/10 text-accent border-l-2 border-accent"
-                        className="flex items-center gap-4 px-4 py-3 text-muted hover:text-text hover:bg-accent/5 rounded-lg cursor-pointer transition-all group"
+                        onClick={() => handleNavClick(item.to)}
+                        className={`flex items-center gap-4 px-4 py-3 rounded-lg cursor-pointer transition-all group w-full text-left ${activeSection === item.to
+                                ? 'bg-accent/10 text-accent border-l-2 border-accent'
+                                : 'text-muted hover:text-text hover:bg-accent/5'
+                            }`}
                     >
-                        <span className="group-hover:scale-110 transition-transform">{item.icon}</span>
+                        <span className={`transition-transform ${activeSection === item.to ? 'scale-110' : 'group-hover:scale-110'}`}>
+                            {item.icon}
+                        </span>
                         <span className="font-medium">{item.name}</span>
-                    </Link>
+                    </button>
                 ))}
             </nav>
 
