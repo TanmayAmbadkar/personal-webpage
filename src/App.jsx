@@ -4,8 +4,10 @@ import ScrollToTop from './components/ScrollToTop';
 import LoadingSpinner from './components/LoadingSpinner';
 import SmoothScroll from './components/SmoothScroll';
 
+import HomePage from './pages/HomePage';
+
 // Lazy load pages
-const HomePage = lazy(() => import('./pages/HomePage'));
+// const HomePage = lazy(() => import('./pages/HomePage'));
 const RampsPage = lazy(() => import('./pages/RampsPage'));
 const RampsBlogPage = lazy(() => import('./pages/RampsBlogPage'));
 const D3poPage = lazy(() => import('./pages/D3poPage'));

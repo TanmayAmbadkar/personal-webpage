@@ -99,7 +99,8 @@ function HomePage() {
                         repeat: Infinity,
                         ease: "easeInOut"
                     }}
-                    className="absolute top-[-10%] right-[-5%] w-[400px] lg:w-[700px] h-[400px] lg:h-[700px] bg-accent/30 rounded-full blur-[80px] lg:blur-[120px]"
+                    className="absolute top-[-10%] right-[-5%] w-[400px] lg:w-[700px] h-[400px] lg:h-[700px] rounded-full will-change-transform"
+                    style={{ background: 'radial-gradient(circle, rgba(var(--color-accent-rgb), 0.3) 0%, transparent 70%)' }}
                 />
                 <motion.div
                     animate={{
@@ -112,7 +113,8 @@ function HomePage() {
                         ease: "easeInOut",
                         delay: 1
                     }}
-                    className="absolute bottom-[-10%] left-[-5%] w-[400px] lg:w-[700px] h-[400px] lg:h-[700px] bg-purple-500/30 rounded-full blur-[80px] lg:blur-[120px]"
+                    className="absolute bottom-[-10%] left-[-5%] w-[400px] lg:w-[700px] h-[400px] lg:h-[700px] rounded-full will-change-transform"
+                    style={{ background: 'radial-gradient(circle, rgba(168, 85, 247, 0.3) 0%, transparent 70%)' }}
                 />
                 <motion.div
                     animate={{
@@ -125,7 +127,8 @@ function HomePage() {
                         ease: "easeInOut",
                         delay: 2
                     }}
-                    className="absolute top-[40%] left-[30%] w-[300px] lg:w-[600px] h-[300px] lg:h-[600px] bg-blue-500/30 rounded-full blur-[100px]"
+                    className="absolute top-[40%] left-[30%] w-[300px] lg:w-[600px] h-[300px] lg:h-[600px] rounded-full will-change-transform"
+                    style={{ background: 'radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, transparent 70%)' }}
                 />
             </div>
 

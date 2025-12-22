@@ -18,7 +18,14 @@ const Hero = () => {
                     {/* Mobile Profile Picture */}
                     <div className="lg:hidden flex justify-center mb-8">
                         <div className="w-32 h-32 rounded-full overflow-hidden border-2 border-accent shadow-lg shadow-accent/20">
-                            <img src="/files/profile.jpg" alt={profileData.name} className="w-full h-full object-cover" />
+                            <img
+                                src="/files/profile.jpg"
+                                alt={profileData.name}
+                                className="w-full h-full object-cover"
+                                width="128"
+                                height="128"
+                                fetchPriority="high"
+                            />
                         </div>
                     </div>
                     <h2 className="text-accent font-medium text-base lg:text-lg mb-3 lg:mb-4 text-center lg:text-left">{about.greeting}</h2>
