@@ -25,7 +25,7 @@
     {
         "title": "AutoSpec: Automating the Refinement of Reinforcement Learning Specifications",
         "authors": "Tanmay Ambadkar, Đorđe Žikelić, Abhinav Verma",
-        "venue": "Accepted at International Conference on Learning Representations (ICLR) 2026; Accepted at The Workshop on Post-AI Formal Methods at AAAI-26; Accepted at PLDI SRC 2024, In Submission at ICLR 2026",
+        "venue": "Accepted at International Conference on Learning Representations (ICLR) 2026; Accepted at The Workshop on Post-AI Formal Methods at AAAI-26; Accepted at PLDI SRC 2024",
         "links": [
             {
                 "name": "Paper",
