@@ -9,7 +9,7 @@
     {
         "title": "Robust Adaptive Multi-Step Predictive Shielding",
         "authors": "Tanmay Ambadkar, Darshan Chudiwal, Greg Anderson, Abhinav Verma",
-        "venue": "Accepted at AAAI Student Abstract and Poster Program, In Submission at ICLR 2026",
+        "venue": "Accepted at International Conference on Learning Representations (ICLR) 2026; Accepted at AAAI Student Abstract and Poster Program",
         "links": [
             {
                 "name": "Paper",
@@ -23,9 +23,25 @@
         "abstract": "Reinforcement learning for safety-critical tasks requires policies that are both high-performing and safe throughout the learning process. While model-predictive shielding is a promising approach, existing methods are often computationally intractable for the high-dimensional, nonlinear systems where deep RL excels, as they typically rely on a patchwork of local models. We introduce RAMPS, a scalable shielding framework that overcomes this limitation by leveraging a learned, linear representation of the environment's dynamics. This model can range from a linear regression in the original state space to a more complex operator learned in a high-dimensional feature space. The key is that this linear structure enables a robust, look-ahead safety technique based on a multi-step Control Barrier Function (CBF). By moving beyond myopic one-step formulations, RAMPS accounts for model error and control delays to provide reliable, real-time interventions. The resulting framework is minimally invasive, computationally efficient, and built upon robust control-theoretic foundations. Our experiments demonstrate that RAMPS significantly reduces safety violations compared to existing safe RL methods while maintaining high task performance in complex control environments."
     },
     {
+        "title": "AutoSpec: Automating the Refinement of Reinforcement Learning Specifications",
+        "authors": "Tanmay Ambadkar, Đorđe Žikelić, Abhinav Verma",
+        "venue": "Accepted at International Conference on Learning Representations (ICLR) 2026; Accepted at The Workshop on Post-AI Formal Methods at AAAI-26; Accepted at PLDI SRC 2024, In Submission at ICLR 2026",
+        "links": [
+            {
+                "name": "Paper",
+                "url": "https://openreview.net/forum?id=a5jzk1hv2Y"
+            },
+            {
+                "name": "Poster",
+                "url": "https://pldi24.sigplan.org/details/pldi-2024-src/11/AutoSpec-Automating-the-Refinement-of-Reinforcement-Learning-Specifications"
+            }
+        ],
+        "abstract": "Logical specifications have been shown to help reinforcement learning algorithms in achieving complex tasks. However, when a task is under-specified, agents might fail to learn useful policies. In this work, we explore the possibility of improving coarse-grained logical specifications via an exploration-guided strategy. We propose AutoSpec, a framework that searches for a logical specification refinement whose satisfaction implies satisfaction of the original specification, but which provides additional guidance therefore making it easier for reinforcement learning algorithms to learn useful policies. AutoSpec is applicable to reinforcement learning tasks specified via the SpectRL specification logic. We exploit the compositional nature of specifications written in SpectRL, and design four refinement procedures that modify the abstract graph of the specification by either refining its existing edge specifications or by introducing new edge specifications. We prove that all four procedures maintain specification soundness, i.e. any trajectory satisfying the refined specification also satisfies the original. We then show how AutoSpec can be integrated with existing reinforcement learning algorithms for learning policies from logical specifications. Our experiments demonstrate that AutoSpec yields promising improvements in terms of the complexity of control tasks that can be solved, when refined logical specifications produced by AutoSpec are utilized."
+    },
+    {
         "title": "Preference Conditioned Multi-Objective Reinforcement Learning: Decomposed, Diversity-Driven Policy Optimization",
         "authors": "Tanmay Ambadkar, Sourav Panda, Shreyas Kale, Abhinav Verma, Jonathan Dodge",
-        "venue": "In Submission at ICLR 2026",
+        "venue": "In Submission at ICML 2026",
         "links": [
             {
                 "name": "Paper",
@@ -41,30 +57,14 @@
     {
         "title": "Safer Policies via Affine Representations using Koopman Dynamics",
         "authors": "Tanmay Ambadkar, Darshan Chudiwal, Greg Anderson, Abhinav Verma",
-        "venue": "In Submission at AAAI 2026",
+        "venue": "In Submission at NASA Formal Methods 2026",
         "links": [],
         "abstract": "Reinforcement learning for safety-critical tasks requires constructing a policy that prioritizes taking safe actions while optimizing performance. Moreover, in many applications it is important to maintain safety during training, not just at the end of the learning process. Model-predictive shielding using weakest preconditions is a promising framework that helps maintain safety during training and deployment, but current techniques are limited to low-dimensional state spaces (4 features) and struggle to scale to higher dimensional environments with complex environment dynamics. In this paper we present SPARKD, a highly scalable framework for model-predictive shielding which works by linearizing non-linear dynamics using a lifted representation of the state space. Our framework leverages the Koopman Operator theory to learn basis functions which augument the state space to capture highly non-linear transition models. The use of the lifted space by SPARKD allows for effective safety calculation using convex optimization and efficient safety analysis for shielding. Our experiments show that SPARKD is capable of learning performant policies with fewer safety violations than existing safe RL techniques."
     },
     {
-        "title": "AutoSpec: Automating the Refinement of Reinforcement Learning Specifications",
-        "authors": "Tanmay Ambadkar, Đorđe Žikelić, Abhinav Verma",
-        "venue": "Accepted at The Workshop on Post-AI Formal Methods at AAAI-26; Accepted at PLDI SRC 2024, In Submission at ICLR 2026",
-        "links": [
-            {
-                "name": "Paper",
-                "url": "https://openreview.net/forum?id=a5jzk1hv2Y"
-            },
-            {
-                "name": "Poster",
-                "url": "https://pldi24.sigplan.org/details/pldi-2024-src/11/AutoSpec-Automating-the-Refinement-of-Reinforcement-Learning-Specifications"
-            }
-        ],
-        "abstract": "Logical specifications have been shown to help reinforcement learning algorithms in achieving complex tasks. However, when a task is under-specified, agents might fail to learn useful policies. In this work, we explore the possibility of improving coarse-grained logical specifications via an exploration-guided strategy. We propose AutoSpec, a framework that searches for a logical specification refinement whose satisfaction implies satisfaction of the original specification, but which provides additional guidance therefore making it easier for reinforcement learning algorithms to learn useful policies. AutoSpec is applicable to reinforcement learning tasks specified via the SpectRL specification logic. We exploit the compositional nature of specifications written in SpectRL, and design four refinement procedures that modify the abstract graph of the specification by either refining its existing edge specifications or by introducing new edge specifications. We prove that all four procedures maintain specification soundness, i.e. any trajectory satisfying the refined specification also satisfies the original. We then show how AutoSpec can be integrated with existing reinforcement learning algorithms for learning policies from logical specifications. Our experiments demonstrate that AutoSpec yields promising improvements in terms of the complexity of control tasks that can be solved, when refined logical specifications produced by AutoSpec are utilized."
-    },
-    {
         "title": "Scaling Strategy, Not Compute: A Stand-Alone, Open-Source StarCraft II Benchmark for Accessible RL Research",
         "authors": "Sourav Panda, Tanmay Ambadkar, Shreyas Kale, Abhinav Verma, Jonathan Dodge",
-        "venue": "In Submission",
+        "venue": "In Submission at ICML 2026",
         "links": [],
         "abstract": "The research community lacks a middle ground between StarCraft II’s full game and mini-games. In the full game, sprawling state-action space renders reward signals sparse and noisy, but in mini-games, simple agents saturate performance with little genuine strategy. This yawning complexity gap hinders steady curriculum design and prevents many academic groups from experimenting with modern RL algorithms under realistic compute budgets. To fill this gap, we present the Two-Bridge Map, the first entry in an open-source benchmark series we purposely engineered as an intermediate benchmark to sit between these extremes. By disabling economy mechanics such as resource collection, base building, and fog-of-war, the environment isolates two core wargaming skills: long-range navigation and micro-combat. Two-Bridge ships as a lightweight, Gym-compatible wrapper on top of PySC2. Because it is a directly interactable environment rather than a replay-driven pipeline, researchers can train and evaluate any RL algorithm immediately---no downloading, filtering, or preprocessing of Blizzard replays required. Preliminary experiments show that agents learn coherent manoeuvring and engagement behaviours without imposing full-game computational costs. By open-sourcing the maps, wrappers, and reference scripts, we invite researchers to adopt the Two-Bridge Map Series as a standard benchmark."
     },
