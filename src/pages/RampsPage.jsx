@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { FileText, Github, BookOpen } from 'lucide-react';
+import { FileText, Github, BookOpen, Home } from 'lucide-react';
 import 'katex/dist/katex.min.css';
 import renderMathInElement from 'katex/dist/contrib/auto-render';
 import SEO from '../components/SEO';
@@ -25,7 +25,14 @@ const RampsPage = () => {
 
     return (
         <div className="font-sans bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-300 min-h-screen transition-colors duration-300" ref={contentRef}>
-            <div className="fixed top-4 right-4 z-[200]">
+            <div className="fixed top-4 right-4 z-[200] flex items-center gap-2 sm:gap-3">
+                <Link
+                    to="/"
+                    className="p-1.5 sm:p-2 rounded-lg bg-white dark:bg-slate-800 shadow-md border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all group"
+                    title="Back to Portfolio"
+                >
+                    <Home size={18} className="sm:w-5 sm:h-5" />
+                </Link>
                 <ThemeToggle />
             </div>
             <SEO
@@ -35,7 +42,7 @@ const RampsPage = () => {
             />
             <main className="container mx-auto px-6 py-12">
                 {/* Main Title and Abstract */}
-                <section className="text-center py-16 mb-12 rounded-xl bg-slate-100 dark:bg-slate-800 relative overflow-hidden transition-colors duration-300">
+                <section className="text-center py-16 px-8 md:px-12 mb-12 rounded-xl bg-slate-100 dark:bg-slate-800 relative overflow-hidden transition-colors duration-300">
                     <div className="absolute inset-0 opacity-10" style={{
                         backgroundImage: 'radial-gradient(#4f46e5 1px, transparent 1px)',
                         backgroundSize: '24px 24px'
@@ -44,27 +51,27 @@ const RampsPage = () => {
                         <h2 className="text-4xl md:text-6xl font-extrabold text-slate-900 dark:text-white leading-tight mb-6 tracking-tight">
                             <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">RAMPS</span>
                         </h2>
-                        <h3 className="text-xl md:text-2xl font-bold text-slate-700 dark:text-slate-200 mb-8 max-w-3xl mx-auto">
+                        <h3 className="text-xl md:text-2xl font-bold text-slate-700 dark:text-slate-200 mb-8 max-w-3xl mx-auto px-4">
                             Robust Adaptive Multi-Step Predictive Shielding
                         </h3>
-                        <p className="text-base text-slate-600 dark:text-slate-400 max-w-4xl mx-auto">
+                        <p className="text-base text-slate-600 dark:text-slate-400 max-w-4xl mx-auto px-4">
                             <em>Tanmay Ambadkar, Darshan Chudiwal, Greg Anderson, Abhinav Verma (Accepted at ICLR 2026)</em>
                         </p>
-                        <hr className="my-4 border-slate-300 dark:border-slate-600" />
-                        <p className="text-lg text-slate-600 dark:text-slate-300 max-w-4xl mx-auto">
+                        <hr className="my-6 border-slate-300 dark:border-slate-600 w-24 mx-auto" />
+                        <p className="text-lg text-slate-600 dark:text-slate-300 max-w-4xl mx-auto leading-relaxed px-4">
                             A scalable framework for ensuring safety in deep reinforcement learning, enabling agents to learn high-performing, safe policies in complex, high-dimensional environments.
                         </p>
 
                         <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-                            <a href="https://openreview.net/forum?id=2bbqHOWFTU" className="inline-flex items-center justify-center gap-2 bg-blue-600 text-white font-semibold px-8 py-3 rounded-lg hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-blue-500/30" rel="noopener noreferrer" target="_blank">
+                            <a href="https://openreview.net/forum?id=2bbqHOWFTU" className="inline-flex items-center justify-center gap-2 bg-blue-600 text-white font-semibold px-6 py-2.5 sm:px-8 sm:py-3 rounded-lg hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-blue-500/30" rel="noopener noreferrer" target="_blank">
                                 <FileText size={20} />
                                 <span>Read Paper</span>
                             </a>
-                            <a href="https://github.com/TanmayAmbadkar/sparkd" className="inline-flex items-center justify-center gap-2 bg-slate-800 text-white font-semibold px-8 py-3 rounded-lg hover:bg-slate-900 transition-all duration-300 shadow-lg hover:shadow-slate-500/30" rel="noopener noreferrer" target="_blank">
+                            <a href="https://github.com/TanmayAmbadkar/sparkd" className="inline-flex items-center justify-center gap-2 bg-slate-800 text-white font-semibold px-6 py-2.5 sm:px-8 sm:py-3 rounded-lg hover:bg-slate-900 transition-all duration-300 shadow-lg hover:shadow-slate-500/30" rel="noopener noreferrer" target="_blank">
                                 <Github size={20} />
                                 <span>View Code</span>
                             </a>
-                            <Link to="/ramps/blog" className="inline-flex items-center justify-center gap-2 bg-purple-600 text-white font-semibold px-8 py-3 rounded-lg hover:bg-purple-700 transition-all duration-300 shadow-lg hover:shadow-purple-500/30">
+                            <Link to="/ramps/blog" className="inline-flex items-center justify-center gap-2 bg-purple-600 text-white font-semibold px-6 py-2.5 sm:px-8 sm:py-3 rounded-lg hover:bg-purple-700 transition-all duration-300 shadow-lg hover:shadow-purple-500/30">
                                 <BookOpen size={20} />
                                 <span>Deep Dive Blog</span>
                             </Link>

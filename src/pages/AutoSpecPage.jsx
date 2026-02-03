@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { FileText, Github, ChevronRight, CheckCircle, AlertTriangle, ArrowRight, Zap, Target, Shield, GitMerge } from 'lucide-react';
+import { FileText, Github, ChevronRight, CheckCircle, AlertTriangle, ArrowRight, Zap, Target, Shield, GitMerge, Home } from 'lucide-react';
 import ThemeToggle from '../components/ThemeToggle';
 import 'katex/dist/katex.min.css';
 import renderMathInElement from 'katex/dist/contrib/auto-render';
@@ -25,7 +25,14 @@ const AutoSpecPage = () => {
 
     return (
         <div className="font-sans bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-300 min-h-screen transition-colors duration-300" ref={contentRef}>
-            <div className="fixed top-4 right-4 z-50">
+            <div className="fixed top-4 right-4 z-[200] flex items-center gap-2 sm:gap-3">
+                <Link
+                    to="/"
+                    className="p-1.5 sm:p-2 rounded-lg bg-white dark:bg-slate-800 shadow-md border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all group"
+                    title="Back to Portfolio"
+                >
+                    <Home size={18} className="sm:w-5 sm:h-5" />
+                </Link>
                 <ThemeToggle />
             </div>
             <SEO
@@ -35,7 +42,7 @@ const AutoSpecPage = () => {
             />
             <main className="container mx-auto px-6 py-12">
                 {/* Main Title and Abstract */}
-                <section className="text-center py-16 mb-12 rounded-xl bg-slate-100 dark:bg-slate-800 relative overflow-hidden transition-colors duration-300">
+                <section className="text-center py-16 px-8 md:px-12 mb-12 rounded-xl bg-slate-100 dark:bg-slate-800 relative overflow-hidden transition-colors duration-300">
                     <div className="absolute inset-0 opacity-10" style={{
                         backgroundImage: 'radial-gradient(#4f46e5 1px, transparent 1px)',
                         backgroundSize: '24px 24px'
@@ -45,26 +52,26 @@ const AutoSpecPage = () => {
                         <h2 className="text-4xl md:text-6xl font-extrabold text-slate-900 dark:text-white leading-tight mb-6 tracking-tight">
                             <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">AutoSpec</span>
                         </h2>
-                        <h3 className="text-xl md:text-2xl font-bold text-slate-700 dark:text-slate-200 mb-8 max-w-3xl mx-auto">
+                        <h3 className="text-xl md:text-2xl font-bold text-slate-700 dark:text-slate-200 mb-8 max-w-3xl mx-auto px-4">
                             Automating the Refinement of Reinforcement Learning Specifications
                         </h3>
 
-                        <p className="text-base text-slate-600 dark:text-slate-400 max-w-4xl mx-auto mb-6">
+                        <p className="text-base text-slate-600 dark:text-slate-400 max-w-4xl mx-auto mb-6 px-4">
                             <em>Tanmay Ambadkar, Đorđe Žikelić, Abhinav Verma (Accepted at ICLR 2026)</em>
                         </p>
 
                         <hr className="my-6 border-slate-300 dark:border-slate-600 w-24 mx-auto" />
 
-                        <p className="text-lg text-slate-600 dark:text-slate-300 max-w-3xl mx-auto leading-relaxed">
+                        <p className="text-lg text-slate-600 dark:text-slate-300 max-w-3xl mx-auto leading-relaxed px-4">
                             A novel framework that automatically transforms "coarse" or under-specified logical objectives into refined, guidance-rich specifications, enabling RL agents to master complex tasks where standard methods fail.
                         </p>
 
-                        <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-                            <button className="inline-flex items-center justify-center gap-2 bg-blue-600 text-white font-semibold px-8 py-3 rounded-lg hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-blue-500/30">
-                                <FileText size={20} />
+                        <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4 px-4">
+                            <a href="https://openreview.net/forum?id=VlBw4Oq0K1" className="inline-flex items-center justify-center gap-2 bg-blue-600 text-white font-semibold px-6 py-2.5 sm:px-8 sm:py-3 rounded-lg hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-blue-500/30" rel="noopener noreferrer" target="_blank">
+                                <FileText size={18} className="sm:w-5 sm:h-5" />
                                 <span>Read Paper</span>
-                            </button>
-                            <a href="https://github.com/TanmayAmbadkar/gridworld-refinement" className="inline-flex items-center justify-center gap-2 bg-slate-800 text-white font-semibold px-8 py-3 rounded-lg hover:bg-slate-900 transition-all duration-300 shadow-lg hover:shadow-slate-500/30" target="_blank" rel="noopener noreferrer">
+                            </a>
+                            <a href="https://github.com/TanmayAmbadkar/gridworld-refinement" className="inline-flex items-center justify-center gap-2 bg-slate-800 text-white font-semibold px-6 py-2.5 sm:px-8 sm:py-3 rounded-lg hover:bg-slate-900 transition-all duration-300 shadow-lg hover:shadow-slate-500/30" target="_blank" rel="noopener noreferrer">
                                 <Github size={20} />
                                 <span>View Code</span>
                             </a>

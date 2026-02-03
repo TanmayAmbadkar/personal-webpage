@@ -33,8 +33,8 @@ const RampsBlogPage = () => {
                 <div className="container mx-auto px-6 py-4 flex items-center justify-between">
                     <Link to="/ramps" className="text-2xl font-bold text-slate-900">RAMPS</Link>
                     <nav className="flex gap-6 items-center">
-                        <Link to="/ramps" className="text-slate-600 hover:text-slate-900">Home</Link>
-                        {/* <span className="text-blue-600 font-semibold">Blog</span> */}
+                        <Link to="/ramps" className="text-slate-600 hover:text-slate-900 transition-colors">Project Home</Link>
+                        <Link to="/" className="text-blue-600 hover:text-blue-700 font-medium transition-colors">Portfolio Home</Link>
                     </nav>
                 </div>
             </header>
