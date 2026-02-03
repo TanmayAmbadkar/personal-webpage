@@ -14,7 +14,7 @@
                 },
                 {
                     "title": "My Approach (AutoSpec)",
-                    "content": "I developed a framework called <strong>AutoSpec</strong> that allows a user to provide an initial, high-level, and potentially imperfect specification. The agent then autonomously refines and corrects this specification during training by identifying and resolving inconsistencies, leading to better task performance without requiring constant human intervention. This makes RL more accessible to domain experts who need the technology but are not RL specialists."
+                    "content": "I developed a framework called <strong>AutoSpec</strong> that allows a user to provide an initial, high-level, and potentially imperfect specification. The agent then autonomously refines and corrects this specification during training by identifying and resolving inconsistencies, leading to better task performance without requiring constant human intervention. This makes RL more accessible to domain experts who need the technology but are not RL specialists. <a href='/autospec' class='text-blue-500 hover:text-blue-700 underline'>[View AutoSpec Homepage]</a>"
                 }
             ]
         },

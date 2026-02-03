@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Github, Linkedin, Mail, FileText, GraduationCap, BookOpen, Briefcase, Code, User, Menu, X, Sun, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import profileData from '../data/profile.json';
+import { useTheme } from '../context/ThemeContext';
 import { useScroll } from '../context/ScrollContext';
 
 const iconMap = {
@@ -12,11 +13,12 @@ const iconMap = {
     FileText: <FileText size={20} />
 };
 
-const Sidebar = ({ isDark, toggleTheme }) => {
+const Sidebar = () => {
     const [isMobile, setIsMobile] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [activeSection, setActiveSection] = useState('about');
     const { lenis } = useScroll();
+    const { isDark, toggleTheme } = useTheme();
 
     useEffect(() => {
         const checkMobile = () => {
@@ -99,8 +101,8 @@ const Sidebar = ({ isDark, toggleTheme }) => {
                                         key={item.name}
                                         onClick={() => handleNavClick(item.to)}
                                         className={`flex items-center gap-4 px-4 py-4 rounded-lg text-lg font-medium transition-colors ${activeSection === item.to
-                                                ? 'text-accent bg-accent/5'
-                                                : 'text-muted hover:text-text hover:bg-accent/5'
+                                            ? 'text-accent bg-accent/5'
+                                            : 'text-muted hover:text-text hover:bg-accent/5'
                                             }`}
                                     >
                                         {item.icon}
@@ -151,8 +153,8 @@ const Sidebar = ({ isDark, toggleTheme }) => {
                         key={item.name}
                         onClick={() => handleNavClick(item.to)}
                         className={`flex items-center gap-4 px-4 py-3 rounded-lg cursor-pointer transition-all group w-full text-left ${activeSection === item.to
-                                ? 'bg-accent/10 text-accent border-l-2 border-accent'
-                                : 'text-muted hover:text-text hover:bg-accent/5'
+                            ? 'bg-accent/10 text-accent border-l-2 border-accent'
+                            : 'text-muted hover:text-text hover:bg-accent/5'
                             }`}
                     >
                         <span className={`transition-transform ${activeSection === item.to ? 'scale-110' : 'group-hover:scale-110'}`}>

@@ -123,8 +123,9 @@ const RampsBlogPage = () => {
                     </div>
                     <p className="text-slate-800 leading-relaxed mb-3">Accumulated worst-case error bound over j steps:</p>
                     <div className="p-4 bg-slate-100 rounded-lg text-center overflow-auto my-4">
-                        {`$$\\mathcal{E}_j(p_i)=\\sum_{k=0}^{j-1} \\epsilon\\|p_i^\\top A^k\\|_1$$`}
+                        {String.raw`$$\mathcal{E}_j(p_i)=\sum_{k=0}^{j-1} \epsilon\|p_i^\top A^k\|_1$$`}
                     </div>
+                    <p className="text-slate-800 leading-relaxed mb-3">Robust Tightening Formula: The robust tightening term $\mathcal{E}_j(p_i)$ ensures that the constraint remains satisfied even in the worst-case accumulation of model errors up to step $j$.</p>
                     <p className="text-slate-800 leading-relaxed mb-3">Robust safety constraint for face i at step j:</p>
                     <div className="p-4 bg-slate-100 rounded-lg text-center overflow-auto my-4">
                         {`$$p_i^\\top z_j(z,u) + b_i \\le \\lambda^j (p_i^\\top z + b_i) - \\mathcal{E}_j(p_i)$$`}
@@ -195,12 +196,16 @@ const RampsBlogPage = () => {
                     {/* 6. Formal guarantees */}
                     <h2 className="text-2xl font-bold mt-6 mb-3">6. Formal guarantees</h2>
 
-                    <h3 className="text-xl font-semibold mt-4 mb-2">Theorem 1: Model-relative forward invariance</h3>
+                    <h3 className="text-xl font-semibold mt-4 mb-2">Theorem 1: Conditional Model-relative forward invariance</h3>
                     <div className="p-4 border-l-4 border-blue-500 bg-blue-50 rounded-md my-4">
                         <p className="font-semibold">Statement</p>
-                        <p>{String.raw`If at each time step the robust multi-step QP is feasible under the learned model and the true residuals satisfy \|w_k\|_\infty \le \epsilon, then the closed-loop trajectory stays in \(\mathcal{C}\) for all times \(k\ge 0\).`}</p>
+                        <p>{String.raw`If at an initial time step $k=0$ the robust multi-step QP is feasible under the learned model, and the true residuals satisfy \|w_k\|_\infty \le \epsilon$, then for all future times $k > 0$, the QP remains feasible and the closed-loop trajectory stays in \(\mathcal{C}\).`}</p>
                     </div>
-                    <p className="text-slate-800 leading-relaxed mb-3">Proof sketch: induction. Feasibility gives a control sequence u that keeps all predicted z_k+1..k+H inside the safe set given the epsilon tightening. Applying u_0 moves the system to z_k+1 which is in the safe set; repeat.</p>
+                    <div className="p-4 border-l-4 border-blue-400 bg-blue-50/50 rounded-md my-4">
+                        <p className="font-semibold text-sm">Corollary: Feasibility Persistence</p>
+                        <p className="text-sm italic">{String.raw`Under the error bound assumption, if the system starts in a robustly safe state, it will never encounter a state where the robust QP is infeasible.`}</p>
+                    </div>
+                    <p className="text-slate-800 leading-relaxed mb-3">Proof sketch: induction. The robust tightening implies that if a sequence of controls is safe for the worst-case error model, the first step leads to a state that is also robustly controllable into the safe set.</p>
 
                     <h3 className="text-xl font-semibold mt-4 mb-2">Theorem 2: High-probability model accuracy</h3>
                     <div className="p-4 border-l-4 border-green-500 bg-green-50 rounded-md my-4">
@@ -226,8 +231,8 @@ const RampsBlogPage = () => {
                         <li>QP variables = action_dim × H; constraints ≈ faces × H.</li>
                     </ul>
 
-                    <h3 className="text-xl font-semibold mt-4 mb-2">Run-time numbers (empirical)</h3>
-                    <p className="text-slate-800 leading-relaxed mb-3">From the experiments (see below), average per-step shield time is under 0.5 ms across environments, making RAMPS compatible with real-time control loops.</p>
+                    <h3 className="text-xl font-semibold mt-4 mb-2">Run-time and Feasibility (empirical)</h3>
+                    <p className="text-slate-800 leading-relaxed mb-3">From the experiments (see below), average per-step shield time is under 0.5 ms across environments. Crucially, strictly robust methods can sometimes be overly conservative leading to infeasibility, but RAMPS maintains <strong>infeasibility rates {`< 2%`}</strong> generally, with <strong>0% infeasibility</strong> observed for the complex Humanoid task.</p>
 
                     <h3 className="text-xl font-semibold mt-4 mb-2">Estimating ε in practice</h3>
                     <p className="text-slate-800 leading-relaxed mb-3">Procedure:</p>
@@ -278,7 +283,7 @@ const RampsBlogPage = () => {
                         </div>
                         <div className="p-4 bg-slate-50 rounded-lg">
                             <p className="text-2xl font-bold text-blue-600">100+</p>
-                            <p className="text-sm text-slate-600">Scales to {`> 100`} lifted state dimensions</p>
+                            <p className="text-sm text-slate-600">Scales to {`> 100`} lifted state dims and 21-dimensional constraints</p>
                         </div>
                         <div className="p-4 bg-slate-50 rounded-lg">
                             <p className="text-2xl font-bold text-blue-600">&lt;0.5 ms</p>
@@ -495,7 +500,7 @@ loop each timestep:
 
             <footer className="bg-white border-t mt-12">
                 <div className="container mx-auto px-6 py-8 text-center text-slate-600">
-                    <p className="mb-2">&copy;Paper under double-blind review for ICLR 2026.</p>
+                    <p className="mb-2">&copy;Paper accepted at ICLR 2026.</p>
                 </div>
             </footer>
         </div>

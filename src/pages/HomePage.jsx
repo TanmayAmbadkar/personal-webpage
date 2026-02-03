@@ -10,75 +10,7 @@ import { motion } from 'framer-motion';
 import SEO from '../components/SEO';
 
 function HomePage() {
-    const [isDark, setIsDark] = useState(true);
 
-    useEffect(() => {
-        // Check system preference or saved theme
-        const savedTheme = localStorage.getItem('theme');
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-        if (savedTheme === 'light') {
-            setIsDark(false);
-            document.documentElement.classList.add('light');
-        } else if (savedTheme === 'dark') {
-            setIsDark(true);
-            document.documentElement.classList.remove('light');
-        } else {
-            setIsDark(prefersDark);
-            if (!prefersDark) document.documentElement.classList.add('light');
-        }
-    }, []);
-
-    const toggleTheme = (e) => {
-        if (!document.startViewTransition) {
-            setIsDark(!isDark);
-            if (isDark) {
-                document.documentElement.classList.add('light');
-                localStorage.setItem('theme', 'light');
-            } else {
-                document.documentElement.classList.remove('light');
-                localStorage.setItem('theme', 'dark');
-            }
-            return;
-        }
-
-        const x = e?.clientX ?? window.innerWidth / 2;
-        const y = e?.clientY ?? window.innerHeight / 2;
-
-        const endRadius = Math.hypot(
-            Math.max(x, window.innerWidth - x),
-            Math.max(y, window.innerHeight - y)
-        );
-
-        const transition = document.startViewTransition(() => {
-            setIsDark(!isDark);
-            if (isDark) {
-                document.documentElement.classList.add('light');
-                localStorage.setItem('theme', 'light');
-            } else {
-                document.documentElement.classList.remove('light');
-                localStorage.setItem('theme', 'dark');
-            }
-        });
-
-        transition.ready.then(() => {
-            const clipPath = [
-                `circle(0px at ${x}px ${y}px)`,
-                `circle(${endRadius}px at ${x}px ${y}px)`,
-            ];
-
-            document.documentElement.animate(
-                {
-                    clipPath: clipPath,
-                },
-                {
-                    duration: 500,
-                    easing: 'ease-in-out',
-                    pseudoElement: '::view-transition-new(root)',
-                }
-            );
-        });
-    };
 
     return (
         <div className="min-h-screen text-text font-sans selection:bg-accent selection:text-primary overflow-x-hidden transition-colors duration-300 relative bg-primary">
@@ -132,7 +64,7 @@ function HomePage() {
                 />
             </div>
 
-            <Sidebar isDark={isDark} toggleTheme={toggleTheme} />
+            <Sidebar />
 
             <main className="lg:ml-64 relative z-10 pt-16 lg:pt-0 transition-all duration-300">
                 <div className="relative">
