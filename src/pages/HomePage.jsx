@@ -15,9 +15,9 @@ function HomePage() {
     return (
         <div className="min-h-screen text-text font-sans selection:bg-accent selection:text-primary overflow-x-hidden transition-colors duration-300 relative bg-primary">
             <SEO
-                title="Tanmay Ambadkar | PhD Student @ Penn State"
-                description="Personal portfolio of Tanmay Ambadkar, a PhD student at Penn State University. Researching Reinforcement Learning, Safe RL, and Multi-Objective RL."
-                keywords="Tanmay Ambadkar, Reinforcement Learning, Safe RL, Multi-Objective RL, Penn State, PhD, Portfolio"
+                title="Tanmay Ambadkar | Reinforcement Learning"
+                description="Personal portfolio of Tanmay Ambadkar, a PhD student at Penn State University specializing in Safe Reinforcement Learning, Formal Methods, and Multi-Objective RL. exploring projects like RAMPS, AutoSpec, and D3PO."
+                keywords="Tanmay Ambadkar, Reinforcement Learning, Safe RL, Multi-Objective RL, Formal Methods, Robust Adaptive Multi-Step Predictive Shielding, RAMPS, AutoSpec, SpectRL, D3PO, Multi-Objective Reinforcement Learning, Preference Conditioned RL, Deep Koopman Operators, Control Barrier Functions, CBF, Sinergym, Building Control, StarCraft II Benchmark, MIXTAPE, Explainable AI, XAI, Penn State, PhD, Portfolio"
             />
             {/* Background Gradients & Animation */}
             <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
