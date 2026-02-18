@@ -1,3 +1,4 @@
+import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { FileText, Github, Home } from 'lucide-react';
 import 'katex/dist/katex.min.css';
