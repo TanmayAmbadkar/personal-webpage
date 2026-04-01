@@ -63,7 +63,7 @@ const D3poPage = () => {
                         </p>
 
                         <div className="flex flex-col sm:flex-row justify-center gap-4 px-4">
-                            <a href="https://openreview.net/forum?id=iH7mSOTR4q" className="inline-flex items-center justify-center gap-2 bg-blue-600 text-white font-semibold px-6 py-2.5 sm:px-8 sm:py-3 rounded-lg hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-blue-500/30" rel="noopener noreferrer" target="_blank">
+                            <a href="https://arxiv.org/abs/2602.07764" className="inline-flex items-center justify-center gap-2 bg-blue-600 text-white font-semibold px-6 py-2.5 sm:px-8 sm:py-3 rounded-lg hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-blue-500/30" rel="noopener noreferrer" target="_blank">
                                 <FileText size={18} className="sm:w-5 sm:h-5" />
                                 <span>Read Paper</span>
                             </a>
@@ -469,7 +469,7 @@ const D3poPage = () => {
             {/* Footer */}
             <footer className="bg-white dark:bg-slate-800 border-t dark:border-slate-700 transition-colors duration-300">
                 <div className="container mx-auto px-6 py-6 text-center text-slate-600 dark:text-slate-400">
-                    <p>&copy; 2026 Anonymous Authors. Paper under double-blind review for ICML 2026.</p>
+                    <p>&copy; 2026 Tanmay Ambadkar</p>
                 </div>
             </footer>
         </div >
