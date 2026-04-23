@@ -1,294 +1,666 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RAMPS: Robust Adaptive Multi-Step Predictive Shielding</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- KaTeX for rendering mathematical formulas -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" xintegrity="sha384-n8MVd4RsNIU0KOVEMmg9ikewadVpGNIJIHwATVNSC1A7MMdGuDRBQwjsOh9kWDEQ" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" xintegrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmFAILfpeV" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" xintegrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc; /* slate-50 */
-        }
-        .section-title {
-            @apply text-3xl font-bold text-slate-800 mb-6;
-        }
-        .card {
-            @apply bg-white rounded-xl shadow-lg overflow-hidden p-8 transition-all duration-300;
-        }
-        .hero-bg {
-            background-color: #f1f5f9;
-            background-image: radial-gradient(#d1d5db 1px, transparent 1px);
-            background-size: 20px 20px;
-        }
-        .primary-btn {
-             @apply inline-flex items-center gap-2 bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-blue-700 transition-transform duration-300 hover:scale-105;
-        }
-        .secondary-btn {
-             @apply inline-flex items-center gap-2 bg-slate-800 text-white font-semibold px-6 py-3 rounded-lg hover:bg-slate-900 transition-transform duration-300 hover:scale-105;
-        }
-    </style>
-</head>
-<body class="text-slate-700">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RAMPS — Robust Adaptive Multi-Step Predictive Shielding</title>
+  <meta name="description" content="A framework for formally safe deep reinforcement learning at scale via multi-step robust control barrier functions over a learned linear dynamics model.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --hue: 248;
 
-    <!-- Header -->
-    <!-- <header class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="container mx-auto px-6 py-4 flex items-center gap-3">
-            <h1 class="text-2xl font-bold text-slate-900">RAMPS</h1>
-        </div>
-    </header> -->
+      /* Tinted neutrals via oklch */
+      --bg: oklch(98.2% 0.006 var(--hue));
+      --surface: oklch(99.6% 0.003 var(--hue));
+      --surface-2: oklch(95.5% 0.012 var(--hue));
+      --text: oklch(22% 0.028 var(--hue));
+      --text-2: oklch(40% 0.022 var(--hue));
+      --text-mute: oklch(58% 0.018 var(--hue));
+      --border: oklch(88% 0.015 var(--hue));
+      --border-strong: oklch(78% 0.02 var(--hue));
 
-    <main class="container mx-auto px-6 py-12">
+      --accent: oklch(48% 0.13 var(--hue));
+      --danger: oklch(55% 0.18 25);
+      --safe: oklch(55% 0.14 155);
 
-        <!-- Main Title and Abstract -->
-        <section class="text-center py-16 mb-12 rounded-xl hero-bg">
-            <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight mb-4">
-                Robust Adaptive Multi-Step Predictive Shielding
-            </h2>
-            <p class="text-base text-slate-600 max-w-4xl mx-auto">
-                <em>Tanmay Ambadkar, Darshan Chudiwal, Greg Anderson, Abhinav Verma</em>
-            </p>
-            <hr>
-            <p class="text-lg text-slate-600 max-w-4xl mx-auto">
-                A scalable framework for ensuring safety in deep reinforcement learning, enabling agents to learn high-performing, safe policies in complex, high-dimensional environments.
-            </p>
-            
-            <div class="mt-8 flex justify-center space-x-4">
-                 <a href="https://openreview.net/forum?id=2bbqHOWFTU" class="primary-btn"  rel="noopener noreferrer" target="_blank">
-                    <u>Paper</u>  
-                    <!-- <i data-lucide="file-text"></i> -->
-                     <!-- <p>View Paper</p> -->
-                 </a>
-                 <a href="https://github.com/TanmayAmbadkar/sparkd" class="secondary-btn"  rel="noopener noreferrer" target="_blank">
-                    <u>Github</u>
-                     <!-- <p class = "center">Code</p> -->
-                </a>
-                <a href="blogpost.html" class="secondary-btn"  rel="noopener noreferrer">
-                    <u>Blog</u>
-                        <!-- <i data-lucide="github"></i> -->
-                     <!-- <p class = "center">Code</p> -->
-                </a>
-            </div>
-        </section>
+      /* Typography */
+      --font-display: "Instrument Serif", Georgia, "Times New Roman", serif;
+      --font-sans: "Manrope", system-ui, -apple-system, Segoe UI, sans-serif;
+      --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
-        <!-- The Challenge Section -->
-        <section class="mb-16">
-            <div class="card">
-                <h3 class="text-2xl font-semibold mb-4 text-slate-800">The Challenge: Safe Exploration in Complex Worlds</h3>
-                <div>
-                    <div>
-                        <p class="mb-4">
-                            Deep Reinforcement Learning (RL) has shown incredible promise, but its application in safety-critical domains like autonomous driving and robotics is limited. A major hurdle is ensuring the agent acts safely not just after training, but <strong class="text-blue-600">throughout the entire learning process.</strong>
-                        </p>
-                        <p class="mb-4">
-                            Existing "shielding" methods that provide formal safety guarantees often struggle to scale. They typically rely on building a patchwork of simple, local models of the environment. This approach becomes computationally intractable in the complex, high-dimensional, and nonlinear systems where deep RL truly shines.
-                        </p>
-                        <p>This creates a critical trade-off: either accept weaker safety guarantees or be confined to simpler problems. How can we achieve provable safety in a way that is both scalable and efficient?</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+      --fs-xxl: clamp(2.5rem, 6vw, 5rem);
+      --fs-xl: clamp(1.75rem, 3.2vw, 2.75rem);
+      --fs-l: clamp(1.25rem, 1.9vw, 1.6rem);
+      --fs-m: clamp(1.05rem, 1.25vw, 1.2rem);
+      --fs-body: clamp(1rem, 1.05vw, 1.1rem);
+      --fs-s: clamp(0.9rem, 0.95vw, 0.95rem);
+      --fs-xs: clamp(0.75rem, 0.8vw, 0.82rem);
 
-        <!-- Our Solution Section -->
-        <section class="mb-16">
-             <div class="card">
-                <h3 class="text-2xl font-semibold mb-4 text-slate-800">Our Solution: RAMPS</h3>
-                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto mb-10">
-                    RAMPS bridges this gap by unifying robust control theory with modern machine learning. It provides strong, real-time safety guarantees without sacrificing performance or scalability.
-                </p>
-                <div class="grid md:grid-cols-3 gap-6 text-center">
-                    <div class="bg-slate-100 p-6 rounded-lg">
-                        <h4 class="text-xl font-semibold mb-2 text-slate-800">Learned Linear Dynamics</h4>
-                        <p class="text-slate-600">RAMPS learns a <strong class="text-blue-600">single, global linear representation</strong> of the system's dynamics, using methods like a Deep Koopman Operator.</p>
-                    </div>
-                    <div class="bg-slate-100 p-6 rounded-lg">
-                        <h4 class="text-xl font-semibold mb-2 text-slate-800">Robust Multi-Step Shielding</h4>
-                        <p class="text-slate-600">A robust Control Barrier Function (CBF) <strong class="text-blue-600">looks ahead in time</strong>, accounting for model errors to prevent future safety violations.</p>
-                    </div>
-                    <div class="bg-slate-100 p-6 rounded-lg">
-                        <h4 class="text-xl font-semibold mb-2 text-slate-800">Minimally Invasive Action</h4>
-                        <p class="text-slate-600">The shield finds the <strong class="text-blue-600">closest possible safe action</strong>, allowing the agent to learn effectively without being overly restricted.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Theoretical Foundations Section -->
-        <section class="mb-16">
-            <div class="card">
-                <h3 class="text-2xl font-semibold mb-4 text-slate-800">Theoretical Foundations</h3>
-                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto mb-10">
-                    RAMPS is built on a solid theoretical footing, combining a linear dynamics model with a novel robust control barrier function to provide formal safety guarantees.
-                </p>
-                <div class="grid md:grid-cols-2 gap-12">
-                    <!-- Left Column: Key Formulas -->
-                    <div>
-                        <h4 class="text-2xl font-semibold mb-4 text-slate-800">Key Formulas</h4>
-                        <div class="space-y-6">
-                            <div>
-                                <h5 class="font-semibold text-slate-700">1. Learned Linear Dynamics</h5>
-                                <p class="text-slate-600 mb-2">The system dynamics are approximated by a linear model in a (potentially lifted) state space `z`:</p>
-                                <div class="p-4 bg-slate-100 rounded-lg text-center text-sm overflow-x-auto">
-                                    $$z_{k+1} = Az_{k} + Bu_{k} + c + w_{k}$$
-                                </div>
-                                <p class="text-xs text-slate-500 mt-2">Where \(w_k\) is the model error, bounded by \(\epsilon\).</p>
-                            </div>
-                            <div>
-                                <h5 class="font-semibold text-slate-700">2. Multi-Step Robust Safety Condition</h5>
-                                <p class="text-slate-600 mb-2">To ensure safety over a future horizon \(j\), this condition must hold for each face \(i\) of the safe set:</p>
-                                 <div class="p-4 bg-slate-100 rounded-lg text-center text-sm overflow-x-auto">
-                                   $$p_{i}^{\top}z_{j}(z,u) + b_{i} \le \lambda^{j}(p_{i}^{\top}z+b_{i}) - \mathcal{E}_{j}(p_{i})$$
-                                </div>
-                            </div>
-                             <div>
-                                <h5 class="font-semibold text-slate-700">3. Robust Tightening Term</h5>
-                                <p class="text-slate-600 mb-2">This term accounts for the accumulated model error over \(j\) steps, ensuring robustness:</p>
-                                 <div class="p-4 bg-slate-100 rounded-lg text-center text-sm overflow-x-auto">
-                                   $$\mathcal{E}_{j}(p_{i}) = \sum_{k=0}^{j-1}\epsilon||p_{i}^{\top}A^{k}||_{1}$$
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Right Column: Safety Guarantees -->
-                    <div>
-                        <h4 class="text-2xl font-semibold mb-4 text-slate-800">Safety Guarantees</h4>
-                        <div class="space-y-6">
-                            <div class="p-6 border-l-4 border-blue-500 bg-blue-50 rounded-r-lg">
-                                <h5 class="font-semibold text-slate-800">Theorem 1: Model-Relative Forward Invariance</h5>
-                                <p class="text-slate-700">
-                                    This theorem provides a <strong class="text-blue-600">deterministic guarantee</strong> of safety relative to the learned model. It states that if the multi-step safety problem is always solvable and the true model error \(w_k\) stays within its estimated bound \(\epsilon\), the system will <strong class="text-blue-600">never leave the safe set.</strong>
-                                </p>
-                            </div>
-                             <div class="p-6 border-l-4 border-green-500 bg-green-50 rounded-r-lg">
-                                <h5 class="font-semibold text-slate-800">Theorem 2: High-Probability Model Accuracy</h5>
-                                <p class="text-slate-700">
-                                    This theorem connects the model-based guarantee to the real world. It provides a <strong class="text-green-600">high-probability bound</strong> on how often the true model error might exceed our empirical estimate \(\epsilon\). This ensures that the safety guarantees from Theorem 1 hold with high confidence in practice.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+      /* Spacing */
+      --pad-page: clamp(1.25rem, 5vw, 4rem);
+      --space-2xs: clamp(0.25rem, 0.5vw, 0.5rem);
+      --space-xs: clamp(0.5rem, 1vw, 1rem);
+      --space-s: clamp(1rem, 1.75vw, 1.75rem);
+      --space-m: clamp(2rem, 3.5vw, 3.25rem);
+      --space-l: clamp(3rem, 6vw, 5.5rem);
 
+      /* Motion */
+      --ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
+      --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
 
-        <!-- Results Section -->
-        <section class="mb-16">
-            <div class="card">
-                <h3 class="text-2xl font-semibold mb-4 text-slate-800">Key Results: A New State-of-the-Art in Safety</h3>
-                <p class="text-lg text-center max-w-3xl mx-auto mb-10 text-slate-600">
-                    Across a suite of challenging high-dimensional control environments, RAMPS significantly outperforms existing methods in both safety and performance.
-                </p>
-                
-                <div class="space-y-8">
-                    <!-- Row 1: Safety Violations -->
-                    <div>
-                        <h4 class="text-xl font-semibold mb-4 text-slate-800 text-center">Cumulative Safety Violations</h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                            <!-- Pendulum -->
-                            
-                            <!-- Cheetah -->
-                            <div class="text-center bg-slate-100 p-2 rounded-lg">
-                                <img src="images/violations_cheetah.png" alt="Cheetah Violations Graph" class="rounded-lg shadow-md w-full">
-                                <p class="mt-2 font-semibold text-slate-700">(b) Cheetah</p>
-                            </div>
-                            <!-- Hopper -->
-                            <div class="text-center bg-slate-100 p-2 rounded-lg">
-                                <img src="images/violations_hopper.png" alt="Hopper Violations Graph" class="rounded-lg shadow-md w-full">
-                                <p class="mt-2 font-semibold text-slate-700">(c) Hopper</p>
-                            </div>
-                            <!-- Ant -->
-                            <div class="text-center bg-slate-100 p-2 rounded-lg">
-                                <img src="images/violations_ant.png" alt="Ant Violations Graph" class="rounded-lg shadow-md w-full">
-                                <p class="mt-2 font-semibold text-slate-700">(d) Ant</p>
-                            </div>
-<div class="text-center bg-slate-100 p-2 rounded-lg">
-                                <img src="images/Violations_humanoid.png" alt="Humanoid Violations Graph" class="rounded-lg shadow-md w-full">
-                                <p class="mt-2 font-semibold text-slate-700">(a) Humanoid</p>
-                            </div>
-                        </div>
-                    </div>
-        
-                    <!-- Row 2: Reward -->
-                    <div>
-                        <h4 class="text-xl font-semibold mb-4 text-slate-800 text-center">Reward Curves</h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                            <!-- Pendulum -->
-                            
-                            <!-- Cheetah -->
-                            <div class="text-center bg-slate-100 p-2 rounded-lg">
-                                <img src="images/reward_cheetah.png" alt="Cheetah Reward Graph" class="rounded-lg shadow-md w-full">
-                                <p class="mt-2 font-semibold text-slate-700">(b) Cheetah</p>
-                            </div>
-                            <!-- Hopper -->
-                            <div class="text-center bg-slate-100 p-2 rounded-lg">
-                                <img src="images/reward_hopper.png" alt="Hopper Reward Graph" class="rounded-lg shadow-md w-full">
-                                <p class="mt-2 font-semibold text-slate-700">(c) Hopper</p>
-                            </div>
-                            <!-- Ant -->
-                            <div class="text-center bg-slate-100 p-2 rounded-lg">
-                                <img src="images/reward_ant.png" alt="Ant Reward Graph" class="rounded-lg shadow-md w-full">
-                                <p class="mt-2 font-semibold text-slate-700">(d) Ant</p>
-                            </div>
-<div class="text-center bg-slate-100 p-2 rounded-lg">
-                                <img src="images/reward_humanoid.png" alt="Humanoid Reward Graph" class="rounded-lg shadow-md w-full">
-                                <p class="mt-2 font-semibold text-slate-700">(a) Humanoid</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+      --radius: 4px;
+    }
 
-                <div class="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
-                    <div class="border-t-4 border-blue-500 pt-4">
-                        <p class="text-4xl font-bold text-blue-600">Up to 90%</p>
-                        <p class="text-slate-600">Reduction in safety violations compared to state-of-the-art safe RL methods.</p>
-                    </div>
-                    <div class="border-t-4 border-blue-500 pt-4">
-                        <p class="text-4xl font-bold text-blue-600">100+</p>
-                        <p class="text-slate-600">Successfully scales to environments with over 100 state dimensions (e.g., SafeAnt).</p>
-                    </div>
-                    <div class="border-t-4 border-blue-500 pt-4">
-                        <p class="text-4xl font-bold text-blue-600">&lt;0.5 ms</p>
-                        <p class="text-slate-600">Average per-step shield computation time, making it feasible for real-time control.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+    /* Base Reset */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; overscroll-behavior: none; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: var(--fs-body);
+      line-height: 1.6;
+      font-weight: 400;
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden; /* handled by presentation wrapper */
+    }
 
-    </main>
+    ::selection { background: color-mix(in oklch, var(--accent) 22%, transparent); color: var(--text); }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
 
-    <!-- Footer -->
-    <footer class="bg-white border-t">
-        <div class="container mx-auto px-6 py-6 text-center text-slate-600">
-            <p>&copy; 2026 Anonymous Authors. Paper under double-blind review for ICLR 2026.</p>
-        </div>
-    </footer>
+    /* The Presentation Engine */
+    .presentation {
+      height: 100vh;
+      overflow-y: auto;
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+    }
     
-    <script>
-        lucide.createIcons();
-        
-        document.addEventListener("DOMContentLoaded", function() {
-            renderMathInElement(document.body, {
-              // customised options
-              // • auto-render specific keys, e.g.:
-              delimiters: [
-                  {left: '$$', right: '$$', display: true},
-                  {left: '$', right: '$', display: false},
-                  {left: '\\(', right: '\\)', display: false},
-                  {left: '\\[', right: '\\]', display: true}
-              ],
-              // • rendering keys, e.g.:
-              throwOnError : false
-            });
-        });
-    </script>
+    .slide {
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      padding: clamp(2rem, 6vh, 8rem) var(--pad-page);
+      max-width: 68rem;
+      margin: 0 auto;
+      box-sizing: border-box;
+    }
 
+    /* Staggered Reveal Animation */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 1.2s var(--ease-out-expo), transform 1.2s var(--ease-out-expo);
+    }
+    .slide.is-visible .reveal { opacity: 1; transform: none; }
+
+    .d-1 { transition-delay: 0.1s; }
+    .d-2 { transition-delay: 0.25s; }
+    .d-3 { transition-delay: 0.4s; }
+    .d-4 { transition-delay: 0.55s; }
+
+    /* Navigation (Floating) */
+    header.nav {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      z-index: 50;
+      padding-block: clamp(1rem, 1.5vw, 1.5rem);
+    }
+    .nav-inner {
+      display: flex; justify-content: space-between; align-items: center;
+      max-width: 68rem; margin: 0 auto; padding: 0 var(--pad-page); width: 100%;
+    }
+    .brand {
+      font-family: var(--font-mono); font-size: var(--fs-xs); font-weight: 500;
+      letter-spacing: 0.12em; color: var(--text); padding-bottom: 2px;
+    }
+    .nav-links { display: flex; gap: clamp(1rem, 2vw, 2rem); }
+    .nav-links a { font-size: var(--fs-s); color: var(--text-2); transition: color 280ms; }
+    .nav-links a:hover { color: var(--accent); }
+
+    /* ──────── Typography Macros ──────── */
+    .section-label {
+      font-family: var(--font-mono); font-size: var(--fs-xs);
+      letter-spacing: 0.12em; color: var(--text-mute);
+      text-transform: uppercase; margin: 0 0 var(--space-xs);
+    }
+    .section-title {
+      font-family: var(--font-display); font-size: var(--fs-xl);
+      line-height: 1.05; letter-spacing: -0.02em; margin: 0 0 var(--space-s);
+    }
+    .lede { font-size: var(--fs-l); color: var(--text-2); line-height: 1.4; margin: 0 0 var(--space-s); font-weight: 300;}
+    .constrained { max-width: 48rem; }
+
+    /* ──────── Slide Specifics ──────── */
+    
+    /* Hero */
+    .slide-hero h1 {
+      font-family: var(--font-display); font-size: var(--fs-xxl); line-height: 1.02;
+      letter-spacing: -0.02em; color: var(--text); margin: 0 0 var(--space-s); max-width: 14ch;
+    }
+    .hero-authors { font-size: var(--fs-m); color: var(--text-2); margin: 0 0 var(--space-s); }
+    .hero-authors span { color: var(--text); }
+    .hero-abstract { font-size: var(--fs-body); line-height: 1.6; color: var(--text-2); margin: 0; max-width: 48rem;}
+    .hero-abstract b { color: var(--text); font-weight: 600; }
+
+    /* The Wall */
+    .compare {
+      margin: var(--space-m) 0 0; padding: 0; list-style: none; display: grid; gap: var(--space-s);
+    }
+    .compare > div {
+      display: grid; grid-template-columns: minmax(12rem, 1fr); gap: 0.5rem;
+      padding: var(--space-s) 0; border-top: 1px solid color-mix(in oklch, var(--border), transparent 40%);
+    }
+    @media (min-width: 640px) { .compare > div { grid-template-columns: 14rem 1fr; gap: var(--space-m); align-items: baseline;} }
+    .compare dt {
+      font-family: var(--font-mono); font-size: var(--fs-xs); letter-spacing: 0.1em;
+      color: var(--text); text-transform: uppercase;
+    }
+    .compare dd { font-size: var(--fs-body); color: var(--text-2); margin: 0; line-height: 1.5; }
+
+    /* Approach Grids (Asymmetrical Design) */
+    .approach-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-m); margin-top: var(--space-m);
+    }
+    @media (max-width: 820px) { .approach-grid { grid-template-columns: 1fr; } }
+    .approach-card {
+      border-top: 2px solid var(--border); padding-top: var(--space-s);
+    }
+    /* Intentional Asymmetry */
+    @media (min-width: 821px) {
+      .approach-card:nth-child(2) { transform: translateY(3rem); }
+      .approach-card:nth-child(3) { transform: translateY(1.5rem); }
+    }
+    .approach-card h3 {
+      font-family: var(--font-display); font-size: var(--fs-l); font-weight: 400;
+      line-height: 1.1; margin: 0 0 var(--space-xs); letter-spacing: -0.01em;
+    }
+    .approach-card p { font-size: var(--fs-s); color: var(--text-2); margin: 0; line-height: 1.6; }
+
+    /* Interactive Simulation */
+    .slide-sim { max-width: none; padding-inline: 0; background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .sim-container {
+      width: 100%; height: 100%; min-height: 60vh; position: relative;
+    }
+    .sim-overlay {
+      position: absolute; top: var(--pad-page); left: var(--pad-page); right: var(--pad-page);
+      display: flex; justify-content: space-between; align-items: flex-start; z-index: 10; pointer-events: none;
+    }
+    .sim-header { pointer-events: auto; }
+    .sim-header h2 { font-family: var(--font-display); font-size: var(--fs-xl); margin: 0; font-weight: 400; letter-spacing: -0.02em; }
+    .sim-header p { font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--text-mute); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.5rem; }
+    
+    .sim-metrics-box {
+      pointer-events: auto; background: color-mix(in oklch, var(--bg) 80%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      padding: var(--space-s) var(--space-m); border: 1px solid var(--border); border-radius: 8px; display: flex; gap: var(--space-l);
+    }
+    .sim-metric { text-align: right; }
+    .sim-metric-val { font-family: var(--font-mono); font-size: var(--fs-xl); color: var(--text); line-height: 1; letter-spacing: -0.04em;}
+    .sim-metric-lbl { font-family: var(--font-sans); font-size: var(--fs-xs); color: var(--text-mute); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.4rem; font-weight: 600;}
+
+    .sim-controls-pane {
+      position: absolute; bottom: var(--pad-page); left: 50%; transform: translateX(-50%);
+      background: color-mix(in oklch, var(--bg) 95%, transparent); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      padding: var(--space-xs); border: 1px solid var(--border); border-radius: 12px; display: flex; gap: var(--space-m); z-index: 10;
+      box-shadow: 0 20px 40px color-mix(in oklch, var(--text) 4%, transparent);
+    }
+    .ctrl-col { display: flex; flex-direction: column; gap: 0.4rem; }
+    .ctrl-lbl { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-mute); text-transform: uppercase; letter-spacing: 0.1em; text-align: center; }
+    
+    .seg { display: flex; background: var(--surface-2); padding: 4px; border-radius: 8px; }
+    .seg button {
+      background: transparent; border: none; color: var(--text-mute); font-family: var(--font-mono); font-size: 0.75rem; 
+      padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .seg button[aria-pressed="true"] { background: var(--bg); color: var(--text); box-shadow: 0 2px 8px color-mix(in oklch, var(--text) 6%, transparent); }
+    .seg button:hover:not([aria-pressed="true"]) { color: var(--text); }
+    
+    .sim-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none;}
+
+    /* Results */
+    .metrics {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-m); margin-bottom: var(--space-l);
+    }
+    @media (max-width: 768px) { .metrics { grid-template-columns: repeat(2, 1fr); } }
+    .metric { border-top: 1px solid var(--border); padding-top: var(--space-xs); }
+    .metric-value { font-family: var(--font-display); font-size: var(--fs-xl); line-height: 1; color: var(--text); letter-spacing: -0.01em;}
+    .metric-label { font-size: var(--fs-s); color: var(--text-2); margin-top: var(--space-2xs); line-height: 1.5; }
+    
+    .figure-frame {
+      border: 1px solid var(--border); border-radius: 6px; background: #fff; padding: var(--space-s);
+      max-width: 48rem; margin: 0 auto;
+    }
+    
+    .cite {
+      margin-top: var(--space-s); border: 1px solid var(--border); border-radius: 8px;
+      background: var(--surface); padding: var(--space-s); max-width: 48rem; width: 100%;
+    }
+    .cite pre {
+      font-family: var(--font-mono); font-size: var(--fs-s); margin: 0;
+      white-space: pre-wrap; color: var(--text-2); line-height: 1.55;
+    }
+    
+    .footer-inner {
+      font-size: var(--fs-s); color: var(--text-mute); display: flex; justify-content: space-between;
+      border-top: 1px solid var(--border); padding-top: var(--space-s); width: 100%; max-width: 68rem;
+      position: absolute; bottom: var(--pad-page); left: 50%; transform: translateX(-50%);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- The Scrollytelling Container -->
+  <main class="presentation" id="scroller">
+
+    <!-- SLIDE 1: Hero -->
+    <section class="slide slide-hero">
+      <header class="nav reveal">
+        <div class="nav-inner">
+          <a href="#" class="brand">RAMPS</a>
+          <nav class="nav-links">
+            <a href="https://openreview.net/forum?id=2bbqHOWFTU">Paper ↗</a>
+            <a href="https://github.com/TanmayAmbadkar/sparkd">Code ↗</a>
+          </nav>
+        </div>
+      </header>
+
+      <div class="constrained">
+        <p class="section-label reveal d-1">ICLR 2026</p>
+        <h1 class="reveal d-2">Robust Adaptive Multi-Step Predictive Shielding</h1>
+        <p class="hero-authors reveal d-3">
+          <span>Tanmay Ambadkar</span>, <span>Darshan Chudiwal</span>, <span>Greg Anderson</span>, <span>Abhinav Verma</span>
+        </p>
+        <div style="height: var(--space-m);"></div>
+        <p class="hero-abstract reveal d-4">
+          RAMPS bridges the gap between formal safety and high-dimensional deep reinforcement learning. By learning a single global linear dynamics model—leveraging <b>Deep Koopman Operators</b>—and constructing <b>adaptive multi-step robust control barrier functions</b>, RAMPS accounts for accumulated model error and resolves high relative-degree traps. A minimally invasive quadratic program guarantees conditional forward invariance at each step.
+        </p>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: The Wall -->
+    <section class="slide">
+      <div class="constrained">
+        <p class="section-label reveal">The Limitation</p>
+        <h2 class="section-title reveal d-1">Safe exploration at scale</h2>
+        <p class="lede reveal d-2">
+          Existing approaches force a compromise between mathematical rigidity and practical scale.
+        </p>
+        
+        <dl class="compare reveal d-3">
+          <div>
+            <dt>Formal Shielding</dt>
+            <dd>Offers strict mathematical certificates of safety, but hits a dimensionality wall around 10 states due to the cost of nonlinear propagation.</dd>
+          </div>
+          <div>
+            <dt>Statistical RL</dt>
+            <dd>Scales seamlessly to high dimensions, but enforces constraints only via penalties, permitting critical safety violations early in training.</dd>
+          </div>
+          <div>
+            <dt style="color: var(--accent);">The RAMPS Synthesis</dt>
+            <dd>Secures the mathematical rigor of formal shields while achieving the 348-dimensional scaling of statistical methods.</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: Approach -->
+    <section class="slide">
+      <p class="section-label reveal">The Architecture</p>
+      <h2 class="section-title reveal d-1">Three core components</h2>
+      
+      <div class="approach-grid">
+        <article class="approach-card reveal d-2">
+          <h3>Deep Koopman embedding</h3>
+          <p>Transforms complex nonlinear control into a single global linear model. By mapping the environment into an infinite-dimensional lifted space via Deep Koopman Operators, powers of A precompute, enabling fast multi-step propagation without a patchwork of local approximations.</p>
+        </article>
+        <article class="approach-card reveal d-3">
+          <h3>Resolving relative-degree traps</h3>
+          <p>Standard shields fail on delayed-effect variables (where action shapes velocity, not position natively). By using an adaptive multi-step horizon, RAMPS secures control authority over these traps, keeping safety tight but never overly conservative.</p>
+        </article>
+        <article class="approach-card reveal d-4">
+          <h3>Probabilistic certification</h3>
+          <p>At every step, a warm-started quadratic program establishes model-relative forward invariance. It explicitly tightens constraints based on a data-driven error bound, yielding a mathematically certified safe action under half a millisecond.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: Simulation -->
+    <section class="slide slide-sim">
+      <div class="sim-container">
+        
+        <!-- HUD -->
+        <div class="sim-overlay">
+          <div class="sim-header reveal">
+            <h2>Interactive Horizon</h2>
+            <p>Control Theory visualization</p>
+          </div>
+          <div class="sim-metrics-box reveal d-1">
+            <div class="sim-metric">
+              <div class="sim-metric-val" id="m-violations">0</div>
+              <div class="sim-metric-lbl">Violations</div>
+            </div>
+            <div class="sim-metric">
+              <div class="sim-metric-val" id="m-intervention">0%</div>
+              <div class="sim-metric-lbl">Interventions</div>
+            </div>
+            <!-- Reward tracker logic preserved, safely hidden for UI cleanliness -->
+            <div id="m-reward" style="display: none;">0</div>
+          </div>
+        </div>
+
+        <!-- Float Controls -->
+        <div class="sim-controls-pane reveal d-2">
+          <div class="ctrl-col">
+            <span class="ctrl-lbl">Horizon Range</span>
+            <div class="seg" role="radiogroup" aria-label="Shield horizon" data-seg="horizon">
+              <button type="button" role="radio" data-value="one" aria-pressed="false">1-Step Myopic</button>
+              <button type="button" role="radio" data-value="multi" aria-pressed="true">Multi-Step Adaptive</button>
+            </div>
+          </div>
+          <div class="ctrl-col">
+            <span class="ctrl-lbl">Model Accuracy</span>
+            <div class="seg" role="radiogroup" aria-label="Learned model quality" data-seg="model">
+              <button type="button" role="radio" data-value="weak" aria-pressed="false">Noisy</button>
+              <button type="button" role="radio" data-value="medium" aria-pressed="true">Calibrated</button>
+              <button type="button" role="radio" data-value="strong" aria-pressed="false">Perfect</button>
+            </div>
+          </div>
+        </div>
+
+        <canvas id="sim-canvas" class="sim-canvas"></canvas>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: Results -->
+    <section class="slide">
+      <div class="constrained">
+        <p class="section-label reveal">Validation</p>
+        <h2 class="section-title reveal d-1">Scaling limits</h2>
+      </div>
+      
+      <div class="metrics reveal d-2">
+        <div class="metric">
+          <div class="metric-value">up to 90%</div>
+          <p class="metric-label">Reduction in cumulative safety violations against safe-RL baselines.</p>
+        </div>
+        <div class="metric">
+          <div class="metric-value">376</div>
+          <p class="metric-label">Max state dimensions shielded (prior formal bounds hit walls at 10).</p>
+        </div>
+        <div class="metric">
+          <div class="metric-value">&lt; 0.5 ms</div>
+          <p class="metric-label">Mean per-step shield computation with warm-started QP.</p>
+        </div>
+        <div class="metric">
+          <div class="metric-value">5 envs</div>
+          <p class="metric-label">Pendulum, Hopper, Half-Cheetah, Ant, SafeHumanoid.</p>
+        </div>
+      </div>
+
+      <div class="figure-frame reveal d-3" style="display: flex; flex-direction: column; gap: 1rem;">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; align-items: center;">
+          <div class="seg" role="radiogroup" id="eval-metric-seg">
+            <button type="button" role="radio" data-val="Violations" aria-pressed="true">Violations</button>
+            <button type="button" role="radio" data-val="reward" aria-pressed="false">Rewards</button>
+          </div>
+          <div class="seg" role="radiogroup" id="eval-env-seg">
+            <button type="button" role="radio" data-val="humanoid" aria-pressed="true">Humanoid</button>
+            <button type="button" role="radio" data-val="ant" aria-pressed="false">Ant</button>
+            <button type="button" role="radio" data-val="cheetah" aria-pressed="false">Cheetah</button>
+            <button type="button" role="radio" data-val="hopper" aria-pressed="false">Hopper</button>
+            <button type="button" role="radio" data-val="pendulum" aria-pressed="false">Pendulum</button>
+          </div>
+        </div>
+        <img id="eval-graph" src="images/Violations_humanoid.png" alt="Evaluation graph" loading="lazy" style="width: 100%; height: auto; border-radius: 4px;">
+      </div>
+    </section>
+
+    <!-- SLIDE 6: Citation -->
+    <section class="slide">
+      <div class="constrained" style="margin: 0 auto; width: 100%;">
+        <p class="section-label reveal">Citation</p>
+        <h2 class="section-title reveal d-1">Reference RAMPS</h2>
+        
+        <div class="cite reveal d-2">
+<pre>@inproceedings{ambadkar2026ramps,
+  title     = {Robust Adaptive Multi-Step Predictive Shielding},
+  author    = {Ambadkar, Tanmay and Chudiwal, Darshan and Anderson, Greg and Verma, Abhinav},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2026}
+}</pre>
+        </div>
+      </div>
+      
+      <div class="footer-inner reveal d-3">
+        <span>ICLR 2026</span>
+        <span>
+          <a href="https://openreview.net/forum?id=2bbqHOWFTU" style="margin-right: 1.5rem; transition: color 0.2s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color=''">Paper ↗</a>
+          <a href="https://github.com/TanmayAmbadkar/sparkd" style="transition: color 0.2s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color=''">Code ↗</a>
+        </span>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // ──────── Presentation Scroll Intersection ────────
+    document.addEventListener("DOMContentLoaded", () => {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) entry.target.classList.add('is-visible');
+        });
+      }, { threshold: 0.25 });
+      document.querySelectorAll('.slide').forEach(slide => observer.observe(slide));
+    });
+
+    // ──────── Evaluation Graph Viewer ────────
+    (function(){
+      const mSeg = document.getElementById('eval-metric-seg');
+      const eSeg = document.getElementById('eval-env-seg');
+      const img = document.getElementById('eval-graph');
+      if(mSeg && eSeg && img) {
+        let metric = 'Violations', env = 'humanoid';
+        const bind = (root, cb) => {
+          const btns = root.querySelectorAll('button');
+          btns.forEach(b => b.addEventListener('click', () => {
+            btns.forEach(x => x.setAttribute('aria-pressed', 'false'));
+            b.setAttribute('aria-pressed', 'true');
+            cb(b.dataset.val); img.src = `images/${metric}_${env}.png`;
+          }));
+        }
+        bind(mSeg, v => metric = v); bind(eSeg, v => env = v);
+      }
+    })();
+
+    // ──────── Advanced Canvas Simulation ────────
+    (function () {
+      const canvas = document.getElementById('sim-canvas');
+      if (!canvas) return; const ctx = canvas.getContext('2d');
+      const cssVar = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+      
+      let col = {
+        accent: cssVar('--accent'), danger: cssVar('--danger'),
+        text: cssVar('--text'), border: cssVar('--border'),
+        surface: cssVar('--surface')
+      };
+
+      let dims = { w: 0, h: 0 };
+      function resize() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const r = canvas.getBoundingClientRect();
+        dims.w = r.width; dims.h = r.height;
+        canvas.width = Math.round(r.width * dpr); canvas.height = Math.round(r.height * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      resize(); new ResizeObserver(resize).observe(canvas);
+
+      const config = { horizon: 'multi', model: 'medium', robust: true }; // Robust internally forced to valid state due to removal of UI
+      const NOISE = { weak: 3.2, medium: 1.1, strong: 0.25 };
+      const ERR_BOUND = { weak: 5.5, medium: 2.0, strong: 0.55 };
+
+      const PT = { DT: 1 / 30, THRUST: 540, DRAG: 2.2, HORIZON: 10, TRAIL: 120 };
+      const state = { x: 0, y: 0, vx: 0, vy: 0 };
+      const metrics = { v: 0, r: 0, i: 0, s: 0, inV: false };
+      
+      let goalIdx = 0, trail = [], lastPol = {x:0, y:0}, lastShld = {x:0, y:0}, lastPred = [], globalTime = 0;
+
+      const obst = () => ({ x: dims.w * 0.5, y: dims.h * 0.5, r: Math.min(dims.w, dims.h) * 0.22 });
+      const goals = () => [{x:dims.w*0.12, y:dims.h*0.25}, {x:dims.w*0.88, y:dims.h*0.75}, {x:dims.w*0.88, y:dims.h*0.25}, {x:dims.w*0.12, y:dims.h*0.75}];
+      const getG = () => goals()[goalIdx % 4];
+
+      function reset() {
+        state.x = dims.w*0.12; state.y = dims.h*0.5; state.vx=0; state.vy=0;
+        trail = []; goalIdx = 0; metrics.v = 0; metrics.i = 0; metrics.s = 0;
+      }
+
+      function stepModel(s, a) {
+        const n = NOISE[config.model], vx = s.vx + (a.x * PT.THRUST - PT.DRAG * s.vx) * PT.DT + (Math.random()-0.5)*n;
+        const vy = s.vy + (a.y * PT.THRUST - PT.DRAG * s.vy) * PT.DT + (Math.random()-0.5)*n;
+        return { x: s.x + vx * PT.DT, y: s.y + vy * PT.DT, vx, vy };
+      }
+      function isUnsafe(pt, pad) {
+        const o = obst(), d = Math.hypot(pt.x - o.x, pt.y - o.y); return d < o.r + pad;
+      }
+      function verify(s, a) {
+        const trj = [], k = config.horizon === 'multi' ? PT.HORIZON : 1, err = ERR_BOUND[config.model];
+        let c = s;
+        for (let i = 0; i < k; i++) {
+          c = stepModel(c, a); trj.push(c);
+          if (isUnsafe(c, err * (i+1))) return { safe: false, trj };
+        }
+        return { safe: true, trj };
+      }
+
+      function shield(s, a) {
+        let f = verify(s, a); if (f.safe) return { a, mod: false, p: f.trj };
+        let th = Math.atan2(a.y, a.x);
+        for(let d=6; d<=180; d+=6) {
+          for (let sign of [1, -1]) {
+            let cand = {x: Math.cos(th + sign*d*Math.PI/180), y: Math.sin(th + sign*d*Math.PI/180)};
+            let v = verify(s, cand); if (v.safe) return { a: cand, mod: true, p: v.trj };
+          }
+        }
+        return { a: {x:0, y:0}, mod: true, p: verify(s, {x:0, y:0}).trj };
+      }
+
+      function step() {
+        metrics.s++;
+        const g = getG(), d = Math.hypot(g.x-state.x, g.y-state.y)||1;
+        const pol = { x: (g.x-state.x)/d, y: (g.y-state.y)/d };
+        
+        const sh = shield(state, pol);
+        lastPol = pol; lastShld = sh.a; lastPred = sh.p;
+        if (sh.mod) metrics.i++;
+
+        const nvX = state.vx + (sh.a.x * PT.THRUST - PT.DRAG * state.vx)*PT.DT;
+        const nvY = state.vy + (sh.a.y * PT.THRUST - PT.DRAG * state.vy)*PT.DT;
+        state.x += nvX*PT.DT; state.y += nvY*PT.DT; state.vx=nvX; state.vy=nvY;
+        
+        if (state.x < 0) { state.x = 0; state.vx = 0; } else if (state.x > dims.w) { state.x = dims.w; state.vx = 0; }
+        if (state.y < 0) { state.y = 0; state.vy = 0; } else if (state.y > dims.h) { state.y = dims.h; state.vy = 0; }
+
+        if (isUnsafe(state, 0) && !metrics.inV) metrics.v++;
+        metrics.inV = isUnsafe(state, 0);
+
+        trail.push({ x: state.x, y: state.y, a: (metrics.s % 10 === 0) ? 1 : 0 }); // Sparse trail
+        if (trail.length > PT.TRAIL) trail.shift();
+        if (d < 20) { metrics.r++; goalIdx++; }
+      }
+
+      // Elegant Rendering Tools
+      function alpha(c, a) { return c.replace(')', ` / ${a})`).replace('oklch', 'oklch'); }
+      
+      function render() {
+        ctx.clearRect(0, 0, dims.w, dims.h);
+        
+        // Technical Cross Grid
+        ctx.fillStyle = alpha(col.text, 0.08);
+        const gs = 60;
+        for (let x = gs; x < dims.w; x += gs) {
+          for (let y = gs; y < dims.h; y += gs) {
+            ctx.fillRect(x - 2, y, 5, 1); ctx.fillRect(x, y - 2, 1, 5);
+          }
+        }
+
+        const o = obst();
+        
+        // Hazard Zone (Precise Hatching)
+        ctx.beginPath(); ctx.arc(o.x, o.y, o.r, 0, Math.PI*2);
+        ctx.fillStyle = alpha(col.danger, 0.04); ctx.fill();
+        ctx.lineWidth = 1; ctx.strokeStyle = alpha(col.danger, 0.4);
+        ctx.setLineDash([4, 4]); ctx.stroke(); ctx.setLineDash([]);
+        
+        // Reticle Goal
+        const g = getG();
+        ctx.save(); ctx.translate(g.x, g.y); ctx.rotate(globalTime * 1.5);
+        ctx.strokeStyle = col.accent; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.arc(0, 0, 12, 0, Math.PI*2); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(-18, 0); ctx.lineTo(-6, 0); ctx.moveTo(6, 0); ctx.lineTo(18, 0);
+        ctx.moveTo(0, -18); ctx.lineTo(0, -6); ctx.moveTo(0, 6); ctx.lineTo(0, 18); ctx.stroke();
+        ctx.restore();
+
+        // Sleek fading trail
+        if (trail.length > 2) {
+          ctx.beginPath(); ctx.moveTo(trail[0].x, trail[0].y);
+          for (let i = 1; i < trail.length; i++) {
+            ctx.lineTo(trail[i].x, trail[i].y);
+          }
+          ctx.strokeStyle = alpha(col.text, 0.15); ctx.lineWidth = 1; ctx.stroke();
+        }
+
+        // Multi-step Bezier Prediction
+        if (config.horizon === 'multi' && lastPred.length) {
+          ctx.beginPath(); ctx.moveTo(state.x, state.y);
+          for(let p of lastPred) ctx.lineTo(p.x, p.y);
+          ctx.strokeStyle = alpha(col.accent, 0.6); ctx.lineWidth = 1.5; ctx.stroke();
+          
+          ctx.fillStyle = col.accent;
+          for(let p of lastPred) { ctx.beginPath(); ctx.arc(p.x, p.y, 1.5, 0, Math.PI*2); ctx.fill(); }
+        }
+
+        // Geometric Agent (Chevron based on velocity)
+        ctx.save(); ctx.translate(state.x, state.y);
+        ctx.rotate(Math.atan2(lastShld.y, lastShld.x)); // Align with actual thrust
+        ctx.fillStyle = col.text;
+        ctx.beginPath(); ctx.moveTo(10, 0); ctx.lineTo(-8, -6); ctx.lineTo(-4, 0); ctx.lineTo(-8, 6); ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+
+      function updateUI() {
+        document.getElementById('m-violations').textContent = metrics.v;
+        document.getElementById('m-reward').textContent = metrics.r;
+        document.getElementById('m-intervention').textContent = metrics.s ? Math.round((100*metrics.i)/metrics.s) + '%' : '0%';
+      }
+
+      let last = performance.now(), acc = 0;
+      function loop(now) {
+        let dt = Math.min((now - last)/1000, 0.1); last = now; acc += dt; globalTime += dt;
+        while(acc >= PT.DT) { step(); acc -= PT.DT; }
+        render(); updateUI(); requestAnimationFrame(loop);
+      }
+      
+      document.querySelectorAll('.seg button').forEach(b => {
+        b.addEventListener('click', (e) => {
+          let seg = e.target.closest('.seg');
+          seg.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', 'false'));
+          e.target.setAttribute('aria-pressed', 'true');
+          config[seg.dataset.seg] = e.target.dataset.value; reset();
+        });
+      });
+
+      const st = () => { if(dims.w) { reset(); requestAnimationFrame(loop); } else requestAnimationFrame(st); }
+      st();
+    })();
+  </script>
 </body>
 </html>
-
