@@ -1,8 +1,8 @@
 import React from 'react';
 import Section from './Section';
-import experienceData from '../data/experience.json';
+import teachingExperienceData from '../data/teachingExperience.json';
 
-const ExperienceItem = ({ role, company, period, description }) => (
+const TeachingExperienceItem = ({ role, company, period, description }) => (
     <div className="mb-8 bg-white/5 p-6 rounded-lg border border-gray hover:border-accent/20 transition-colors">
         <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-4 gap-2">
             <div>
@@ -24,11 +24,11 @@ const ExperienceItem = ({ role, company, period, description }) => (
     </div>
 );
 
-const Experience = () => {
+const TeachingExperience = () => {
     return (
-        <Section id="experience" title="Work Experience">
-            {experienceData.map((exp, index) => (
-                <ExperienceItem
+        <Section id="teaching" title="Teaching Experience">
+            {teachingExperienceData.map((exp, index) => (
+                <TeachingExperienceItem
                     key={index}
                     {...exp}
                 />
@@ -37,4 +37,4 @@ const Experience = () => {
     );
 };
 
-export default Experience;
+export default TeachingExperience;

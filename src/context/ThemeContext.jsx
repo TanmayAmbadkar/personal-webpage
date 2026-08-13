@@ -34,8 +34,9 @@ export const ThemeProvider = ({ children }) => {
         }
     }, []);
 
-    const toggleTheme = (e) => {
+    const toggleTheme = () => {
         const nextIsDark = !isDark;
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         // Helper to perform the actual DOM updates
         const updateDOM = () => {
@@ -52,40 +53,13 @@ export const ThemeProvider = ({ children }) => {
         };
 
         // Use View Transitions API if available
-        if (!document.startViewTransition) {
+        if (!document.startViewTransition || reduceMotion) {
             updateDOM();
             return;
         }
 
-        const x = e?.clientX ?? window.innerWidth / 2;
-        const y = e?.clientY ?? window.innerHeight / 2;
-
-        const endRadius = Math.hypot(
-            Math.max(x, window.innerWidth - x),
-            Math.max(y, window.innerHeight - y)
-        );
-
-        const transition = document.startViewTransition(() => {
+        document.startViewTransition(() => {
             updateDOM();
-        });
-
-        transition.ready.then(() => {
-            const clipPath = [
-                `circle(0px at ${x}px ${y}px)`,
-                `circle(${endRadius}px at ${x}px ${y}px)`,
-            ];
-
-            // Different animation direction based on theme
-            document.documentElement.animate(
-                {
-                    clipPath: nextIsDark ? [...clipPath].reverse() : clipPath,
-                },
-                {
-                    duration: 500,
-                    easing: 'ease-in-out',
-                    pseudoElement: nextIsDark ? '::view-transition-old(root)' : '::view-transition-new(root)',
-                }
-            );
         });
     };
 

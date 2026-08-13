@@ -1,0 +1,20 @@
+[
+    {
+        "role": "Teaching Assistant",
+        "company": "The Pennsylvania State University",
+        "period": "Various Semesters",
+        "description": [
+            "CMPSC 448: Machine Learning and Algorithmic AI",
+            "CMPSC 221: Object Oriented Design & Web Programming",
+            "CMPEN 270: Digital Design: Theory and Practice"
+        ]
+    },
+    {
+        "role": "Teaching Assistant",
+        "company": "Indian Institute of Information Technology, Vadodara",
+        "period": "Prior to 2022",
+        "description": [
+            "CS201: Introduction to Data Structures"
+        ]
+    }
+]

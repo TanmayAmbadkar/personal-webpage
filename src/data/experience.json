@@ -1,20 +1,23 @@
 [
     {
-        "role": "Research Assistant",
-        "company": "Dept. of Architectural Engineering, Penn State",
-        "period": "Aug 2023 - Jan 2025",
+        "role": "Machine Learning Engineer Intern",
+        "company": "Stripe",
+        "period": "May 2025 - Present",
         "description": [
-            "Integrated Dymola simulation tools with Gymnasium, defining a robust multi-objective reward system.",
-            "Trained multiple RL agents for energy optimization."
+            "Architected a neuro-symbolic agentic workflow combining traditional machine learning with LLMs to optimize counterfeit goods detection, improving recall by 22 points and F1 score by 18 points while cutting LLM costs by 70% and pipeline latency by over 60%.",
+            "Led the team toward internal model-training workflows and created end-to-end model training, deployment, and maintenance pipelines via Flyte and Diorama.",
+            "Boosted downstream counterfeit signal consumers by providing 36 structured insights, textual summaries with grounded evidence, and a streaming point-in-time dataset for risk and fraud detection."
         ]
     },
     {
         "role": "Research Assistant",
-        "company": "Dept. of Industrial and Manufacturing Engineering, Penn State",
-        "period": "May 2023 - July 2023",
+        "company": "The Pennsylvania State University",
+        "period": "May 2023 - Present",
         "description": [
-            "Predicted Autism Spectrum Disorder in children using EHR data and time-series models.",
-            "Preprocessed over 500GB of data using PySpark for 600,000+ patients."
+            "Developed and shipped multi-objective reinforcement learning frameworks for preference-based Markovian rewards and non-linear multi-objective rewards in collaboration with Kitware, Penn State IST, and US Department of Defense sponsors.",
+            "Built explainable artifacts by decomposing policy actions into directed graphs.",
+            "Designed reinforcement learning frameworks for optimizing operational costs of grid-integrated district energy systems, achieving a 32% cost reduction and using neural-network-based dynamics modeling to reduce training time.",
+            "Predicted Autism Spectrum Disorder cases in children using time-series models on Electronic Health Records data, preprocessing over 500GB of data with PySpark."
         ]
     },
     {
@@ -22,9 +25,8 @@
         "company": "Siemens Technology and Services",
         "period": "Jan 2022 - July 2022",
         "description": [
-            "Detected anomalies in data using AutoEncoders and SHAP for explainability.",
-            "Developed a plug-and-play library for time-series anomaly detection.",
-            "Performed EDA on Starbucks coffee roaster data to predict burner cuts."
+            "Owned the end-to-end development of a plug-and-play anomaly detection library using AutoEncoders and Explainable AI, deploying the final model on Databricks and presenting a working demo to project stakeholders.",
+            "Engineered forecasting workflows that achieved a 0.98 R-squared score on internal benchmarks and built CNN-based models for a major client."
         ]
     },
     {
@@ -32,18 +34,8 @@
         "company": "Siemens Technology and Services",
         "period": "May 2021 - July 2021",
         "description": [
-            "Integrated workflow creation and management using Celery, Redis, and Flask for the Industrial Predictive Analytics Engine (IPAE).",
-            "Reduced pipeline execution time by 30%."
-        ]
-    },
-    {
-        "role": "Teaching Assistant",
-        "company": "The Pennsylvania State University",
-        "period": "Various Semesters",
-        "description": [
-            "CMPEN 270: Digital Design: Theory and Practice",
-            "CMPSC 221: Object Oriented Design & Web Programming",
-            "CMPSC 448: Machine Learning and Algorithmic AI"
+            "Optimized the Industrial Predictive Analytics Engine by integrating real-time monitoring tools, reducing pipeline execution time by 30%.",
+            "Developed a library to forecast building occupancy and energy requirements alongside an RL model for optimizing building setpoints for maximum energy savings at Dubai Expo 2021."
         ]
     }
 ]

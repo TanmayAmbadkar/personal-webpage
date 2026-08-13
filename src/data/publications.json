@@ -1,9 +1,13 @@
 [
     {
         "title": "Robust Adaptive Multi-Step Predictive Shielding",
-        "authors": "Tanmay Ambadkar, Darshan Chudiwal, Greg Anderson, Abhinav Verma",
-        "venue": "Accepted at International Conference on Learning Representations (ICLR) 2026; Accepted at AAAI Student Abstract and Poster Program",
+        "authors": "Tanmay Sadanand Ambadkar, Darshan Chudiwal, Greg Anderson, Abhinav Verma",
+        "venue": "International Conference on Learning Representations (ICLR) 2026",
         "links": [
+            {
+                "name": "Proceedings",
+                "url": "https://iclr.cc/virtual/2026/poster/10011722"
+            },
             {
                 "name": "Paper",
                 "url": "https://openreview.net/forum?id=2bbqHOWFTU"
@@ -16,10 +20,14 @@
         "abstract": "Reinforcement learning for safety-critical tasks requires policies that are both high-performing and safe throughout the learning process. While model-predictive shielding is a promising approach, existing methods are often computationally intractable for the high-dimensional, nonlinear systems where deep RL excels, as they typically rely on a patchwork of local models. We introduce RAMPS, a scalable shielding framework that overcomes this limitation by leveraging a learned, linear representation of the environment's dynamics. This model can range from a linear regression in the original state space to a more complex operator learned in a high-dimensional feature space. The key is that this linear structure enables a robust, look-ahead safety technique based on a multi-step Control Barrier Function (CBF). By moving beyond myopic one-step formulations, RAMPS accounts for model error and control delays to provide reliable, real-time interventions. The resulting framework is minimally invasive, computationally efficient, and built upon robust control-theoretic foundations. Our experiments demonstrate that RAMPS significantly reduces safety violations compared to existing safe RL methods while maintaining high task performance in complex control environments."
     },
     {
-        "title": "AutoSpec: Automating the Refinement of Reinforcement Learning Specifications",
+        "title": "Automating the Refinement of Reinforcement Learning Specifications",
         "authors": "Tanmay Ambadkar, Đorđe Žikelić, Abhinav Verma",
-        "venue": "Accepted at International Conference on Learning Representations (ICLR) 2026; Accepted at The Workshop on Post-AI Formal Methods at AAAI-26; Accepted at PLDI SRC 2024",
+        "venue": "International Conference on Learning Representations (ICLR) 2026",
         "links": [
+            {
+                "name": "Proceedings",
+                "url": "https://iclr.cc/virtual/2026/poster/10008739"
+            },
             {
                 "name": "Paper",
                 "url": "https://openreview.net/forum?id=a5jzk1hv2Y"
@@ -36,40 +44,59 @@
         "abstract": "Logical specifications have been shown to help reinforcement learning algorithms in achieving complex tasks. However, when a task is under-specified, agents might fail to learn useful policies. In this work, we explore the possibility of improving coarse-grained logical specifications via an exploration-guided strategy. We propose AutoSpec, a framework that searches for a logical specification refinement whose satisfaction implies satisfaction of the original specification, but which provides additional guidance therefore making it easier for reinforcement learning algorithms to learn useful policies. AutoSpec is applicable to reinforcement learning tasks specified via the SpectRL specification logic. We exploit the compositional nature of specifications written in SpectRL, and design four refinement procedures that modify the abstract graph of the specification by either refining its existing edge specifications or by introducing new edge specifications. We prove that all four procedures maintain specification soundness, i.e. any trajectory satisfying the refined specification also satisfies the original. We then show how AutoSpec can be integrated with existing reinforcement learning algorithms for learning policies from logical specifications. Our experiments demonstrate that AutoSpec yields promising improvements in terms of the complexity of control tasks that can be solved, when refined logical specifications produced by AutoSpec are utilized."
     },
     {
-        "title": "Specification Guided Reinforcement Learning",
+        "title": "Specification-Guided Reinforcement Learning",
         "authors": "Tanmay Ambadkar",
-        "venue": "Accepted at AAAI Doctoral Consortium",
-        "links": [],
+        "venue": "Proceedings of the AAAI Conference on Artificial Intelligence, 40(48):41032-41033, 2026",
+        "links": [
+            {
+                "name": "Paper",
+                "url": "https://ojs.aaai.org/index.php/AAAI/article/view/42142"
+            }
+        ],
         "abstract": "While Reinforcement Learning (RL) has demonstrated remarkable success in solving complex sequential decision-making problems, its application in real-world, safety-critical systems is hindered by its reliance on carefully engineered reward functions. Designing effective rewards is notoriously challenging and can lead to unintended or unsafe behaviors, a phenomenon known as reward hacking. Specification-guided RL has emerged as a principled alternative, leveraging formal methods to directly encode high-level objectives, safety requirements, and behavioral constraints. However, the practical utility of this approach is often limited by coarse or under-specified logical formulas and the computational challenge of enforcing safety at scale. This thesis addresses these limitations by developing a unified framework for the automated refinement, scalable enforcement, and flexible adaptation of formal specifications in RL."
     },
     {
         "title": "Preference Conditioned Multi-Objective Reinforcement Learning: Decomposed, Diversity-Driven Policy Optimization",
-        "authors": "Tanmay Ambadkar, Sourav Panda, Shreyas Kale, Abhinav Verma, Jonathan Dodge",
-        "venue": "In Submission at ICML 2026",
+        "authors": "Tanmay Ambadkar, Sourav Panda, Shreyash Kale, Jonathan Dodge, Abhinav Verma",
+        "venue": "arXiv:2602.07764v2 [cs.LG], revised July 10, 2026",
         "links": [
             {
-                "name": "Paper",
+                "name": "arXiv",
                 "url": "https://arxiv.org/abs/2602.07764"
+            },
+            {
+                "name": "PDF",
+                "url": "https://arxiv.org/pdf/2602.07764"
             },
             {
                 "name": "Homepage",
                 "url": "/d3po"
             }
         ],
-        "abstract": "Multi-objective reinforcement learning (MORL) aims to optimize policies in environments with multiple, often conflicting objectives. While a single, preference-conditioned policy offers the most flexible and efficient solution, existing methods often struggle to cover the entire spectrum of optimal trade-offs. This is frequently due to two underlying challenges: destructive gradient interference between conflicting objectives and representational mode collapse, where the policy fails to produce diverse behaviors. In this work, we introduce D3PO, a novel algorithm that trains a single preference conditioned policy to directly address these issues. Our framework features a decomposed optimization process to encourage stable credit assignment and a scaled diversity regularizer to explicitly encourage a robust mapping from preferences to policies. Empirical evaluations across standard MORL benchmarks show that D3PO discovers more comprehensive and higher-quality Pareto fronts, establishing a new state-of-the-art in terms of hypervolume and expected utility, particularly in complex and many-objective environments."
+        "abstract": "Multi-objective reinforcement learning (MORL) seeks to train agents capable of balancing conflicting objectives. While single preference-conditioned policies offer a highly scalable solution, existing approaches remain brittle in practice, frequently failing to recover dense Pareto fronts. We demonstrate that this failure stems from two structural pathologies: destructive advantage cancellation caused by premature Early Scalarization (ES), and representational mode collapse across the preference space. To overcome these bottlenecks, we introduce D3PO, a PPO-based framework that fundamentally reorganizes multi-objective optimization. By preserving per-objective learning signals through a decomposed pipeline and integrating preferences only after trust-region stabilization (Late-Stage Weighting), D3PO improves credit assignment under conflicting objectives. Concurrently, a scaled diversity regularizer encourages behavioral divergence proportional to preference distance. D3PO operates entirely within the efficient linear scalarization regime shared by standard deep MORL baselines. By reducing information loss caused due to linear scalarization rather than relying on expensive non-linear utility functions, it suggests that optimization bottlenecks play a significant role. Across available standard benchmarks, including high-dimensional and many-objective environments, D3PO consistently discovers broader, higher-quality Pareto fronts than prior methods, exceeding state-of-the-art hypervolume and expected utility using a single deployable policy."
     },
     {
-        "title": "The Environment is Scaffolding: Reconstructing Reinforcement Learning Policies from Random Noise",
+        "title": "On the Structure of Reinforcement Learning Policies: Recovery from Synthetic Observations via Geometric Coverage",
         "authors": "Tanmay Ambadkar, Abhinav Verma",
         "venue": "In Preparation",
-        "links": [],
+        "links": [
+            {
+                "name": "Paper",
+                "url": "/files/NoiseDistillation_NeurIPS_2026.pdf"
+            }
+        ],
         "abstract": "Reinforcement learning policies are discovered through millions of environment interactions, yet the resulting artefact is simply a neural network mapping observations to actions. We ask how much information is actually required to reconstruct this function once it has been found. The answer is surprising: a student policy trained entirely on randomly generated Gaussian observations — with no environment interaction, no demonstrations, and no reward signal — recovers near-teacher performance across MuJoCo continuous control tasks spanning 11 to 376 state dimensions. We call this approach Gaussian Probing Distillation (GPD). The mechanism is geometric: modern RL implementations normalise observations to approximately N(0, I) during training, placing synthetic Gaussian queries in-distribution for the teacher by construction. Because the policy function is continuous and smooth over this normalised space, random coverage suffices for supervised regression to recover the mapping. This geometric argument has a sharp empirical consequence: at high dimensionality, uniform sampling fails catastrophically — reaching only 1.6–14.7% of teacher performance on Humanoid (376D) regardless of sample count — while Gaussian probing degrades gracefully, a direct consequence of measure concentration in high-dimensional hypercubes. Beyond faithful reconstruction, students frequently exceed their teachers: a 64-neuron student achieves 3,278 ± 4 on Hopper against a teacher of 3,217 ± 203, consistent with GPD acting as an implicit regulariser that smooths brittle teacher behaviours unreachable during trajectory-confined training. Together, these results reveal a striking gap between the complexity of policy discovery and the simplicity of policy representation: the environment is scaffolding for the search process, not for the function it uncovers."
     },
     {
-        "title": "Chemistry-Native Tokenization and Structured Reasoning Enable Bidirectional Enzymatic Reaction Prediction in Small Language Models",
-        "authors": "Mohit Anand, Tanmay Ambadkar, Abhinav Verma, Costas Maranas",
+        "title": "EnzymeLM: Chemistry-Native Language Modeling for Balanced Enzymatic Reaction Prediction",
+        "authors": "Tanmay Ambadkar, Mohit Anand, Yu-Wen Su, Costas Maranas, Abhinav Verma",
         "venue": "In Preparation",
-        "links": [],
+        "links": [
+            {
+                "name": "Paper",
+                "url": "/files/ChemLM_NeurIPS_2026.pdf"
+            }
+        ],
         "abstract": "Enzymatic reaction prediction remains a fundamental challenge in computational biochemistry, yet large language models fail catastrophically at this task despite their remarkable capabilities on general reasoning benchmarks. We demonstrate that this failure is a representation problem rather than a capacity problem: standard tokenizers fragment chemical structures into meaningless subword units, depriving models of the molecular identity, structural semantics, and atomic composition prerequisites for chemical reasoning. We present a three-stage framework that makes language models chemistry-native before asking them to reason about reactions. First, we extend the tokenizer with a complete SELFIES-based chemical vocabulary and pretrain on one billion tokens across three structure-grounding tasks: isomerism, nomenclature, and molecular formula prediction. Second, we apply structured chain-of-thought supervised fine-tuning on enzymatic reactions from the ECREACT database, requiring the model to predict the enzyme class from reactants as an intermediate reasoning step — a strictly harder problem than prior work, which conditions on the enzyme class as input. Third, we introduce a bidirectional training objective that unifies forward synthesis and retrosynthesis in a single model, including a novel multi-route retrosynthesis formulation that requires enumeration of all biochemically distinct enzymatic routes to hub metabolites spanning multiple EC classes. On forward synthesis, our 1B-parameter model achieves 76.79% any-product accuracy and 42.62% all-product accuracy, outperforming all general-purpose baselines regardless of scale and surpassing prior fine-tuned chemistry models that condition on the enzyme class. Retrosynthesis results further confirm that chemistry-native representation transfers across reaction directions, with the multi-route formulation revealing systematic differences in how the model recovers biochemically diverse versus mechanistically redundant pathways. A systematic ablation demonstrates that chemistry-native tokenization and pretraining account for the largest gain on the hardest metrics, while structured chain-of-thought and training mix contribute independent incremental improvements. Our results establish that domain-appropriate representation is a prerequisite for chemical reasoning in language models, and that a well-represented 1B model outperforms a poorly-represented 80B model by more than an order of magnitude."
     },
     {
@@ -80,39 +107,48 @@
         "abstract": "In multi objective reinforcement learning with non linear preferences, the choice of optimization criterion is critical. While prior work has distinguished between scalarized expected return and expected scalarized return, most practical deep reinforcement learning algorithms implicitly optimize the former due to reliance on bootstrapped value estimates. This mismatch leads to policies that optimize average outcomes while ignoring correlations, variance, and joint success that matter in single deployment settings. We revisit expected scalarized return as the correct objective for such problems and analyze why standard actor critic methods are structurally misaligned with it. Building on this analysis, we propose an ESR aware policy gradient framework that restores Markov structure via state augmentation, evaluates utility on realized trajectory returns, and separates linear return estimation from non linear utility evaluation. To address the sample inefficiency of optimizing multiple utilities, we further introduce a counterfactual reuse mechanism that safely updates multiple task specific policies from shared experience. Empirical results demonstrate that the proposed approach recovers behaviors aligned with expected utility in settings where scalarized expected return fails, while remaining practical in multi utility environments."
     },
     {
-        "title": "Safer Policies via Affine Representations using Koopman Dynamics",
+        "title": "Safer Policies via Affine Representations Using Koopman Dynamics",
         "authors": "Tanmay Ambadkar, Darshan Chudiwal, Greg Anderson, Abhinav Verma",
-        "venue": "In Submission at NASA Formal Methods 2026",
-        "links": [],
+        "venue": "NASA Formal Methods (NFM) 2026, Lecture Notes in Computer Science, pp. 334-355",
+        "links": [
+            {
+                "name": "Proceedings",
+                "url": "https://doi.org/10.1007/978-3-032-28079-4_15"
+            },
+            {
+                "name": "DBLP",
+                "url": "https://dblp.org/rec/conf/nfm/AmbadkarCAV26"
+            }
+        ],
         "abstract": "Reinforcement learning for safety-critical tasks requires constructing a policy that prioritizes taking safe actions while optimizing performance. Moreover, in many applications it is important to maintain safety during training, not just at the end of the learning process. Model-predictive shielding using weakest preconditions is a promising framework that helps maintain safety during training and deployment, but current techniques are limited to low-dimensional state spaces (4 features) and struggle to scale to higher dimensional environments with complex environment dynamics. In this paper we present SPARKD, a highly scalable framework for model-predictive shielding which works by linearizing non-linear dynamics using a lifted representation of the state space. Our framework leverages the Koopman Operator theory to learn basis functions which augument the state space to capture highly non-linear transition models. The use of the lifted space by SPARKD allows for effective safety calculation using convex optimization and efficient safety analysis for shielding. Our experiments show that SPARKD is capable of learning performant policies with fewer safety violations than existing safe RL techniques."
     },
     {
         "title": "Scaling Strategy, Not Compute: A Stand-Alone, Open-Source StarCraft II Benchmark for Accessible RL Research",
-        "authors": "Sourav Panda, Tanmay Ambadkar, Shreyas Kale, Abhinav Verma, Jonathan Dodge",
+        "authors": "Sourav Panda, Tanmay Ambadkar, Shreyash Kale, Abhinav Verma, Jonathan Dodge",
         "venue": "In Submission at ICML 2026",
         "links": [],
         "abstract": "The research community lacks a middle ground between StarCraft II’s full game and mini-games. In the full game, sprawling state-action space renders reward signals sparse and noisy, but in mini-games, simple agents saturate performance with little genuine strategy. This yawning complexity gap hinders steady curriculum design and prevents many academic groups from experimenting with modern RL algorithms under realistic compute budgets. To fill this gap, we present the Two-Bridge Map, the first entry in an open-source benchmark series we purposely engineered as an intermediate benchmark to sit between these extremes. By disabling economy mechanics such as resource collection, base building, and fog-of-war, the environment isolates two core wargaming skills: long-range navigation and micro-combat. Two-Bridge ships as a lightweight, Gym-compatible wrapper on top of PySC2. Because it is a directly interactable environment rather than a replay-driven pipeline, researchers can train and evaluate any RL algorithm immediately---no downloading, filtering, or preprocessing of Blizzard replays required. Preliminary experiments show that agents learn coherent manoeuvring and engagement behaviours without imposing full-game computational costs. By open-sourcing the maps, wrappers, and reference scripts, we invite researchers to adopt the Two-Bridge Map Series as a standard benchmark."
     },
     {
         "title": "MIXTAPE: Middleware for Interactive XAI with Tree-Based AI Performance Evaluation",
-        "authors": "Tanmay Ambadkar, Hayden Moore, Sourav Panda, Shreyash Kale, Connor Greenwell, Brianna Major, Aashish Chaudhary, Jonathan Dodge, Abhinav Verma and Brian Hu",
-        "venue": "Simulation Interoperability Standards Organization (SISO) SIMposium, 2025",
+        "authors": "Brianna Major, Aashish Chaudhary, Brian Hu, Connor Greenwell, Tanmay Ambadkar, Sourav Panda, Shreyash Kale, Abhinav Verma, Jonathan Dodge",
+        "venue": "NATO S&T Journal Special Issue on AI Security and Assurance for Military Systems, 2026; SISO SIMposium 2024, 2025",
         "links": [
             {
-                "name": "Abstract",
-                "url": "https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fcdn.ymaws.com%2Fwww.sisostandards.org%2Fresource%2Fresmgr%2Fevents%2Fsiw%2F2025_siw%2Frevised_2025_abstracts.docx&wdOrigin=BROWSELINK"
+                "name": "Paper",
+                "url": "https://publications.sto.nato.int/publications/STO%20Meeting%20Proceedings/STO-MP-IST-210/MP-IST-210-1A.02.pdf"
             }
         ],
         "abstract": ""
     },
     {
-        "title": "MIXTAPE: Middleware for Interactive XAI with Tree-Based AI Performance Evaluation",
-        "authors": "Brian Hu, Jonathan Dodge, Abhinav Verma, Tanmay Ambadkar, Sourav Panda, Sujay Koujalgi, Aashish Chaudhary, Brianna Major, and Bryon Lewis",
-        "venue": "Simulation Interoperability Standards Organization (SISO) SIMposium, 2024",
+        "title": "Reinforcement Learning-Driven Energy Dispatch Using ANN Surrogate Environments for Complex District Energy Systems",
+        "authors": "Saranya Anbarasu, Tanmay Ambadkar, Zhanwei He, Abhinav Verma, Wangda Zuo",
+        "venue": "Submitted to Engineering Applications of Artificial Intelligence",
         "links": [
             {
-                "name": "Abstract",
-                "url": "https://cdn.ymaws.com/www.sisostandards.org/resource/resmgr%2Fevents/simposium_/2024_simposium_/2024_simposium_abstracts.pdf"
+                "name": "Journal",
+                "url": "https://www.sciencedirect.com/journal/engineering-applications-of-artificial-intelligence"
             }
         ],
         "abstract": ""
@@ -147,7 +183,7 @@
     },
     {
         "title": "Discrete Sequencing for Demand Forecasting: A novel data sampling technique for time series forecasting",
-        "authors": "N. Menon, S. Saboo, T. Ambadkar and U. Uppili",
+        "authors": "Nisha Menon, Shantanu Saboo, Tanmay Ambadkar, Umesh Uppili",
         "venue": "International Conference on Intelligent Data Science Technologies and Applications (IDSTA), 2022",
         "links": [
             {

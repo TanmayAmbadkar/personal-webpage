@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
-import { motion, useSpring, useMotionValue } from 'framer-motion';
+import { motion, useReducedMotion, useSpring, useMotionValue } from 'framer-motion';
 
 const MouseFollower = () => {
+    const reduceMotion = useReducedMotion();
     const mouseX = useMotionValue(0);
     const mouseY = useMotionValue(0);
 
@@ -18,6 +19,10 @@ const MouseFollower = () => {
         window.addEventListener('mousemove', handleMouseMove);
         return () => window.removeEventListener('mousemove', handleMouseMove);
     }, [mouseX, mouseY]);
+
+    if (reduceMotion) {
+        return null;
+    }
 
     return (
         <motion.div

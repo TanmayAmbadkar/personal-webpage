@@ -1,67 +1,64 @@
 {
     "intro": [
-        "My research is focused on making artificial intelligence more reliable and trustworthy. While reinforcement learning (RL) can train agents to perform incredibly complex tasks, it often struggles with three key challenges: it needs perfectly defined goals, it can behave unsafely, and it does not know how to handle conflicting objectives.",
-        "My work tackles these problems by creating frameworks that allow people to guide AI with high-level instructions. I am building systems that can automatically fix imperfect instructions, a \"safety shield\" that prevents agents from taking dangerous actions, and methods that allow users to balance competing goals on the fly. Ultimately, the goal is to build AI that is not only powerful but also safe, interpretable, and collaborative enough to be deployed in critical real-world scenarios."
+        "My research develops a structural theory of AI alignment: instead of treating safety as a data-scaling problem, I study alignment as a set of low-dimensional behaviors that can be recovered, controlled, and verified inside learned systems.",
+        "This agenda connects three layers of work. In reinforcement learning, I build neurosymbolic safety and multi-objective control methods that make agent behavior mathematically bounded and operator-tunable. In distillation, I show that complex behaviors can be transferred from models using only synthetic noise, revealing alignment-relevant behavior as a compact structural object. In scientific foundation models, I apply these principles through verifiable rewards so models obey physical and logical constraints by design."
     ],
     "objectives": [
         {
-            "title": "Objective 1: Making RL Robust to Imperfect Instructions",
-            "icon": "Target",
-            "blocks": [
-                {
-                    "title": "The Problem",
-                    "content": "Manually designing a perfect reward function to guide an RL agent is extremely difficult and a major barrier for non-experts. A slightly flawed specification can lead to completely wrong or unexpected behavior."
-                },
-                {
-                    "title": "My Approach (AutoSpec)",
-                    "content": "I developed a framework called <strong>AutoSpec</strong> that allows a user to provide an initial, high-level, and potentially imperfect specification. The agent then autonomously refines and corrects this specification during training by identifying and resolving inconsistencies, leading to better task performance without requiring constant human intervention. This makes RL more accessible to domain experts who need the technology but are not RL specialists. <a href='/autospec' class='text-blue-500 hover:text-blue-700 underline'>[View AutoSpec Homepage]</a>"
-                }
-            ]
-        },
-        {
-            "title": "Objective 2: Building a Scalable Safety Shield for RL Agents",
+            "title": "Objective 1: Build Verifiable Control for RL Agents",
             "icon": "Shield",
             "blocks": [
                 {
                     "title": "The Problem",
-                    "content": "An RL agent trained to maximize a reward will do so at all costs, potentially violating critical safety constraints. Furthermore, standard safe RL algorithms (like CMDPs) often fail to learn when given only sparse, binary cost signals (e.g., \"safe\" or \"unsafe\")."
+                    "content": "AI agents deployed in high-stakes settings cannot be trusted on empirical performance alone. A reward-maximizing policy can violate safety constraints, exploit ambiguous specifications, or behave in ways that are difficult for an operator to audit."
                 },
                 {
-                    "title": "My Approach (SPARKD)",
-                    "content": "I developed <strong>SPARKD</strong>, a scalable framework that learns a globally linear model of the environment's complex non-linear dynamics using <strong>Deep Koopman Operators</strong>. This \"lifted\" representation allows the shield to use formal methods, specifically <strong>weakest precondition calculus</strong>, to efficiently analyze the safety of an agent's actions over a finite horizon. If a proposed action could lead to an unsafe state, the shield intervenes with a safe alternative."
-                },
-                {
-                    "title": "My Approach (RAMPS)",
-                    "content": "Building on this, <strong>RAMPS</strong> (Robust Adaptive Multi-Step Predictive Shielding) advances the state-of-the-art by introducing a <strong>robust, multi-step Control Barrier Function (CBF)</strong>. This method not only uses a learned linear model but also explicitly accounts for model error and control delays. This allows RAMPS to provide stronger, continuous safety guarantees and has demonstrated over a 90% reduction in safety violations in complex, high-dimensional robotic simulations."
+                    "title": "My Approach",
+                    "content": "I develop safe and interpretable RL systems that pair learned dynamics with formal reasoning. <strong>AutoSpec</strong> automates and visualizes behavioral specifications from imperfect user intent. <strong>SPARKD</strong> and <strong>RAMPS</strong> use weakest preconditions, Koopman-linearized dynamics, and optimization-based shielding to create provable guardrails for nonlinear environments. This turns safety from an after-the-fact evaluation into a constraint enforced during action selection. <a href='/autospec' class='text-blue-500 hover:text-blue-700 underline'>[View AutoSpec Homepage]</a>"
                 }
-            ],
-            "nextSteps": {
-                "title": "Next Steps (AutoCost)",
-                "items": [
-                    "To solve the sparse cost problem, I am developing <strong>AutoCost</strong>, which extracts a rich, continuous cost signal directly from these safety shields. When an agent's proposed action is unsafe, the safety Quadratic Program (QP) in RAMPS or SPARKD requires a large \"slack\" value to find a safe alternative. <strong>AutoCost</strong> captures the magnitude of this slack variable, which directly quantifies <em>how unsafe</em> the proposed action was. This provides a dense, informative cost gradient, enabling non-shielded CMDP agents to learn safe policies far more effectively than with traditional binary costs."
-                ]
-            }
+            ]
         },
         {
-            "title": "Objective 3: Enabling User-Driven Trade-offs in Multi-Objective RL",
+            "title": "Objective 2: Make Multi-Objective Behavior Operator-Tunable",
             "icon": "GitMerge",
             "blocks": [
                 {
                     "title": "The Problem",
-                    "content": "Real-world applications rarely have a single goal. More often, they involve balancing a set of conflicting objectives, such as maximizing performance while minimizing cost and energy consumption."
+                    "content": "Real deployments rarely optimize a single objective. Defense, robotics, energy, and scientific systems require agents to trade off safety, performance, cost, interpretability, and mission priorities as conditions change."
                 },
                 {
-                    "title": "My Approach (D³PO)",
-                    "content": "<strong>Decomposed, Diversity-Driven Policy Optimization</strong>. My work on the DoD-funded <strong>MIXTAPE</strong> initiative addresses this with <strong>D³PO</strong>. This framework trains a single, robust policy capable of generating a wide spectrum of optimal behaviors. This allows a human operator to interactively tune the agent's objective priorities at runtime (without retraining) to adapt its strategy to changing mission requirements."
+                    "title": "My Approach",
+                    "content": "Through the DoD-funded <strong>MIXTAPE</strong> initiative with Kitware, I develop multi-objective RL methods such as <strong>D3PO</strong> and <strong>ESR-PPO</strong>. These frameworks train a single policy whose reward weights can be adjusted at runtime, allowing a human operator to observe and control how changing objective priorities alter the agent's behavior without retraining."
                 }
-            ],
-            "nextSteps": {
-                "title": "Next Steps",
-                "items": [
-                    "<strong>Negative Preferences (Symmetric Scalarization):</strong> We are introducing a fundamentally new paradigm where negative preferences can be allowed, enabling an operator to <em>actively penalize</em> an objective. We will explore its impact by designing new environments and metrics and modifying D³PO to support this symmetric instruction space.",
-                    "<strong>Non-Linear Scalarization:</strong> We are moving from linear combinations of objectives to non-linear scalarization functions. This will allow the agent to learn a richer class of non-convex trade-offs, giving the user a choice between multiple possible scalarization options."
-                ]
-            }
+            ]
+        },
+        {
+            "title": "Objective 3: Recover and Diagnose Alignment Structure",
+            "icon": "Target",
+            "blocks": [
+                {
+                    "title": "The Problem",
+                    "content": "Modern alignment methods often assume behavior is deeply entangled with massive training datasets. That makes safety behavior hard to isolate, transfer, or diagnose, especially when hidden failure modes are embedded inside opaque models."
+                },
+                {
+                    "title": "My Approach",
+                    "content": "My zero-data noise distillation work tests whether behavior can be separated from the original data distribution. By training student models from teacher outputs on pure synthetic noise, I recover complex RL policies and language-model behaviors with high fidelity. The same process also exposes latent vulnerabilities, because hidden failure modes can transfer along with desired behavior. This reframes distillation as both a transfer method and a diagnostic tool for alignment."
+                }
+            ]
+        },
+        {
+            "title": "Objective 4: Scale Verifiable Alignment to Scientific LLMs",
+            "icon": "Shield",
+            "blocks": [
+                {
+                    "title": "The Problem",
+                    "content": "Scientific foundation models fail dangerously when they hallucinate physically impossible outputs. In domains such as chemistry, materials discovery, and engineering simulation, a model must satisfy computable constraints before its outputs can be trusted."
+                },
+                {
+                    "title": "My Approach",
+                    "content": "I extend the same verification-driven alignment principles to scientific LLMs through <strong>Reinforcement Learning from Verifiable Rewards (RLVR)</strong>. In chemistry, this means rewarding mechanistic constraints such as atom balance, mass balance, charge consistency, stereochemistry, and valid reaction structure. The goal is to build domain-native models that are transparent in their failure modes and bounded by physical laws rather than only by human preference data."
+                }
+            ]
         }
     ]
 }
