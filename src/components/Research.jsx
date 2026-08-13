@@ -56,7 +56,7 @@ const ResearchBlock = ({ title, content }) => (
 
 const Research = () => {
     return (
-        <Section id="research" title="Research Overview">
+        <Section id="research" title="Research Directions">
             <div className="max-w-3xl space-y-5 mb-12">
                 {researchData.intro.map((paragraph, idx) => (
                     <p key={idx} className="text-lg text-muted leading-relaxed">
@@ -66,10 +66,10 @@ const Research = () => {
             </div>
 
             <div className="max-w-4xl">
-                {researchData.objectives.map((obj) => (
+                {researchData.objectives.map((obj, index) => (
                     <ResearchObjective
                     key={obj.title}
-                    title={obj.title}
+                    title={`0${index + 1} / ${obj.title.replace(/^Objective \d+: /, '')}`}
                     icon={iconMap[obj.icon]}
                 >
                     {obj.blocks.map((block, bIdx) => (

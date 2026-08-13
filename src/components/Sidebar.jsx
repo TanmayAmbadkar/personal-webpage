@@ -6,11 +6,11 @@ import { useTheme } from '../context/ThemeContext';
 import { useScroll } from '../context/ScrollContext';
 
 const iconMap = {
-    Mail: <Mail size={20} />,
-    Linkedin: <Linkedin size={20} />,
-    Github: <Github size={20} />,
-    GraduationCap: <GraduationCap size={20} />,
-    FileText: <FileText size={20} />
+    Mail,
+    Linkedin,
+    Github,
+    GraduationCap,
+    FileText
 };
 
 const Sidebar = () => {
@@ -58,12 +58,12 @@ const Sidebar = () => {
     };
 
     const navItems = [
-        { name: 'About', to: 'about', icon: <User size={20} /> },
-        { name: 'Research', to: 'research', icon: <BookOpen size={20} /> },
-        { name: 'Publications', to: 'publications', icon: <FileText size={20} /> },
-        { name: 'Experience', to: 'experience', icon: <Briefcase size={20} /> },
-        { name: 'Education', to: 'education', icon: <GraduationCap size={20} /> },
-        { name: 'Teaching', to: 'teaching', icon: <BookOpen size={20} /> },
+        { name: 'About', to: 'about', icon: <User size={20} />, tone: 'about' },
+        { name: 'Directions', to: 'research', icon: <BookOpen size={20} />, tone: 'directions' },
+        { name: 'Publications', to: 'publications', icon: <FileText size={20} />, tone: 'publications' },
+        { name: 'Experience', to: 'experience', icon: <Briefcase size={20} />, tone: 'experience' },
+        { name: 'Education', to: 'education', icon: <GraduationCap size={20} />, tone: 'education' },
+        { name: 'Teaching', to: 'teaching', icon: <BookOpen size={20} />, tone: 'teaching' },
     ];
 
     // Mobile Header
@@ -116,24 +116,29 @@ const Sidebar = () => {
                                             : 'text-muted hover:text-text hover:bg-accent/5'
                                             }`}
                                     >
-                                        {item.icon}
+                                        <span className={`nav-icon nav-icon--${item.tone}`}>
+                                            {item.icon}
+                                        </span>
                                         {item.name}
                                     </button>
                                 ))}
 
                                 <div className="flex justify-center gap-6 mt-8 pt-8 border-t border-gray">
-                                    {profileData.socialLinks.map((link) => (
-                                        <a
-                                            key={link.name}
-                                            href={link.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-muted hover:text-accent p-2 rounded-md active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary transition-colors"
-                                            aria-label={link.name}
-                                        >
-                                            {iconMap[link.icon]}
-                                        </a>
-                                    ))}
+                                    {profileData.socialLinks.map((link) => {
+                                        const Icon = iconMap[link.icon] || FileText;
+                                        return (
+                                            <a
+                                                key={link.name}
+                                                href={link.url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className={`social-link social-link--${link.icon.toLowerCase()} p-2 rounded-md active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary`}
+                                                aria-label={link.name}
+                                            >
+                                                <Icon className="social-icon" size={20} />
+                                            </a>
+                                        );
+                                    })}
                                 </div>
                             </nav>
                         </motion.div>
@@ -157,6 +162,12 @@ const Sidebar = () => {
                 </div>
                 <h1 className="text-xl font-bold text-text text-center">{profileData.name}</h1>
                 <p className="text-sm text-muted text-center mt-1">{profileData.role}</p>
+                <div className="profile-signal" aria-hidden="true">
+                    <span className="profile-signal__gmail" />
+                    <span className="profile-signal__linkedin" />
+                    <span className="profile-signal__scholar" />
+                    <span className="profile-signal__acrobat" />
+                </div>
             </div>
 
             <nav className="flex flex-col gap-1 px-4 my-6">
@@ -171,7 +182,7 @@ const Sidebar = () => {
                             : 'text-muted hover:text-text hover:bg-accent/5'
                             }`}
                     >
-                        <span className={`transition-transform ${activeSection === item.to ? 'scale-110' : 'group-hover:scale-110'}`}>
+                        <span className={`nav-icon nav-icon--${item.tone} transition-transform ${activeSection === item.to ? 'scale-110' : 'group-hover:scale-110'}`}>
                             {item.icon}
                         </span>
                         <span className="font-medium">{item.name}</span>
@@ -181,19 +192,22 @@ const Sidebar = () => {
 
             <div className="flex flex-col items-center gap-4 px-4 shrink-0">
                 <div className="flex justify-center gap-1">
-                    {profileData.socialLinks.map((link) => (
-                        <a
-                            key={link.name}
-                            href={link.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-muted hover:text-accent transition-colors p-1.5 hover:bg-accent/5 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-secondary rounded-full"
-                            title={link.name}
-                            aria-label={link.name}
-                        >
-                            {iconMap[link.icon]}
-                        </a>
-                    ))}
+                    {profileData.socialLinks.map((link) => {
+                        const Icon = iconMap[link.icon] || FileText;
+                        return (
+                            <a
+                                key={link.name}
+                                href={link.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={`social-link social-link--${link.icon.toLowerCase()} p-1.5 rounded-full active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-secondary`}
+                                title={link.name}
+                                aria-label={link.name}
+                            >
+                                <Icon className="social-icon" size={20} />
+                            </a>
+                        );
+                    })}
                 </div>
 
                 <button
@@ -210,7 +224,7 @@ const Sidebar = () => {
                                 opacity: isDark ? 0 : 1,
                                 rotate: isDark ? 90 : 0
                             }}
-                            transition={reduceMotion ? { duration: 0 } : { duration: 0.5, ease: "easeInOut" }}
+                            transition={reduceMotion ? { duration: 0 } : { duration: 0.24, ease: [0.23, 1, 0.32, 1] }}
                             className="absolute inset-0 flex items-center justify-center"
                         >
                             <Sun size={20} />
@@ -222,7 +236,7 @@ const Sidebar = () => {
                                 opacity: isDark ? 1 : 0,
                                 rotate: isDark ? 0 : -90
                             }}
-                            transition={reduceMotion ? { duration: 0 } : { duration: 0.5, ease: "easeInOut" }}
+                            transition={reduceMotion ? { duration: 0 } : { duration: 0.24, ease: [0.23, 1, 0.32, 1] }}
                             className="absolute inset-0 flex items-center justify-center"
                         >
                             <Moon size={20} />

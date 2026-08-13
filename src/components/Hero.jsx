@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import profileData from '../data/profile.json';
 
@@ -23,12 +23,69 @@ const ConstraintField = () => {
     );
 };
 
+export const LiquidBackdrop = () => {
+    const interactiveRef = useRef(null);
+
+    useEffect(() => {
+        const interactive = interactiveRef.current;
+        if (!interactive || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+
+        let currentX = 0;
+        let currentY = 0;
+        let targetX = 0;
+        let targetY = 0;
+        let animationFrame;
+
+        const move = () => {
+            currentX += (targetX - currentX) * 0.07;
+            currentY += (targetY - currentY) * 0.07;
+            interactive.style.transform = `translate3d(${Math.round(currentX)}px, ${Math.round(currentY)}px, 0)`;
+            animationFrame = window.requestAnimationFrame(move);
+        };
+
+        const handlePointerMove = (event) => {
+            targetX = event.clientX - (window.innerWidth / 2);
+            targetY = event.clientY - (window.innerHeight / 2);
+        };
+
+        window.addEventListener('pointermove', handlePointerMove, { passive: true });
+        animationFrame = window.requestAnimationFrame(move);
+
+        return () => {
+            window.removeEventListener('pointermove', handlePointerMove);
+            window.cancelAnimationFrame(animationFrame);
+        };
+    }, []);
+
+    return (
+        <div className="liquid-backdrop" aria-hidden="true">
+            <svg className="liquid-filter" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <filter id="hero-goo">
+                        <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+                        <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 18 -8" result="goo" />
+                        <feBlend in="SourceGraphic" in2="goo" />
+                    </filter>
+                </defs>
+            </svg>
+            <div className="liquid-backdrop__field">
+                <span className="liquid-blob liquid-blob--one" />
+                <span className="liquid-blob liquid-blob--two" />
+                <span className="liquid-blob liquid-blob--three" />
+                <span className="liquid-blob liquid-blob--four" />
+                <span className="liquid-blob liquid-blob--five" />
+                <span ref={interactiveRef} className="liquid-blob liquid-blob--interactive" />
+            </div>
+        </div>
+    );
+};
+
 const Hero = () => {
     const { about } = profileData;
     const reduceMotion = useReducedMotion();
 
     return (
-        <section id="about" className="min-h-[72vh] lg:min-h-[78vh] flex items-center justify-center px-4 sm:px-6 lg:px-12 py-24 lg:py-20">
+        <section id="about" className="relative min-h-[calc(100svh-4rem)] lg:min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-12 py-24 lg:py-20">
             <div className="max-w-3xl w-full relative isolate">
                 <ConstraintField />
                 <motion.div

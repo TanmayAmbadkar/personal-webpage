@@ -14,7 +14,7 @@
                 },
                 {
                     "title": "My Approach",
-                    "content": "I develop safe and interpretable RL systems that pair learned dynamics with formal reasoning. <strong>AutoSpec</strong> automates and visualizes behavioral specifications from imperfect user intent. <strong>SPARKD</strong> and <strong>RAMPS</strong> use weakest preconditions, Koopman-linearized dynamics, and optimization-based shielding to create provable guardrails for nonlinear environments. This turns safety from an after-the-fact evaluation into a constraint enforced during action selection. <a href='/autospec' class='text-blue-500 hover:text-blue-700 underline'>[View AutoSpec Homepage]</a>"
+                    "content": "I develop safe and interpretable RL systems that pair learned dynamics with formal reasoning. <strong>AutoSpec</strong> automates and visualizes behavioral specifications from imperfect user intent. <strong>SPARKD</strong> and <strong>RAMPS</strong> use weakest preconditions, Koopman-linearized dynamics, and optimization-based shielding to create provable guardrails for nonlinear environments. This turns safety from an after-the-fact evaluation into a constraint enforced during action selection. <a href='/autospec' class='text-accent hover:text-text underline'>[View AutoSpec Homepage]</a>"
                 }
             ]
         },

@@ -16,14 +16,11 @@ const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 import { ScrollProvider } from './context/ScrollContext';
 import { ThemeProvider } from './context/ThemeContext';
 
-import MouseFollower from './components/MouseFollower';
-
 function App() {
     return (
         <ThemeProvider>
             <ScrollProvider>
                 <Router>
-                    <MouseFollower />
                     <ScrollToTop />
                     <Suspense fallback={<LoadingSpinner />}>
                         <Routes>

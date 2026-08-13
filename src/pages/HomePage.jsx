@@ -1,10 +1,10 @@
 import React from 'react';
 import Sidebar from '../components/Sidebar';
-import Hero from '../components/Hero';
+import Hero, { LiquidBackdrop } from '../components/Hero';
 import Research from '../components/Research';
 import Publications from '../components/Publications';
+import AcademicTimeline from '../components/AcademicTimeline';
 import Education from '../components/Education';
-import Experience from '../components/Experience';
 import TeachingExperience from '../components/TeachingExperience';
 import SEO from '../components/SEO';
 
@@ -19,13 +19,16 @@ function HomePage() {
             <Sidebar />
 
             <main className="lg:ml-64 relative z-10 pt-16 lg:pt-0 transition-all duration-300">
-                <div className="relative">
-                    <Hero />
-                    <Research />
-                    <Publications />
-                    <Experience />
-                    <Education />
-                    <TeachingExperience />
+                <LiquidBackdrop />
+                <div className="relative z-10 atlas">
+                    <div className="atlas-band atlas-band--moss">
+                        <Hero />
+                        <Research />
+                    </div>
+                    <div className="atlas-band atlas-band--white"><Publications /></div>
+                    <div className="atlas-band atlas-band--moss"><AcademicTimeline /></div>
+                    <div className="atlas-band atlas-band--paper"><Education /></div>
+                    <div className="atlas-band atlas-band--white"><TeachingExperience /></div>
                 </div>
 
                 <footer className="py-8 text-center text-muted text-sm mt-12 px-4 relative">
