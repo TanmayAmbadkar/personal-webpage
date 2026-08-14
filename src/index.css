@@ -291,6 +291,20 @@ body {
   background-color: color-mix(in srgb, var(--atlas-paper, #1d1b1d) 74%, transparent);
 }
 
+/* Skip layout and paint work for sections that are outside the viewport. */
+.site-section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 48rem;
+}
+
+@media (max-width: 1023px) {
+  /* The filtered animated backdrop is visually subtle on small screens but
+     expensive to composite, so reserve that effect for larger viewports. */
+  .liquid-backdrop {
+    display: none;
+  }
+}
+
 .atlas-band--white {
   background-color: color-mix(in srgb, var(--atlas-white, #2a2729) 74%, transparent);
 }

@@ -49,9 +49,9 @@ const AutoSpecPage = () => {
                     }}></div>
 
                     <div className="relative z-10">
-                        <h2 className="text-4xl md:text-6xl font-extrabold text-slate-900 dark:text-white leading-tight mb-6 tracking-tight">
-                            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">AutoSpec</span>
-                        </h2>
+                        <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 dark:text-white leading-tight mb-6 tracking-tight">
+                            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">AutoSpec</span><span className="sr-only">: Specification Refinement for Reinforcement Learning</span>
+                        </h1>
                         <h3 className="text-xl md:text-2xl font-bold text-slate-700 dark:text-slate-200 mb-8 max-w-3xl mx-auto px-4">
                             Automating the Refinement of Reinforcement Learning Specifications
                         </h3>

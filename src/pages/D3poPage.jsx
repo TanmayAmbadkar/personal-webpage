@@ -48,9 +48,9 @@ const D3poPage = () => {
                         backgroundSize: '24px 24px'
                     }}></div>
                     <div className="relative z-10">
-                        <h2 className="text-4xl md:text-6xl font-extrabold text-slate-900 dark:text-white leading-tight mb-6 tracking-tight">
-                            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">D3PO</span>
-                        </h2>
+                        <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 dark:text-white leading-tight mb-6 tracking-tight">
+                            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">D3PO</span><span className="sr-only">: Multi-Objective Reinforcement Learning</span>
+                        </h1>
                         <h3 className="text-xl md:text-2xl font-bold text-slate-700 dark:text-slate-200 mb-8 max-w-4xl mx-auto px-4">
                             Preference Conditioned Multi-Objective Reinforcement Learning
                         </h3>
@@ -76,7 +76,7 @@ const D3poPage = () => {
                         {/* Teaser Image in Hero - floated or after buttons */}
                         <div className="mt-12 max-w-4xl mx-auto">
                             <div className="bg-white dark:bg-slate-900 p-2 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700">
-                                <img src="/images/D3PO/D3PPO_page-0001.jpg" alt="D³PO Algorithm Overview" className="rounded-lg w-full" />
+                                <img src="/images/D3PO/D3PPO_page-0001.jpg" alt="D³PO Algorithm Overview" className="rounded-lg w-full" loading="lazy" decoding="async" />
                             </div>
                             <p className="text-sm text-slate-500 dark:text-slate-400 mt-3 italic">Overview of the D³PO decomposed architecture.</p>
                         </div>
@@ -218,17 +218,17 @@ const D3poPage = () => {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
                             {/* Hopper */}
                             <div className="text-center bg-slate-50 dark:bg-slate-700 p-3 rounded-xl border border-slate-100 dark:border-slate-600">
-                                <img src="/images/D3PO/hopper_rewards.png" alt="Hopper Pareto Front" className="rounded-lg shadow-sm w-full" />
+                                <img src="/images/D3PO/hopper_rewards.png" alt="Hopper Pareto Front" className="rounded-lg shadow-sm w-full" loading="lazy" decoding="async" />
                                 <p className="mt-3 font-semibold text-slate-700 dark:text-slate-200">Hopper-v2</p>
                             </div>
                             {/* Ant */}
                             <div className="text-center bg-slate-50 dark:bg-slate-700 p-3 rounded-xl border border-slate-100 dark:border-slate-600">
-                                <img src="/images/D3PO/ant_rewards.png" alt="Ant Pareto Front" className="rounded-lg shadow-sm w-full" />
+                                <img src="/images/D3PO/ant_rewards.png" alt="Ant Pareto Front" className="rounded-lg shadow-sm w-full" loading="lazy" decoding="async" />
                                 <p className="mt-3 font-semibold text-slate-700 dark:text-slate-200">Ant-v2</p>
                             </div>
                             {/* Humanoid */}
                             <div className="text-center bg-slate-50 dark:bg-slate-700 p-3 rounded-xl border border-slate-100 dark:border-slate-600">
-                                <img src="/images/D3PO/humanoid_rewards.png" alt="Humanoid Pareto Front" className="rounded-lg shadow-sm w-full" />
+                                <img src="/images/D3PO/humanoid_rewards.png" alt="Humanoid Pareto Front" className="rounded-lg shadow-sm w-full" loading="lazy" decoding="async" />
                                 <p className="mt-3 font-semibold text-slate-700 dark:text-slate-200">Humanoid-v2</p>
                             </div>
                         </div>

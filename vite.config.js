@@ -10,6 +10,10 @@ export default defineConfig({
             input: {
                 main: resolve(__dirname, 'index.html'),
                 loans: resolve(__dirname, 'loans/index.html'),
+                ramps: resolve(__dirname, 'ramps/index.html'),
+                rampsBlog: resolve(__dirname, 'ramps/blog/index.html'),
+                d3po: resolve(__dirname, 'd3po/index.html'),
+                autospec: resolve(__dirname, 'autospec/index.html'),
             },
         },
     },

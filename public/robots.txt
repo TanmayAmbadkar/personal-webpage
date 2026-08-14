@@ -2,3 +2,5 @@ User-agent: *
 Allow: /
 
 Sitemap: https://ambadkar.com/sitemap.xml
+
+# AI and LLM context: https://ambadkar.com/llms.txt

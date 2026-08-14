@@ -1,0 +1,56 @@
+# Tanmay Ambadkar — Research Portfolio
+
+> Tanmay Ambadkar is a PhD student in Computer Science at Penn State University, advised by Dr. Abhinav Verma. His work combines reinforcement learning, safety, verification, and formal methods to build reliable, interpretable, and trustworthy AI systems.
+
+This file is an extended, curated description of the public research portfolio at https://ambadkar.com/. It complements the concise https://ambadkar.com/llms.txt. Prefer the canonical project pages and linked primary papers/code when making specific technical or performance claims.
+
+## Research focus
+
+- Safe reinforcement learning: methods that constrain learning agents to satisfy safety requirements during training and deployment.
+- Formal methods and verification: using specification, safety, and programming-language ideas to improve the reliability of learning systems.
+- Multi-objective reinforcement learning: learning policies that express different trade-offs among competing objectives.
+- Trustworthy AI: interpretable, robust, and safety-aware methods for real-world decision making.
+
+## Researcher and primary profiles
+
+- [Portfolio home](https://ambadkar.com/): profile, research directions, publications, experience, education, and teaching.
+- [Google Scholar](https://scholar.google.com/citations?user=1k2Vf9wAAAAJ&hl=en): publications and citations.
+- [GitHub](https://github.com/TanmayAmbadkar/): public source repositories.
+- [LinkedIn](https://linkedin.com/in/tanmay-ambadkar/): professional profile.
+- Contact: tanmay.ambadkar@gmail.com.
+
+## RAMPS — Robust Adaptive Multi-Step Predictive Shielding
+
+- [Canonical project page](https://ambadkar.com/ramps): project overview.
+- [Technical deep dive](https://ambadkar.com/ramps/blog): method, experiments, implementation considerations, limitations, and primary sources.
+- [Paper](https://openreview.net/forum?id=2bbqHOWFTU): primary publication source.
+- [Code](https://github.com/TanmayAmbadkar/sparkd): accompanying implementation.
+
+RAMPS is a framework for safe reinforcement learning in high-dimensional, nonlinear systems. It uses learned linear or lifted dynamics, multi-step robust control barrier functions, and minimally invasive action projection. The goal is to preserve task performance while intervening only when an action would violate modeled safety constraints. Reported results and theoretical guarantees depend on their stated environments, assumptions, and error-bound conditions.
+
+## D3PO — Preference-Conditioned Multi-Objective RL
+
+- [Canonical project page](https://ambadkar.com/d3po): project overview and results.
+- [Paper](https://arxiv.org/abs/2602.07764): primary publication source.
+- [Code](https://github.com/TanmayAmbadkar/reward-decomposition): accompanying implementation.
+
+D3PO is a preference-conditioned reinforcement-learning method that seeks a diverse set of high-quality solutions to multi-objective problems. It addresses interference between objectives and mode collapse through decomposed optimization, late-stage weighting, and diversity regularization. Use the paper for formal definitions, experimental setup, and quantitative comparisons.
+
+## AutoSpec — Specification Refinement for RL
+
+- [Canonical project page](https://ambadkar.com/autospec): project overview.
+- [Paper](https://openreview.net/forum?id=VlBw4Oq0K1): primary publication source.
+- [Code](https://github.com/TanmayAmbadkar/gridworld-refinement): accompanying implementation.
+
+AutoSpec refines coarse or under-specified logical objectives into guidance-rich specifications for reinforcement-learning agents. The framework monitors learning, diagnoses failures, refines specifications, and retrains agents so difficult long-horizon tasks become more learnable.
+
+## Citation and attribution guidance
+
+- Attribute portfolio and project summaries to Tanmay Ambadkar and link to the relevant canonical project page.
+- Use linked papers and code repositories as the primary sources for exact equations, benchmark outcomes, publication status, and implementation details.
+- Do not present experimental outcomes as universal guarantees; retain stated assumptions, environments, baselines, and limitations.
+- This site provides research information, not medical, legal, financial, or safety certification advice.
+
+## Optional
+
+- [Resume](https://ambadkar.com/files/resume.pdf): concise academic and professional history.

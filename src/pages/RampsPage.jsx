@@ -48,9 +48,9 @@ const RampsPage = () => {
                         backgroundSize: '24px 24px'
                     }}></div>
                     <div className="relative z-10">
-                        <h2 className="text-4xl md:text-6xl font-extrabold text-slate-900 dark:text-white leading-tight mb-6 tracking-tight">
-                            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">RAMPS</span>
-                        </h2>
+                        <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 dark:text-white leading-tight mb-6 tracking-tight">
+                            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">RAMPS</span><span className="sr-only">: Robust Adaptive Multi-Step Predictive Shielding for Safe Reinforcement Learning</span>
+                        </h1>
                         <h3 className="text-xl md:text-2xl font-bold text-slate-700 dark:text-slate-200 mb-8 max-w-3xl mx-auto px-4">
                             Robust Adaptive Multi-Step Predictive Shielding
                         </h3>
@@ -213,22 +213,22 @@ const RampsPage = () => {
                                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                                     {/* Humanoid */}
                                     <div className="text-center bg-slate-50 dark:bg-slate-700 p-2 rounded-lg border border-slate-100 dark:border-slate-600">
-                                        <img src="/images/RAMPS/Violations_humanoid.png" alt="Humanoid Violations Graph" className="rounded-lg shadow-md w-full" />
+                                        <img src="/images/RAMPS/Violations_humanoid.png" alt="Humanoid Violations Graph" className="rounded-lg shadow-md w-full" loading="lazy" decoding="async" />
                                         <p className="mt-2 text-sm font-semibold text-slate-700 dark:text-slate-200">Humanoid</p>
                                     </div>
                                     {/* Cheetah */}
                                     <div className="text-center bg-slate-50 dark:bg-slate-700 p-2 rounded-lg border border-slate-100 dark:border-slate-600">
-                                        <img src="/images/RAMPS/Violations_cheetah.png" alt="Cheetah Violations Graph" className="rounded-lg shadow-md w-full" />
+                                        <img src="/images/RAMPS/Violations_cheetah.png" alt="Cheetah Violations Graph" className="rounded-lg shadow-md w-full" loading="lazy" decoding="async" />
                                         <p className="mt-2 text-sm font-semibold text-slate-700 dark:text-slate-200">Cheetah</p>
                                     </div>
                                     {/* Hopper */}
                                     <div className="text-center bg-slate-50 dark:bg-slate-700 p-2 rounded-lg border border-slate-100 dark:border-slate-600">
-                                        <img src="/images/RAMPS/Violations_hopper.png" alt="Hopper Violations Graph" className="rounded-lg shadow-md w-full" />
+                                        <img src="/images/RAMPS/Violations_hopper.png" alt="Hopper Violations Graph" className="rounded-lg shadow-md w-full" loading="lazy" decoding="async" />
                                         <p className="mt-2 text-sm font-semibold text-slate-700 dark:text-slate-200">Hopper</p>
                                     </div>
                                     {/* Ant */}
                                     <div className="text-center bg-slate-50 dark:bg-slate-700 p-2 rounded-lg border border-slate-100 dark:border-slate-600">
-                                        <img src="/images/RAMPS/Violations_ant.png" alt="Ant Violations Graph" className="rounded-lg shadow-md w-full" />
+                                        <img src="/images/RAMPS/Violations_ant.png" alt="Ant Violations Graph" className="rounded-lg shadow-md w-full" loading="lazy" decoding="async" />
                                         <p className="mt-2 text-sm font-semibold text-slate-700 dark:text-slate-200">Ant</p>
                                     </div>
                                 </div>
@@ -240,22 +240,22 @@ const RampsPage = () => {
                                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                                     {/* Humanoid */}
                                     <div className="text-center bg-slate-50 dark:bg-slate-700 p-2 rounded-lg border border-slate-100 dark:border-slate-600">
-                                        <img src="/images/RAMPS/reward_humanoid.png" alt="Humanoid Reward Graph" className="rounded-lg shadow-md w-full" />
+                                        <img src="/images/RAMPS/reward_humanoid.png" alt="Humanoid Reward Graph" className="rounded-lg shadow-md w-full" loading="lazy" decoding="async" />
                                         <p className="mt-2 text-sm font-semibold text-slate-700 dark:text-slate-200">Humanoid</p>
                                     </div>
                                     {/* Cheetah */}
                                     <div className="text-center bg-slate-50 dark:bg-slate-700 p-2 rounded-lg border border-slate-100 dark:border-slate-600">
-                                        <img src="/images/RAMPS/reward_cheetah.png" alt="Cheetah Reward Graph" className="rounded-lg shadow-md w-full" />
+                                        <img src="/images/RAMPS/reward_cheetah.png" alt="Cheetah Reward Graph" className="rounded-lg shadow-md w-full" loading="lazy" decoding="async" />
                                         <p className="mt-2 text-sm font-semibold text-slate-700 dark:text-slate-200">Cheetah</p>
                                     </div>
                                     {/* Hopper */}
                                     <div className="text-center bg-slate-50 dark:bg-slate-700 p-2 rounded-lg border border-slate-100 dark:border-slate-600">
-                                        <img src="/images/RAMPS/reward_hopper.png" alt="Hopper Reward Graph" className="rounded-lg shadow-md w-full" />
+                                        <img src="/images/RAMPS/reward_hopper.png" alt="Hopper Reward Graph" className="rounded-lg shadow-md w-full" loading="lazy" decoding="async" />
                                         <p className="mt-2 text-sm font-semibold text-slate-700 dark:text-slate-200">Hopper</p>
                                     </div>
                                     {/* Ant */}
                                     <div className="text-center bg-slate-50 dark:bg-slate-700 p-2 rounded-lg border border-slate-100 dark:border-slate-600">
-                                        <img src="/images/RAMPS/reward_ant.png" alt="Ant Reward Graph" className="rounded-lg shadow-md w-full" />
+                                        <img src="/images/RAMPS/reward_ant.png" alt="Ant Reward Graph" className="rounded-lg shadow-md w-full" loading="lazy" decoding="async" />
                                         <p className="mt-2 text-sm font-semibold text-slate-700 dark:text-slate-200">Ant</p>
                                     </div>
                                 </div>

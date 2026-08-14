@@ -34,23 +34,29 @@ export const LiquidBackdrop = () => {
         let currentY = 0;
         let targetX = 0;
         let targetY = 0;
-        let animationFrame;
+        let animationFrame = 0;
 
         const move = () => {
             currentX += (targetX - currentX) * 0.07;
             currentY += (targetY - currentY) * 0.07;
             interactive.style.transform = `translate3d(${Math.round(currentX)}px, ${Math.round(currentY)}px, 0)`;
-            animationFrame = window.requestAnimationFrame(move);
+
+            // Keep the visual easing after pointer input, but do not keep a
+            // requestAnimationFrame loop running while the page is idle.
+            if (Math.abs(targetX - currentX) > 0.5 || Math.abs(targetY - currentY) > 0.5) {
+                animationFrame = window.requestAnimationFrame(move);
+            } else {
+                animationFrame = 0;
+            }
         };
 
         const handlePointerMove = (event) => {
             targetX = event.clientX - (window.innerWidth / 2);
             targetY = event.clientY - (window.innerHeight / 2);
+            if (!animationFrame) animationFrame = window.requestAnimationFrame(move);
         };
 
         window.addEventListener('pointermove', handlePointerMove, { passive: true });
-        animationFrame = window.requestAnimationFrame(move);
-
         return () => {
             window.removeEventListener('pointermove', handlePointerMove);
             window.cancelAnimationFrame(animationFrame);

@@ -34,7 +34,7 @@ const SEO = ({ title, description, keywords, image, url }) => {
             { property: 'og:description', content: description },
             { property: 'og:url', content: url || window.location.href },
             { property: 'og:type', content: 'website' },
-            { property: 'og:image', content: image || '/images/profile.jpg' }
+            { property: 'og:image', content: image || 'https://ambadkar.com/files/profile.jpg' }
         ];
 
         ogTags.forEach(tag => {
@@ -52,7 +52,7 @@ const SEO = ({ title, description, keywords, image, url }) => {
             { name: 'twitter:card', content: 'summary_large_image' },
             { name: 'twitter:title', content: title },
             { name: 'twitter:description', content: description },
-            { name: 'twitter:image', content: image || '/images/profile.jpg' }
+            { name: 'twitter:image', content: image || 'https://ambadkar.com/files/profile.jpg' }
         ];
 
         twitterTags.forEach(tag => {
@@ -72,7 +72,7 @@ const SEO = ({ title, description, keywords, image, url }) => {
             canonical.rel = 'canonical';
             document.head.appendChild(canonical);
         }
-        canonical.href = url || window.location.href;
+        canonical.href = url || `https://ambadkar.com${location.pathname}`;
 
     }, [title, description, keywords, image, url, location]);
 

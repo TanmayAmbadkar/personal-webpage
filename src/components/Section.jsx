@@ -5,7 +5,7 @@ const Section = ({ id, title, children, className = "" }) => {
     const reduceMotion = useReducedMotion();
 
     return (
-        <section id={id} className={`py-12 lg:py-24 px-4 sm:px-6 lg:px-12 max-w-5xl mx-auto ${className}`}>
+        <section id={id} className={`site-section py-12 lg:py-24 px-4 sm:px-6 lg:px-12 max-w-5xl mx-auto ${className}`}>
             <motion.div
                 initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
                 whileInView={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}

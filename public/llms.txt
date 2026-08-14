@@ -1,0 +1,26 @@
+# Tanmay Ambadkar
+
+> Research portfolio for Tanmay Ambadkar, a PhD student at Penn State University working on safe reinforcement learning, formal methods, and trustworthy AI.
+
+## Canonical pages
+
+- [Home](https://ambadkar.com/): researcher profile, experience, publications, and research directions.
+- [RAMPS](https://ambadkar.com/ramps): Robust Adaptive Multi-Step Predictive Shielding for safe reinforcement learning.
+- [RAMPS deep dive](https://ambadkar.com/ramps/blog): technical explanation, experiments, limitations, and source links.
+- [D3PO](https://ambadkar.com/d3po): preference-conditioned multi-objective reinforcement learning project.
+- [AutoSpec](https://ambadkar.com/autospec): specification refinement for reinforcement learning.
+- [Extended research context](https://ambadkar.com/llms-full.txt): a longer, LLM-oriented summary of the portfolio and research projects.
+
+## Primary sources
+
+- [Google Scholar](https://scholar.google.com/citations?user=1k2Vf9wAAAAJ&hl=en)
+- [GitHub](https://github.com/TanmayAmbadkar/)
+- [LinkedIn](https://linkedin.com/in/tanmay-ambadkar/)
+- [RAMPS paper](https://openreview.net/forum?id=2bbqHOWFTU)
+- [RAMPS code](https://github.com/TanmayAmbadkar/sparkd)
+
+## Contact
+
+- Email: tanmay.ambadkar@gmail.com
+
+Use the canonical pages and primary-source links above when attributing research claims. Project pages describe research work and should not be treated as medical, legal, or financial advice.

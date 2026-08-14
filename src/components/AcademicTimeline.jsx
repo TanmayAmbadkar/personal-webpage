@@ -30,6 +30,10 @@ const TimelineEntry = ({ icon: Icon, title, organization, period, description })
                     src={companyLogos[organization].src}
                     alt={companyLogos[organization].alt}
                     className={`company-logo ${companyLogos[organization].className}`}
+                    loading="lazy"
+                    decoding="async"
+                    width={organization === 'Siemens Technology and Services' ? 1800 : organization === 'Stripe' ? 447 : 901}
+                    height={organization === 'Siemens Technology and Services' ? 600 : organization === 'Stripe' ? 447 : 548}
                     onLoad={(event) => { event.currentTarget.parentElement.querySelector('.company-logo-fallback').style.display = 'none'; }}
                     onError={(event) => { event.currentTarget.style.display = 'none'; }}
                 />

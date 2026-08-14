@@ -366,22 +366,22 @@ const RampsBlogPage = () => {
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                                 {/* Pendulum */}
                                 <div className="text-center bg-slate-100 p-2 rounded-lg">
-                                    <img src="/images/RAMPS/violations_pendulum.png" alt="Pendulum Violations Graph" className="rounded-lg shadow-md w-full" />
+                                    <img src="/images/RAMPS/Violations_pendulum.png" alt="Pendulum Violations Graph" className="rounded-lg shadow-md w-full" loading="lazy" decoding="async" />
                                     <p className="mt-2 font-semibold text-slate-700">(a) Pendulum</p>
                                 </div>
                                 {/* Cheetah */}
                                 <div className="text-center bg-slate-100 p-2 rounded-lg">
-                                    <img src="/images/RAMPS/violations_cheetah.png" alt="Cheetah Violations Graph" className="rounded-lg shadow-md w-full" />
+                                    <img src="/images/RAMPS/Violations_cheetah.png" alt="Cheetah Violations Graph" className="rounded-lg shadow-md w-full" loading="lazy" decoding="async" />
                                     <p className="mt-2 font-semibold text-slate-700">(b) Cheetah</p>
                                 </div>
                                 {/* Hopper */}
                                 <div className="text-center bg-slate-100 p-2 rounded-lg">
-                                    <img src="/images/RAMPS/violations_hopper.png" alt="Hopper Violations Graph" className="rounded-lg shadow-md w-full" />
+                                    <img src="/images/RAMPS/Violations_hopper.png" alt="Hopper Violations Graph" className="rounded-lg shadow-md w-full" loading="lazy" decoding="async" />
                                     <p className="mt-2 font-semibold text-slate-700">(c) Hopper</p>
                                 </div>
                                 {/* Ant */}
                                 <div className="text-center bg-slate-100 p-2 rounded-lg">
-                                    <img src="/images/RAMPS/violations_ant.png" alt="Ant Violations Graph" className="rounded-lg shadow-md w-full" />
+                                    <img src="/images/RAMPS/Violations_ant.png" alt="Ant Violations Graph" className="rounded-lg shadow-md w-full" loading="lazy" decoding="async" />
                                     <p className="mt-2 font-semibold text-slate-700">(d) Ant</p>
                                 </div>
                             </div>
@@ -393,22 +393,22 @@ const RampsBlogPage = () => {
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                                 {/* Pendulum */}
                                 <div className="text-center bg-slate-100 p-2 rounded-lg">
-                                    <img src="/images/RAMPS/reward_pendulum.png" alt="Pendulum Reward Graph" className="rounded-lg shadow-md w-full" />
+                                    <img src="/images/RAMPS/reward_pendulum.png" alt="Pendulum Reward Graph" className="rounded-lg shadow-md w-full" loading="lazy" decoding="async" />
                                     <p className="mt-2 font-semibold text-slate-700">(a) Pendulum</p>
                                 </div>
                                 {/* Cheetah */}
                                 <div className="text-center bg-slate-100 p-2 rounded-lg">
-                                    <img src="/images/RAMPS/reward_cheetah.png" alt="Cheetah Reward Graph" className="rounded-lg shadow-md w-full" />
+                                    <img src="/images/RAMPS/reward_cheetah.png" alt="Cheetah Reward Graph" className="rounded-lg shadow-md w-full" loading="lazy" decoding="async" />
                                     <p className="mt-2 font-semibold text-slate-700">(b) Cheetah</p>
                                 </div>
                                 {/* Hopper */}
                                 <div className="text-center bg-slate-100 p-2 rounded-lg">
-                                    <img src="/images/RAMPS/reward_hopper.png" alt="Hopper Reward Graph" className="rounded-lg shadow-md w-full" />
+                                    <img src="/images/RAMPS/reward_hopper.png" alt="Hopper Reward Graph" className="rounded-lg shadow-md w-full" loading="lazy" decoding="async" />
                                     <p className="mt-2 font-semibold text-slate-700">(c) Hopper</p>
                                 </div>
                                 {/* Ant */}
                                 <div className="text-center bg-slate-100 p-2 rounded-lg">
-                                    <img src="/images/RAMPS/reward_ant.png" alt="Ant Reward Graph" className="rounded-lg shadow-md w-full" />
+                                    <img src="/images/RAMPS/reward_ant.png" alt="Ant Reward Graph" className="rounded-lg shadow-md w-full" loading="lazy" decoding="async" />
                                     <p className="mt-2 font-semibold text-slate-700">(d) Ant</p>
                                 </div>
                             </div>
