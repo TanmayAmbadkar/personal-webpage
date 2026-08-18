@@ -4,6 +4,7 @@ import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import profileData from '../data/profile.json';
 import { useTheme } from '../context/ThemeContext';
 import { useScroll } from '../context/ScrollContext';
+import TerminalReveal from './TerminalReveal';
 
 const iconMap = {
     Mail,
@@ -160,8 +161,16 @@ const Sidebar = () => {
                 <div className="w-24 h-24 rounded-full overflow-hidden border border-accent/70 mb-4 shadow-lg shadow-accent/10">
                     <img src="/files/profile.jpg" alt={profileData.name} className="w-full h-full object-cover" />
                 </div>
-                <h1 className="text-xl font-bold text-text text-center">{profileData.name}</h1>
-                <p className="text-sm text-muted text-center mt-1">{profileData.role}</p>
+                <TerminalReveal as="h1" className="text-xl font-bold text-text text-center">
+                    {profileData.name}
+                </TerminalReveal>
+                <TerminalReveal
+                    as="p"
+                    className="text-sm text-muted text-center mt-1"
+                    delayOffset={120}
+                >
+                    {profileData.role}
+                </TerminalReveal>
                 <div className="profile-signal" aria-hidden="true">
                     <span className="profile-signal__gmail" />
                     <span className="profile-signal__linkedin" />
@@ -171,7 +180,7 @@ const Sidebar = () => {
             </div>
 
             <nav className="flex flex-col gap-1 px-4 my-6">
-                {navItems.map((item) => (
+                {navItems.map((item, index) => (
                     <button
                         type="button"
                         key={item.name}
@@ -185,7 +194,12 @@ const Sidebar = () => {
                         <span className={`nav-icon nav-icon--${item.tone} transition-transform ${activeSection === item.to ? 'scale-110' : 'group-hover:scale-110'}`}>
                             {item.icon}
                         </span>
-                        <span className="font-medium">{item.name}</span>
+                        <TerminalReveal
+                            className="font-medium"
+                            delayOffset={260 + index * 72}
+                        >
+                            {item.name}
+                        </TerminalReveal>
                     </button>
                 ))}
             </nav>

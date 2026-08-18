@@ -2,6 +2,14 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 
 const ThemeContext = createContext();
 const PALETTE_QUERY_PARAM = 'palette';
+const ZOLA_PALETTE_SEED = 'zola';
+
+const zolaPalette = {
+    name: 'zola',
+    dark: { '--bg-primary': '#000000', '--bg-secondary': '#000000', '--text-primary': '#00ff00', '--text-muted': '#00ff00', '--color-accent': '#00ff00', '--color-accent-ink': '#000000', '--color-signal': '#00ff00', '--scrollbar-thumb': '#00ff00', '--color-separator': '#00ff00', '--color-field-line': '#00ff00', '--color-field-node': '#00ff00', '--atlas-moss': '#000000', '--atlas-paper': '#000000', '--atlas-white': '#000000', '--icon-about': '#00ff00', '--icon-directions': '#00ff00', '--icon-publications': '#00ff00', '--icon-experience': '#00ff00', '--icon-education': '#00ff00', '--icon-teaching': '#00ff00' },
+    // Keep the Zola treatment monochrome even if the standard light-mode toggle is used.
+    light: { '--bg-primary': '#000000', '--bg-secondary': '#000000', '--text-primary': '#00ff00', '--text-muted': '#00ff00', '--color-accent': '#00ff00', '--color-accent-ink': '#000000', '--color-signal': '#00ff00', '--scrollbar-thumb': '#00ff00', '--color-separator': '#00ff00', '--color-field-line': '#00ff00', '--color-field-node': '#00ff00', '--atlas-moss': '#000000', '--atlas-paper': '#000000', '--atlas-white': '#000000', '--icon-about': '#00ff00', '--icon-directions': '#00ff00', '--icon-publications': '#00ff00', '--icon-experience': '#00ff00', '--icon-education': '#00ff00', '--icon-teaching': '#00ff00' }
+};
 
 const palettes = [
     {
@@ -35,7 +43,8 @@ const palettes = [
     {
         dark: { '--bg-primary': '#1b1019', '--bg-secondary': '#271625', '--text-primary': '#fff2fa', '--text-muted': '#c8adbd', '--color-accent': '#ff5f9b', '--color-accent-ink': '#321020', '--color-signal': '#67dcff', '--scrollbar-thumb': '#493044', '--color-separator': '#493044', '--color-field-line': '#603a57', '--color-field-node': '#ff5f9b', '--atlas-moss': '#261622', '--atlas-paper': '#20131e', '--atlas-white': '#31222e' },
         light: { '--bg-primary': '#fff0f7', '--bg-secondary': '#fffaff', '--text-primary': '#281824', '--text-muted': '#705766', '--color-accent': '#c12f70', '--color-accent-ink': '#ffffff', '--color-signal': '#087b9e', '--scrollbar-thumb': '#e1cbd7', '--color-separator': '#ecd8e2', '--color-field-line': '#ecc5d8', '--color-field-node': '#c12f70', '--atlas-moss': '#f6deea', '--atlas-paper': '#fdf2f8', '--atlas-white': '#fffaff' }
-    }
+    },
+    zolaPalette
 ];
 
 const hashSeed = (seed) => Array.from(seed).reduce((hash, character) => ((hash << 5) - hash) + character.charCodeAt(0) | 0, 0);
@@ -43,8 +52,11 @@ const createSeed = () => window.crypto?.getRandomValues ? window.crypto.getRando
 const readSeed = () => new URLSearchParams(window.location.search).get(PALETTE_QUERY_PARAM) || createSeed();
 
 const applyPalette = (seed, isDark) => {
-    const palette = palettes[Math.abs(hashSeed(seed)) % palettes.length][isDark ? 'dark' : 'light'];
-    Object.entries(palette).forEach(([property, value]) => document.documentElement.style.setProperty(property, value));
+    const palette = seed === ZOLA_PALETTE_SEED
+        ? zolaPalette
+        : palettes[Math.abs(hashSeed(seed)) % palettes.length];
+    document.documentElement.dataset.themeVariant = palette.name || '';
+    Object.entries(palette[isDark ? 'dark' : 'light']).forEach(([property, value]) => document.documentElement.style.setProperty(property, value));
 };
 
 export const useTheme = () => useContext(ThemeContext);

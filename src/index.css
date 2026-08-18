@@ -107,6 +107,89 @@
 .social-link--graduationcap { color: #4285f4; }
 .social-link--filetext { color: #fa0f00; }
 
+/* The Zola palette deliberately suppresses brand-color accents for a unified terminal treatment. */
+:root[data-theme-variant="zola"] .social-link--linkedin,
+:root[data-theme-variant="zola"] .social-link--github,
+:root[data-theme-variant="zola"] .social-link--graduationcap,
+:root[data-theme-variant="zola"] .social-link--filetext {
+  color: var(--color-accent);
+  background-color: transparent;
+}
+
+:root[data-theme-variant="zola"] .profile-signal__gmail,
+:root[data-theme-variant="zola"] .profile-signal__linkedin,
+:root[data-theme-variant="zola"] .profile-signal__scholar,
+:root[data-theme-variant="zola"] .profile-signal__acrobat {
+  background-color: var(--color-accent);
+}
+
+:root[data-theme-variant="zola"] body,
+:root[data-theme-variant="zola"] body * {
+  font-family: "Share Tech Mono", "OCR A Std", "Lucida Console", monospace;
+  letter-spacing: 0.035em;
+}
+
+:root[data-theme-variant="zola"] body {
+  background-color: #000;
+  color: #00ff00;
+  text-shadow: 0 0 5px color-mix(in srgb, #00ff00 55%, transparent);
+}
+
+:root[data-theme-variant="zola"] .liquid-backdrop,
+:root[data-theme-variant="zola"] .atlas-band--moss,
+:root[data-theme-variant="zola"] .atlas-band--paper,
+:root[data-theme-variant="zola"] .atlas-band--white {
+  background: #000;
+}
+
+:root[data-theme-variant="zola"] [class*="bg-slate"],
+:root[data-theme-variant="zola"] [class*="bg-white"],
+:root[data-theme-variant="zola"] [class*="bg-blue"],
+:root[data-theme-variant="zola"] [class*="bg-green"],
+:root[data-theme-variant="zola"] [class*="bg-purple"],
+:root[data-theme-variant="zola"] [class*="bg-pink"] {
+  background-color: #000 !important;
+}
+
+:root[data-theme-variant="zola"] [class*="text-slate"],
+:root[data-theme-variant="zola"] [class*="text-white"],
+:root[data-theme-variant="zola"] [class*="text-blue"],
+:root[data-theme-variant="zola"] [class*="text-green"],
+:root[data-theme-variant="zola"] [class*="text-purple"],
+:root[data-theme-variant="zola"] [class*="text-pink"] {
+  color: #00ff00 !important;
+}
+
+:root[data-theme-variant="zola"] [class*="border-slate"],
+:root[data-theme-variant="zola"] [class*="border-blue"],
+:root[data-theme-variant="zola"] [class*="border-green"],
+:root[data-theme-variant="zola"] [class*="border-purple"],
+:root[data-theme-variant="zola"] [class*="border-pink"] {
+  border-color: #00ff00 !important;
+}
+
+:root[data-theme-variant="zola"] .liquid-backdrop::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: repeating-linear-gradient(to bottom, transparent 0 3px, rgb(0 255 0 / 7%) 3px 4px);
+  pointer-events: none;
+}
+
+:root[data-theme-variant="zola"] .terminal-reveal > span {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.2em);
+  animation: terminal-character-in 180ms var(--ease-out) var(--terminal-delay) both;
+}
+
+@keyframes terminal-character-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .profile-signal {
   display: flex;
   width: 3.25rem;
@@ -337,6 +420,12 @@ body {
 
   .liquid-blob {
     animation: none;
+  }
+
+  :root[data-theme-variant="zola"] .terminal-reveal > span {
+    animation-duration: 180ms;
+    animation-delay: 0ms;
+    transform: none;
   }
 
 }
