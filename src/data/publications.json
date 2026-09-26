@@ -1,5 +1,25 @@
 [
     {
+        "title": "Preference Conditioned Multi-Objective Reinforcement Learning: Decomposed, Diversity-Driven Policy Optimization",
+        "authors": "Tanmay Ambadkar, Sourav Panda, Shreyash Kale, Jonathan Dodge, Abhinav Verma",
+        "venue": "Neural Information Processing Systems 2026",
+        "links": [
+            {
+                "name": "arXiv",
+                "url": "https://arxiv.org/abs/2602.07764"
+            },
+            {
+                "name": "PDF",
+                "url": "https://arxiv.org/pdf/2602.07764"
+            },
+            {
+                "name": "Homepage",
+                "url": "/d3po"
+            }
+        ],
+        "abstract": "Multi-objective reinforcement learning (MORL) seeks to train agents capable of balancing conflicting objectives. While single preference-conditioned policies offer a highly scalable solution, existing approaches remain brittle in practice, frequently failing to recover dense Pareto fronts. We demonstrate that this failure stems from two structural pathologies: destructive advantage cancellation caused by premature Early Scalarization (ES), and representational mode collapse across the preference space. To overcome these bottlenecks, we introduce D3PO, a PPO-based framework that fundamentally reorganizes multi-objective optimization. By preserving per-objective learning signals through a decomposed pipeline and integrating preferences only after trust-region stabilization (Late-Stage Weighting), D3PO improves credit assignment under conflicting objectives. Concurrently, a scaled diversity regularizer encourages behavioral divergence proportional to preference distance. D3PO operates entirely within the efficient linear scalarization regime shared by standard deep MORL baselines. By reducing information loss caused due to linear scalarization rather than relying on expensive non-linear utility functions, it suggests that optimization bottlenecks play a significant role. Across available standard benchmarks, including high-dimensional and many-objective environments, D3PO consistently discovers broader, higher-quality Pareto fronts than prior methods, exceeding state-of-the-art hypervolume and expected utility using a single deployable policy."
+    },
+	{
         "title": "Robust Adaptive Multi-Step Predictive Shielding",
         "authors": "Tanmay Sadanand Ambadkar, Darshan Chudiwal, Greg Anderson, Abhinav Verma",
         "venue": "International Conference on Learning Representations (ICLR) 2026",
@@ -54,26 +74,6 @@
             }
         ],
         "abstract": "While Reinforcement Learning (RL) has demonstrated remarkable success in solving complex sequential decision-making problems, its application in real-world, safety-critical systems is hindered by its reliance on carefully engineered reward functions. Designing effective rewards is notoriously challenging and can lead to unintended or unsafe behaviors, a phenomenon known as reward hacking. Specification-guided RL has emerged as a principled alternative, leveraging formal methods to directly encode high-level objectives, safety requirements, and behavioral constraints. However, the practical utility of this approach is often limited by coarse or under-specified logical formulas and the computational challenge of enforcing safety at scale. This thesis addresses these limitations by developing a unified framework for the automated refinement, scalable enforcement, and flexible adaptation of formal specifications in RL."
-    },
-    {
-        "title": "Preference Conditioned Multi-Objective Reinforcement Learning: Decomposed, Diversity-Driven Policy Optimization",
-        "authors": "Tanmay Ambadkar, Sourav Panda, Shreyash Kale, Jonathan Dodge, Abhinav Verma",
-        "venue": "arXiv:2602.07764v2 [cs.LG], revised July 10, 2026",
-        "links": [
-            {
-                "name": "arXiv",
-                "url": "https://arxiv.org/abs/2602.07764"
-            },
-            {
-                "name": "PDF",
-                "url": "https://arxiv.org/pdf/2602.07764"
-            },
-            {
-                "name": "Homepage",
-                "url": "/d3po"
-            }
-        ],
-        "abstract": "Multi-objective reinforcement learning (MORL) seeks to train agents capable of balancing conflicting objectives. While single preference-conditioned policies offer a highly scalable solution, existing approaches remain brittle in practice, frequently failing to recover dense Pareto fronts. We demonstrate that this failure stems from two structural pathologies: destructive advantage cancellation caused by premature Early Scalarization (ES), and representational mode collapse across the preference space. To overcome these bottlenecks, we introduce D3PO, a PPO-based framework that fundamentally reorganizes multi-objective optimization. By preserving per-objective learning signals through a decomposed pipeline and integrating preferences only after trust-region stabilization (Late-Stage Weighting), D3PO improves credit assignment under conflicting objectives. Concurrently, a scaled diversity regularizer encourages behavioral divergence proportional to preference distance. D3PO operates entirely within the efficient linear scalarization regime shared by standard deep MORL baselines. By reducing information loss caused due to linear scalarization rather than relying on expensive non-linear utility functions, it suggests that optimization bottlenecks play a significant role. Across available standard benchmarks, including high-dimensional and many-objective environments, D3PO consistently discovers broader, higher-quality Pareto fronts than prior methods, exceeding state-of-the-art hypervolume and expected utility using a single deployable policy."
     },
     {
         "title": "On the Structure of Reinforcement Learning Policies: Recovery from Synthetic Observations via Geometric Coverage",
