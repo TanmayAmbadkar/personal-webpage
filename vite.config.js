@@ -14,6 +14,7 @@ export default defineConfig({
                 rampsBlog: resolve(__dirname, 'ramps/blog/index.html'),
                 d3po: resolve(__dirname, 'd3po/index.html'),
                 autospec: resolve(__dirname, 'autospec/index.html'),
+                mcpo: resolve(__dirname, 'mcpo/index.html'),
             },
         },
     },
